@@ -8,6 +8,8 @@ import user from './reducers/user';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DateScreen from './screens/DateScreen';
+import GenderScreen from './screens/GenderScreen';
+import RelationScreen from './screens/RelationScreen';
 
 const store = configureStore({
  reducer: {user},
@@ -18,6 +20,8 @@ const SignInNav = () => {
     return <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name='SignIn' component={SignIn}/>
         <Stack.Screen name='DateScreen' component={DateScreen}/>
+        <Stack.Screen name='GenderScreen' component={GenderScreen}/>
+        <Stack.Screen name='RelationScreen' component={RelationScreen}/>
     </Stack.Navigator>
 }
 

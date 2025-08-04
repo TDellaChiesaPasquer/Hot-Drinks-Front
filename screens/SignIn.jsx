@@ -33,16 +33,14 @@ export default function({navigation}) {
                 })
             });
             const data = await response.json();
-            console.log(data)
             if (!data.result) {
                 setValidateDisabled(false);
                 return;
             }
             dispatch(addToken(data.token));
-            console.log('test2')
             setValidateDisabled(false);
             setEmailVisible(false);
-            navigation.navigate('test')
+            navigation.navigate('DateScreen')
             return;
         } catch(error) {
             setValidateDisabled(false);
