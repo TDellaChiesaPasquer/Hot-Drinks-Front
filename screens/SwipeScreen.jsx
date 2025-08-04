@@ -36,10 +36,9 @@ const styles = StyleSheet.create({
 	},
 	swiperWrapper: {
 		flex: 1,
+		height: "100%",
 	},
 	slides: {
 		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
 	},
 });

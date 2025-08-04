@@ -57,7 +57,7 @@ export default function SwipeContainer() {
 		);
 		for (let index = 0; index < hashtagsList.length; index++) {
 			tmpHashtagsListJSX.push(
-				<Text ket={index} style={styles.hashtag}>
+				<Text key={index} style={styles.hashtag}>
 					#{capitalize(hashtagsList[index])}{" "}
 				</Text>
 			);
