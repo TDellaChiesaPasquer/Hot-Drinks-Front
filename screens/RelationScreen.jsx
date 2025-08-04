@@ -41,6 +41,7 @@ export default function ({ navigation }) {
 			setDisabled(false);
 			return;
 		}
+            setDisabled(false);
 	};
 	return (
 		<SafeAreaProvider>
