@@ -1,12 +1,35 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import SignIn from "./screens/SignIn";
+import Test from './screens/Test';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import user from './reducers/user';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import DateScreen from './screens/DateScreen';
+
+const store = configureStore({
+ reducer: {user},
+});
+const Stack = createNativeStackNavigator();
+
+const SignInNav = () => {
+    return <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name='SignIn' component={SignIn}/>
+        <Stack.Screen name='DateScreen' component={DateScreen}/>
+    </Stack.Navigator>
+}
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+  return (<Provider store={store}>
+        <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name='SignInNav' component={SignInNav}/>
+                <Stack.Screen name='test' component={Test}/>
+            </Stack.Navigator>
+        </NavigationContainer>
+    </Provider>
   );
 }
 
