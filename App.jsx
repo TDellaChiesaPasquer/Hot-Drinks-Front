@@ -1,20 +1,23 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+
 import DateScreen from './screens/DateScreen';
 import GenderScreen from './screens/GenderScreen';
 import RelationScreen from './screens/RelationScreen';
-import user from './reducers/user';
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
+import SwipeScreen from './screens/SwipeScreen';
 import SignIn from "./screens/SignIn";
+
+import user from './reducers/user';
 
 const store = configureStore({
  reducer: {user},
 });
-
-import SwipeScreen from "./screens/SwipeScreen.jsx";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,12 +33,13 @@ const SignInNav = () => {
 export default function App() {
 	return (
 		<Provider store={store}>
-            <NavigationContainer>
-                <Stack.Navigator screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name='SignInNav' component={SignInNav}/>
-                    <Stack.Screen name="SwipeScreen" component={SwipeScreen} />
-                </Stack.Navigator>
-            </NavigationContainer>
+			<NavigationContainer>
+				<Stack.Navigator screenOptions={{ headerShown: false }}>
+					{/* <Stack.Screen name="SignInNav" component={SignInNav} />
+					<Stack.Screen name="SignInNav" component={SignInNav} /> */}
+					<Stack.Screen name="SwipeScreen" component={SwipeScreen} />
+				</Stack.Navigator>
+			</NavigationContainer>
 		</Provider>
 	);
 }

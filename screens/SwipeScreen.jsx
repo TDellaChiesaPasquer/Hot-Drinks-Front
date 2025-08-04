@@ -7,7 +7,7 @@ import SwipeContainer from "../components/swipe/SwipeContainer";
 export default function SwipeScreen({ navigation }) {
 	const [swipeProfilList, setSwipeProfilList] = useState([]);
 
-  useEffect(() => {
+	useEffect(() => {
 		const tmpProfileTab = [];
 
 		for (let index = 0; index < 10; index++) {
@@ -18,7 +18,7 @@ export default function SwipeScreen({ navigation }) {
 			);
 		}
 		setSwipeProfilList(tmpProfileTab);
-  }, []);
+	}, []);
 
 	return (
 		<View style={styles.container}>
