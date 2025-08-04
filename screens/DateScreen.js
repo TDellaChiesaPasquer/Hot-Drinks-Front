@@ -40,7 +40,7 @@ export default function({navigation}) {
             setDisabled(false);
             return;
         }
-        dispatch(addTempInfo({date: date.valueOf(), username}));
+        dispatch(addTempInfo({date: `${year}-${month}-${day}`, username}));
         navigation.navigate('GenderScreen');
     }
     return <SafeAreaProvider>

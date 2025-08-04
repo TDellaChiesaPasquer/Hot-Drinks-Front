@@ -28,10 +28,10 @@ export default function({navigation}) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                birthdate: user.date,
-                username: user.username,
-                gender: user.gender,
-                orientation: user.orientation,
+                birthdate: user.tempInfos.date,
+                username: user.tempInfos.username,
+                gender: user.tempInfos.gender,
+                orientation: user.tempInfos.orientation,
                 relationship: relation
             })
         });
@@ -41,6 +41,7 @@ export default function({navigation}) {
             setDisabled(false);
             return;
         }
+            setDisabled(false);
     }
     return <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
