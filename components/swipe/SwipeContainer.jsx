@@ -4,11 +4,8 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import SwipeButton from "./SwipeButton";
 
 export default function SwipeContainer() {
-	const [hashtagsList, setHashtagsList] = useState([]);
-	const [informationList, setInformationList] = useState([]);
-
-	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
 	const [informationListJSX, setInformationListJSX] = useState([]);
+	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
 
 	function capitalize(str) {
 		return str.length > 1 ? str[0].toUpperCase() + str.slice(1) : str;
@@ -45,11 +42,9 @@ export default function SwipeContainer() {
 	// }
 
 	useEffect(() => {
-		setHashtagsList(["violon", "randonnée", "chat"]);
-		setInformationList(["Username", "Age", "Ville"]);
-	}, []);
+		const hashtagsList = ["violon", "randonnée", "chat"];
+		const informationList = ["Username", "Age", "Ville"];
 
-	useEffect(() => {
 		let tmpHashtagsListJSX = [];
 		let tmpInformationListJSX = [];
 		for (let index = 0; index < informationList.length - 1; index++) {
