@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 import SwipeButton from "./SwipeButton";
 
@@ -7,39 +8,33 @@ export default function SwipeContainer() {
 	const [informationListJSX, setInformationListJSX] = useState([]);
 	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
 
+	const userInfos = useSelector((state) => state.user.value);
+
 	function capitalize(str) {
 		return str.length > 1 ? str[0].toUpperCase() + str.slice(1) : str;
 	}
 
-	// async function handleLike() {
-	// 	try {
-	// 		const response = await fetch("http://localhost:3000/profils/profil", {
-	// 			method: "GET",
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 				Authorization: userInfos.token,
-	// 			},
-	// 			body: JSON.stringify({
-	// 				tweetId: props._id,
-	// 				liking: !liked,
-	// 			}),
-	// 		});
-	// 		const data = await response.json();
-	// 		console.log(data);
-	// 		if (!data.result) {
-	// 			return;
-	// 		}
-	// 		if (liked) {
-	// 			setNbreOfLikes(nbreOfLikes - 1);
-	// 			setLiked(false);
-	// 		} else {
-	// 			setNbreOfLikes(nbreOfLikes + 1);
-	// 			setLiked(true);
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Erreur réseau :", error);
-	// 	}
-	// }
+	async function fetchProfiles() {
+		try {
+			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/profil", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: userInfos.token,
+				},
+			});
+			const data = await response.json();
+			console.log(data);
+			if (!data.result) {
+				return;
+			}
+		} catch (error) {
+			console.error("Erreur réseau :", error);
+		}
+	}
+
+	// Fetch initial des profils
+	fetchProfiles();
 
 	useEffect(() => {
 		const hashtagsList = ["violon", "randonnée", "chat"];

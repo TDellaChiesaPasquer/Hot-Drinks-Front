@@ -22,10 +22,10 @@ export default function SwipeScreen({ navigation }) {
 
 	return (
 		<View style={styles.container}>
-			{/* <Swiper style={styles.swiperWrapper} showsButtons={true}>
-				<View style={styles.slides}>{swipeProfilList}</View>
-			</Swiper> */}
-			<SwipeContainer />
+			<Swiper style={styles.swiperWrapper} showsButtons={true}>
+				{swipeProfilList}
+			</Swiper>
+			{/* <SwipeContainer /> */}
 		</View>
 	);
 }
@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	slides: {
-		// flex: 1,
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
 	},
 });
