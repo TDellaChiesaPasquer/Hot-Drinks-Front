@@ -7,8 +7,16 @@ export default function SwipeButton(props) {
 	const [buttonType, setButtonType] = useState(props.type);
 
 	let texteAfficher = "Like";
-	if (buttonType === "Dislike") texteAfficher = "Dislike";
-	if (buttonType === "Superlike") texteAfficher = "Superlike";
+	let colorStyle = "buttonLike";
+
+	if (buttonType === "Dislike") {
+		texteAfficher = "Dislike";
+		colorStyle = "buttonDislike";
+	}
+	if (buttonType === "Superlike") {
+		texteAfficher = "Superlike";
+		colorStyle = "buttonSuperLike";
+	}
 
 	function handleDecide() {
 		console.log(texteAfficher);
@@ -16,7 +24,7 @@ export default function SwipeButton(props) {
 
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity onPress={handleDecide} style={styles.button}>
+			<TouchableOpacity onPress={handleDecide} style={[styles.button, styles[colorStyle]]}>
 				<Text style={styles.buttonText}>{texteAfficher}</Text>
 			</TouchableOpacity>
 		</View>
@@ -26,5 +34,22 @@ export default function SwipeButton(props) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+	},
+	button: {
+		flex: 1,
+		textAlign: "center",
+		width: 100,
+		height: 100,
+		borderRadius: 100,
+		color: "red",
+	},
+	buttonLike: {
+		backgroundColor: "green",
+	},
+	buttonDislike: {
+		backgroundColor: "red",
+	},
+	buttonSuperLike: {
+		backgroundColor: "yellow",
 	},
 });

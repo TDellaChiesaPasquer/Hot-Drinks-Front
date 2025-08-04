@@ -1,34 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import Swiper from "react-native-swiper";
 
-import SwipeButton from "../components/SwipeButton";
+import SwipeContainer from "../components/swipe/SwipeContainer";
 
 export default function SwipeScreen({ navigation }) {
+	const [swipeProfilList, setSwipeProfilList] = useState([]);
+
+  useEffect(() => {
+		const tmpProfileTab = [];
+
+		for (let index = 0; index < 10; index++) {
+			tmpProfileTab.push(
+				<View style={styles.slides}>
+					<SwipeContainer />
+				</View>
+			);
+		}
+		setSwipeProfilList(tmpProfileTab);
+  }, []);
+
 	return (
 		<View style={styles.container}>
-			<View style={styles.swipeContainer}>
-				<Image source={require("../assets/IllustrationPorfileBase.jpg")} style={styles.image} resizeMode="cover" />
-
-				<View style={styles.textContainer}>
-					<View style={styles.userInformationsContainer}>
-						<Text style={styles.userInformation}>Username</Text>
-						<Text style={styles.userInformation}>Age</Text>
-						<Text style={styles.userInformation}>Ville</Text>
-					</View>
-
-					<View style={styles.userHashTags}>
-						<Text style={styles.hashtag}>#Violon</Text>
-						<Text style={styles.hashtag}>#Randonnée</Text>
-						<Text style={styles.hashtag}>#Chat</Text>
-					</View>
-
-					<View style={styles.choiceButtonList}>
-						<SwipeButton style={styles.choiceButton} type="Like" />
-						<SwipeButton style={styles.choiceButton} type="Superlike" />
-						<SwipeButton style={styles.choiceButton} type="Dislike" />
-					</View>
-				</View>
-			</View>
+			{/* <Swiper style={styles.swiperWrapper} showsButtons={true}>
+				<View style={styles.slides}>{swipeProfilList}</View>
+			</Swiper> */}
+			<SwipeContainer />
 		</View>
 	);
 }
@@ -37,29 +34,5 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#FFF5F0",
-	},
-	swipeContainer: {
-		flex: 1,
-	},
-	userInformationsContainer: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-bettween",
-		alignItems: "center",
-	},
-	choiceButtonList: {
-		flex: 1,
-		flexDirection: "row",
-	},
-	userInformation: {},
-	userHashTags: {
-		flex: 1,
-		flexDirection: "row",
-	},
-	textContainer: {
-		flex: 1,
-		flexDirection: "colommn",
-		alignItems: "center",
 	},
 });
