@@ -1,28 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import Swiper from "react-native-swiper";
 
-import SwipeButton from "../components/SwipeButton";
+import SwipeContainer from "../components/swipe/SwipeContainer";
 
 export default function SwipeScreen({ navigation }) {
+	const [swipeProfilList, setSwipeProfilList] = useState([]);
+
+  useEffect(() => {
+		const tmpProfileTab = [];
+
+		for (let index = 0; index < 10; index++) {
+			tmpProfileTab.push(
+				<View key={index} style={styles.slides}>
+					<SwipeContainer />
+				</View>
+			);
+		}
+		setSwipeProfilList(tmpProfileTab);
+  }, []);
+
 	return (
 		<View style={styles.container}>
-			<Image source={require("../assets/IllustrationPorfileBase.jpg")} style={styles.image} resizeMode="cover" />
-
-			<View style={styles.userInformationsContainer}>
-				<Text style={styles.username}>Username</Text>
-				<Text style={styles.age}>Age</Text>
-				<Text style={styles.ville}>Ville</Text>
-			</View>
-
-			<View style={styles.userHashTags}>
-				<Text style={styles.username}>Username</Text>
-				<Text style={styles.age}>Age</Text>
-				<Text style={styles.ville}>Ville</Text>
-			</View>
-
-			<SwipeButton style={styles.information} type="Like" />
-			<SwipeButton style={styles.information} type="Superlike" />
-			<SwipeButton style={styles.information} type="Dislike" />
+			{/* <Swiper style={styles.swiperWrapper} showsButtons={true}>
+				<View style={styles.slides}>{swipeProfilList}</View>
+			</Swiper> */}
+			<SwipeContainer />
 		</View>
 	);
 }
@@ -31,17 +34,10 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 	},
-	userInformationsContainer: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-bettween",
-		alignItems: "center",
-	},
-	information: {
+	swiperWrapper: {
 		flex: 1,
 	},
-	userHashTags: {
-
+	slides: {
+		// flex: 1,
 	},
 });
