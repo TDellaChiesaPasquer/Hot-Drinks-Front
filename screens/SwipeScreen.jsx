@@ -12,7 +12,7 @@ export default function SwipeScreen({ navigation }) {
 
 		for (let index = 0; index < 10; index++) {
 			tmpProfileTab.push(
-				<View style={styles.slides}>
+				<View key={index} style={styles.slides}>
 					<SwipeContainer />
 				</View>
 			);
@@ -33,6 +33,11 @@ export default function SwipeScreen({ navigation }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#FFF5F0",
+	},
+	swiperWrapper: {
+		flex: 1,
+	},
+	slides: {
+		// flex: 1,
 	},
 });

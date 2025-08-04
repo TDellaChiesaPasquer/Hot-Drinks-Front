@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
 
 export default function SwipeButton(props) {
 	// Valeurs : Accept, Refuse, SuperLike
 	const [buttonType, setButtonType] = useState(props.type);
 
+	const buttonSize = 80;
+
 	let texteAfficher = "Like";
 	let colorStyle = "buttonLike";
+	let mainComponent = <AntDesign name="heart" size={buttonSize} color="red" />;
 
 	if (buttonType === "Dislike") {
 		texteAfficher = "Dislike";
 		colorStyle = "buttonDislike";
+		mainComponent = <Entypo name="circle-with-cross" size={buttonSize} color="purple" />;
 	}
 	if (buttonType === "Superlike") {
 		texteAfficher = "Superlike";
 		colorStyle = "buttonSuperLike";
+		mainComponent = <AntDesign name="staro" size={buttonSize} color="yellow" />;
 	}
 
 	function handleDecide() {
@@ -24,8 +30,8 @@ export default function SwipeButton(props) {
 
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity onPress={handleDecide} style={[styles.button, styles[colorStyle]]}>
-				<Text style={styles.buttonText}>{texteAfficher}</Text>
+			<TouchableOpacity onPress={handleDecide} style={styles.button}>
+				{mainComponent}
 			</TouchableOpacity>
 		</View>
 	);
