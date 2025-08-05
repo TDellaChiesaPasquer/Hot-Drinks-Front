@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../components/swipe/SwipeContainer";
@@ -52,8 +53,9 @@ const styles = StyleSheet.create({
 
 	card: {
 		/* dimensions et centrage */
+		flex: 1,
 		width: width * 0.9,
-		height: "90%",
+		height: height,
 		alignSelf: "center",
 
 		/* apparence conforme à la maquette */

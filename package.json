@@ -22,11 +22,13 @@
     "react-native-deck-swiper": "^2.0.18",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+    "react-native-svg": "^15.12.1",
     "react-native-swiper": "^1.6.0",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "react-native-svg-transformer": "^1.5.1"
   },
   "private": true
 }

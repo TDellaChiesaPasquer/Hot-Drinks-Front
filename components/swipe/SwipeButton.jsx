@@ -4,6 +4,11 @@ import { useSelector } from "react-redux";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 
+import HeartIcon from "../../assets/swipeButtons/heart.svg";
+import StarIcon from "../../assets/swipeButtons/star.svg";
+import CrossIcon from "../../assets/swipeButtons/cross.svg";
+
+
 export default function SwipeButton(props) {
 	// Valeurs : Like, Dislike, SuperLike
 	const [buttonType, setButtonType] = useState(props.type);
@@ -17,17 +22,20 @@ export default function SwipeButton(props) {
 
 	let actionType = "Like";
 	let colorStyle = "buttonLike";
-	let mainComponent = <AntDesign name="heart" size={buttonSize} color="red" />;
+	// let mainComponent = <AntDesign name="heart" size={buttonSize} color="red" />;
+	let mainComponent = <HeartIcon width={44} height={44} />;
 
 	if (buttonType === "Dislike") {
 		actionType = "Dislike";
 		colorStyle = "buttonDislike";
-		mainComponent = <Entypo name="circle-with-cross" size={buttonSize} color="purple" />;
+		// mainComponent = <Entypo name="circle-with-cross" size={buttonSize} color="purple" />;
+		mainComponent = <CrossIcon width={44} height={44} />;
 	}
 	if (buttonType === "Superlike") {
 		actionType = "Superlike";
 		colorStyle = "buttonSuperLike";
-		mainComponent = <AntDesign name="staro" size={buttonSize} color="yellow" />;
+		// mainComponent = <AntDesign name="staro" size={buttonSize} color="yellow" />;
+		mainComponent = <StarIcon width={44} height={44} />;
 	}
 
 	async function handleDecide() {
@@ -89,8 +97,8 @@ const styles = StyleSheet.create({
 	button: {
 		justifyContent: "center",
 		alignItems: "center",
-		width: 90,
-		height: 90,
+		width: 80,
+		height: 80,
 		borderRadius: 45,
 		backgroundColor: "#FFF5F0",
 		shadowColor: "#000",

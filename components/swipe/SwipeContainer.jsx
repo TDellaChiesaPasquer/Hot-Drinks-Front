@@ -34,7 +34,7 @@ export default function SwipeContainer(props) {
 
 	useEffect(() => {
 		const hashtagsList = ["violon", "randonnée", "chat"];
-		const informationList = ["Username", "Age", "Ville"];
+		const informationList = ["Emma", "25", "Paris"];
 
 		let tmpHashtagsListJSX = [];
 		let tmpInformationListJSX = [];
@@ -72,9 +72,9 @@ export default function SwipeContainer(props) {
 					<View style={styles.userHashTags}>{hashtagsListJSX}</View>
 
 					<View style={styles.choiceButtonList}>
-						<SwipeButton style={styles.choiceButton} type="Like" profileID={profileID} />
-						<SwipeButton style={styles.choiceButton} type="Superlike" profileID={profileID} />
 						<SwipeButton style={styles.choiceButton} type="Dislike" profileID={profileID} />
+						<SwipeButton style={styles.choiceButton} type="Superlike" profileID={profileID} />
+						<SwipeButton style={styles.choiceButton} type="Like" profileID={profileID} />
 					</View>
 				</View>
 			</View>
@@ -83,40 +83,46 @@ export default function SwipeContainer(props) {
 }
 
 const styles = StyleSheet.create({
-	/* fond brun derrière l’image */
-	container: {
-		flex: 1,
-	},
+	container: { flex: 1 },
 
-	/* image : 60 % de la hauteur, coins arrondis en haut */
+	/* l’image couvre toute la carte */
 	image: {
 		width: "100%",
-		height: "60%",
-		borderTopLeftRadius: 20,
-		borderTopRightRadius: 20,
+		height: "100%",
+		borderRadius: 20,
 	},
 
-	/* zone inférieure crème */
+	/* textes superposés sur l’image, au-dessus des boutons */
 	textContainer: {
-		flex: 1,
-		backgroundColor: "#FFF5F0",
-		paddingHorizontal: 20,
-		paddingTop: 16,
+		position: "absolute",
+		left: 20,
+		right: 20,
+		bottom: 120, // place les textes au-dessus de la rangée de boutons
 	},
 
-	/* « Emma, 25, Paris » */
-	userInformationsContainer: { flexDirection: "row", flexWrap: "wrap" },
-	userInformation: { color: "#000", fontWeight: "600" },
+	userInformationsContainer: {
+		flexDirection: "colomn",
+		flexWrap: "wrap",
+		marginBottom: 4
+	},
+	userInformation: {
+		color: "#000", // noir (comme demandé)
+		fontWeight: "600",
+		fontSize: 18,
+	},
 
 	/* hashtags */
-	userHashTags: { flexDirection: "row", flexWrap: "wrap", marginTop: 2 },
-	hashtag: { color: "#000" },
+	userHashTags: { flexDirection: "row", flexWrap: "wrap", marginTop: 4 },
+	hashtag: { color: "#000", fontSize: 16 }, // noir
 
-	/* barre de boutons */
+	/* barre de boutons collée en bas de la card, sur l’image */
 	choiceButtonList: {
+		position: "absolute",
+		left: 0,
+		right: 0,
+		bottom: -100,
 		flexDirection: "row",
 		justifyContent: "space-around",
 		alignItems: "center",
-		marginTop: 12,
 	},
 });
