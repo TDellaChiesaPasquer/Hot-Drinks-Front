@@ -29,7 +29,7 @@ export default function ({navigation}) {
                 return;
             }
             dispatch(addInfos(newUser));
-            navigation.navigate('SwipeScreen');
+            navigation.navigate('MainTabNav');
         })();
     }, [])
     return <SafeAreaProvider>

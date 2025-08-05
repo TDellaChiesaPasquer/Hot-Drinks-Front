@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput,
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useDispatch, useSelector } from "react-redux";
-import { addToken } from "../reducers/user";
+import { addInfos, addToken } from "../reducers/user";
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,6 +37,23 @@ export default function ({ navigation }) {
 				return;
 			}
 			dispatch(addToken(data.token));
+      if (data.message === 'User is connected') {
+        const response2 = await fetch(process.env.EXPO_PUBLIC_IP + '/users/infos', {
+          headers: {
+            authorization: data.token
+          }
+        })
+        const data2 = await response2.json();
+        setValidateDisabled(false);
+        setEmailVisible(false);
+        if (!data2.user.birthdate) {
+            navigation.navigate('SignInNav', {path: 'DateScreen'});
+            return;
+        }
+        dispatch(addInfos(data2.user));
+        navigation.navigate('MainTabNav');
+        return;
+      }
 			setValidateDisabled(false);
 			setEmailVisible(false);
 			navigation.navigate("DateScreen");
