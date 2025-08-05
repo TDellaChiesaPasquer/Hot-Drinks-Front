@@ -61,7 +61,7 @@ export default function SwipeButton(props) {
 
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity onPress={handleDecide} style={styles.button}>
+			<TouchableOpacity onPress={handleDecide} style={[styles.button, props.style]}>
 				{mainComponent}
 			</TouchableOpacity>
 		</View>

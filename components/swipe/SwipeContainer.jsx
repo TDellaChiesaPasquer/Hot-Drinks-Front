@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import Swiper from "react-native-swiper";
 
 import SwipeButton from "./SwipeButton";
 
@@ -9,6 +10,8 @@ export default function SwipeContainer(props) {
 	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
 
 	const placeholderImage = "../../assets/IllustrationPorfileBase.jpg";
+	const placeholderAsset = require(placeholderImage);
+	const images = Array(10).fill(placeholderAsset);
 
 	// if (!props.profile) return;
 
@@ -65,16 +68,20 @@ export default function SwipeContainer(props) {
 	return (
 		<View style={styles.container}>
 			<View style={styles.swipeContainer}>
-				<Image source={require(placeholderImage)} style={styles.image} resizeMode="cover" />
+				<Swiper style={styles.carousel} showsButtons={true} loop={false} autoplay={false}>
+					{images.map((src, idx) => (
+						<Image key={idx} source={src} style={styles.image} resizeMode="cover" />
+					))}
+				</Swiper>
 
 				<View style={styles.textContainer}>
 					<View style={styles.userInformationsContainer}>{informationListJSX}</View>
 					<View style={styles.userHashTags}>{hashtagsListJSX}</View>
 
 					<View style={styles.choiceButtonList}>
-						<SwipeButton style={styles.choiceButton} type="Dislike" profileID={profileID} />
-						<SwipeButton style={styles.choiceButton} type="Superlike" profileID={profileID} />
-						<SwipeButton style={styles.choiceButton} type="Like" profileID={profileID} />
+						{["Dislike", "Superlike", "Like"].map((type) => (
+							<SwipeButton key={type} style={styles.choiceButton} type={type} profileID={profileID} />
+						))}
 					</View>
 				</View>
 			</View>
@@ -84,6 +91,16 @@ export default function SwipeContainer(props) {
 
 const styles = StyleSheet.create({
 	container: { flex: 1 },
+
+	swipeContainer: {
+		flex: 1,
+		borderRadius: 20,
+		overflow: "hidden",
+	},
+
+	carousel: {
+		flex: 1,
+	},
 
 	/* l’image couvre toute la carte */
 	image: {
@@ -103,7 +120,7 @@ const styles = StyleSheet.create({
 	userInformationsContainer: {
 		flexDirection: "colomn",
 		flexWrap: "wrap",
-		marginBottom: 4
+		marginBottom: 4,
 	},
 	userInformation: {
 		color: "#000", // noir (comme demandé)

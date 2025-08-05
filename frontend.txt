@@ -19,12 +19,12 @@ Arborescence (profondeur max 4, sans node_modules) :
 │   └── swipe
 │       ├── SwipeButton.jsx
 │       └── SwipeContainer.jsx
+├── frontend.txt
 ├── Hot-Drinks.code-workspace
 ├── index.js
 ├── metro.config.js
 ├── package.json
 ├── package-lock.json
-├── projet.txt
 ├── reducers
 │   └── user.js
 ├── screens
