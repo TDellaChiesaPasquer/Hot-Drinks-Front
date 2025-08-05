@@ -59,7 +59,7 @@ export default function SwipeScreen({ navigation }) {
 		console.log(profile, index);
 		return (
 			<View style={styles.card}>
-				<SwipeContainer onChoice={handleChoice} profile={profile} />
+				{/* <SwipeContainer onChoice={handleChoice} profile={profile} /> */}
 			</View>
 		);
 	};

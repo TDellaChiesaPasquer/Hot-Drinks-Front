@@ -15,14 +15,12 @@ export default function ({ navigation }) {
 	const [disabled, setDisabled] = useState(false);
 	const [relation, setRelation] = useState("");
 	const dispatch = useDispatch();
-    console.log(user)
 	const sanitizeInputs = async () => {
 		setDisabled(true);
 		if (relation === "") {
 			setError("Selectionnez un type de relation");
 			setDisabled(false);
 		}
-        console.log( user.date)
 		const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/userInfos", {
 			method: "PUT",
 			headers: {
@@ -44,7 +42,7 @@ export default function ({ navigation }) {
 			return;
 		}
         setDisabled(false);
-        navigation.navigate('SwipeScreen');
+        navigation.navigate('MainTabNav');
 	};
 	return (
 		<SafeAreaProvider>

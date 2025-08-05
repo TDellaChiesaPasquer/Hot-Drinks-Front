@@ -10,7 +10,7 @@ export default function SwipeContainer(props) {
 
 	const placeholderImage = "../../assets/IllustrationPorfileBase.jpg";
 
-	if (!props.profile) return;
+
 
 	const userInfos = useSelector((state) => state.user.value);
 	const profile = props.profile;
@@ -58,7 +58,7 @@ export default function SwipeContainer(props) {
 		setHashtagsListJSX(tmpHashtagsListJSX);
 		setInformationListJSX(tmpInformationListJSX);
 	}, []);
-
+	if (!props.profile) return;
 	return (
 		<View style={styles.container}>
 			<View style={styles.swipeContainer}>
