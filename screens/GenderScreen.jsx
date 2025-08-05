@@ -56,10 +56,12 @@ export default function ({ navigation }) {
 						<Text style={[styles.boutonChoixMultipleText, { color: jeRecherche === "Tout" ? "#F5EBE6" : "#965A51" }]}>Tout</Text>
 					</TouchableOpacity>
 				</View>
-				<Text style={styles.error}>{error}</Text>
-				<TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
-					<Text style={styles.boutonText}>Continuer</Text>
-				</TouchableOpacity>
+                <View style={styles.bottom}>
+                    <Text style={styles.error}>{error}</Text>
+                    <TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
+                        <Text style={styles.boutonText}>Continuer</Text>
+                    </TouchableOpacity>
+                </View>
 			</SafeAreaView>
 		</SafeAreaProvider>
 	);
@@ -70,6 +72,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#DFC9B4",
 		alignItems: "center",
+        position: 'relative',
 	},
 	bouton: {
 		alignItems: "center",
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
 	inputTitle: {
 		color: "#965A51",
 		fontWeight: "bold",
+        marginTop: 30
 	},
 	inputSub: {
 		color: "#BC8D85",
@@ -136,6 +140,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		boxShadow: "0 2px 3px #896761",
+        marginVertical: 30
 	},
 	boutonChoixMultipleText: {
 		fontWeight: "bold",
@@ -149,4 +154,8 @@ const styles = StyleSheet.create({
 		width: "90%",
 		alignItems: "center",
 	},
+    bottom: {
+        position: 'absolute',
+        top: height * 0.7
+    }
 });

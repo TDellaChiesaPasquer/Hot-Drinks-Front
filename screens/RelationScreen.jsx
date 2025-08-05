@@ -82,10 +82,12 @@ export default function ({ navigation }) {
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Relation amicale</Text>
 					</TouchableOpacity>
 				</View>
-				<Text style={styles.error}>{error}</Text>
-				<TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
-					<Text style={styles.boutonText}>Valider</Text>
-				</TouchableOpacity>
+                <View style={styles.bottom}>
+                    <Text style={styles.error}>{error}</Text>
+                    <TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
+                        <Text style={styles.boutonText}>Valider</Text>
+                    </TouchableOpacity>
+                </View>
 			</SafeAreaView>
 		</SafeAreaProvider>
 	);
@@ -184,4 +186,8 @@ const styles = StyleSheet.create({
 	boutonChoixMultipleTextLegend: {
 		fontSize: 8,
 	},
+    bottom: {
+        position: 'absolute',
+        top: height * 0.7
+    }
 });
