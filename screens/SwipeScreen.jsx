@@ -1,44 +1,57 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
-import Swiper from "react-native-swiper";
+import React, { useRef, useState, useEffect } from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
+const { width } = Dimensions.get("window");
 
+import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../components/swipe/SwipeContainer";
 
 export default function SwipeScreen({ navigation }) {
-	const [swipeProfilList, setSwipeProfilList] = useState([]);
+	const swiperRef = useRef(null);
+	const [cards, setCards] = useState([]);
+
+	const numberOfCards = 10;
 
 	useEffect(() => {
-		const tmpProfileTab = [];
-
-		for (let index = 0; index < 10; index++) {
-			tmpProfileTab.push(
-				<View key={index} style={styles.slides}>
-					<SwipeContainer />
-				</View>
-			);
-		}
-		setSwipeProfilList(tmpProfileTab);
+		setCards([...Array(numberOfCards).keys()]);
 	}, []);
+
+	// Fonction appelée depuis les boutons
+	function handleChoice(action) {
+		if (!swiperRef.current) return;
+		if (action === "Like") swiperRef.current.swipeRight();
+		if (action === "Dislike") swiperRef.current.swipeLeft();
+		if (action === "Superlike") swiperRef.current.swipeTop();
+	}
+
+	const renderCard = (index) => (
+		<View style={styles.card}>
+			<SwipeContainer onChoice={handleChoice} />
+		</View>
+	);
 
 	return (
 		<View style={styles.container}>
-			<Swiper style={styles.swiperWrapper} showsButtons={true}>
-				{swipeProfilList}
-			</Swiper>
-			{/* <SwipeContainer /> */}
+			<Swiper
+				ref={swiperRef}
+				cards={cards}
+				renderCard={renderCard}
+				stackSize={3}
+				backgroundColor="transparent"
+				verticalSwipe={false}
+				onSwipedLeft={() => {}}
+				onSwipedRight={() => {}}
+				onSwipedTop={() => {}}
+			/>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
+	container: { flex: 1 },
+	card: {
+		width: width * 0.9,
 		flex: 1,
-	},
-	swiperWrapper: {
-		flex: 1,
-		height: "100%",
-	},
-	slides: {
-		flex: 1,
+		alignSelf: "center",
+		justifyContent: "center",
 	},
 });
