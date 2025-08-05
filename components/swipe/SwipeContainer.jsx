@@ -97,7 +97,7 @@ export default function SwipeContainer(props) {
 		setHashtagsListJSX(tmpHashtagsListJSX);
 		setInformationListJSX(tmpInformationListJSX);
 	}, []);
-
+	if (!props.profile) return;
 	return (
 		<View style={styles.container}>
 			<View style={styles.swipeContainer}>
