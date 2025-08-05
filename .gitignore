@@ -36,7 +36,6 @@ yarn.lock
 
 # Environnement
 .env*.local
-.env
 
 # typescript
 *.tsbuildinfo

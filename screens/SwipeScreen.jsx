@@ -13,8 +13,9 @@ export default function SwipeScreen({ navigation }) {
 	async function fetchProfiles() {
 		try {
 			// const urlTmp = process.env.EXPO_PUBLIC_IP + "/profils/profil";
-			const urlTmp = "http://192.168.100.77:3000" + "/profils/profil";
+			const urlTmp = process.env.EXPO_PUBLIC_IP + "/profils/profil";
 			console.log("urlTmp : " + urlTmp);
+      console.log("testA")
 
 			const response = await fetch(urlTmp, {
 				headers: {
