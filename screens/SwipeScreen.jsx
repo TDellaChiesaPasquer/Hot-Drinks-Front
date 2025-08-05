@@ -9,12 +9,19 @@ import SwipeContainer from "../components/swipe/SwipeContainer";
 export default function SwipeScreen({ navigation }) {
 	const swiperRef = useRef(null);
 	const [cards, setCards] = useState([]);
+	const [swiperKey, setSwiperKey] = useState(0);
 
 	const numberOfCards = 10;
 
 	useEffect(() => {
-		setCards([...Array(numberOfCards).keys()]);
+		loadCards();
 	}, []);
+
+	// Charge les N premières cartes ou les recharge
+	function loadCards() {
+		setCards([...Array(numberOfCards).keys()]);
+		setSwiperKey((prevKey) => prevKey + 1); // Force Swiper to remount
+	}
 
 	// Fonction appelée depuis les boutons
 	function handleChoice(action) {
@@ -33,13 +40,18 @@ export default function SwipeScreen({ navigation }) {
 	return (
 		<View style={styles.container}>
 			<Swiper
-				// ref={swiperRef}
+				key={swiperKey}
+				ref={swiperRef}
 				cards={cards}
 				renderCard={renderCard}
+				stackSize={2}
+				showSecondCard={true}
+				infinite={false}
+				onSwipedAll={loadCards}
 				backgroundColor="transparent"
-				onSwipedLeft={() => {}}
-				onSwipedRight={() => {}}
-				onSwipedTop={() => {}}
+				onSwipedLeft={() => handleChoice("Like")}
+				onSwipedRight={() => handleChoice("Dislike")}
+				onSwipedTop={() => handleChoice("Superlike")}
 			/>
 		</View>
 	);

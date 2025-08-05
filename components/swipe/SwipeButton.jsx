@@ -8,7 +8,6 @@ import HeartIcon from "../../assets/swipeButtons/heart.svg";
 import StarIcon from "../../assets/swipeButtons/star.svg";
 import CrossIcon from "../../assets/swipeButtons/cross.svg";
 
-
 export default function SwipeButton(props) {
 	// Valeurs : Like, Dislike, SuperLike
 	const [buttonType, setButtonType] = useState(props.type);

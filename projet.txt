@@ -9,7 +9,11 @@ Arborescence (profondeur max 4, sans node_modules) :
 │   ├── IllustrationPorfileBase.jpg
 │   ├── images
 │   │   └── boat.png
-│   └── splash-icon.png
+│   ├── splash-icon.png
+│   └── swipeButtons
+│       ├── cross.svg
+│       ├── heart.svg
+│       └── star.svg
 ├── components
 │   ├── headerBeginning.jsx
 │   └── swipe
@@ -17,7 +21,9 @@ Arborescence (profondeur max 4, sans node_modules) :
 │       └── SwipeContainer.jsx
 ├── Hot-Drinks.code-workspace
 ├── index.js
+├── metro.config.js
 ├── package.json
+├── package-lock.json
 ├── projet.txt
 ├── reducers
 │   └── user.js
@@ -31,7 +37,7 @@ Arborescence (profondeur max 4, sans node_modules) :
 │   └── Test.jsx
 └── yarn.lock
 
-7 directories, 24 files
+8 directories, 29 files
 
 
 
@@ -162,6 +168,10 @@ import { useSelector } from "react-redux";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 
+import HeartIcon from "../../assets/swipeButtons/heart.svg";
+import StarIcon from "../../assets/swipeButtons/star.svg";
+import CrossIcon from "../../assets/swipeButtons/cross.svg";
+
 export default function SwipeButton(props) {
 	// Valeurs : Like, Dislike, SuperLike
 	const [buttonType, setButtonType] = useState(props.type);
@@ -175,17 +185,20 @@ export default function SwipeButton(props) {
 
 	let actionType = "Like";
 	let colorStyle = "buttonLike";
-	let mainComponent = <AntDesign name="heart" size={buttonSize} color="red" />;
+	// let mainComponent = <AntDesign name="heart" size={buttonSize} color="red" />;
+	let mainComponent = <HeartIcon width={44} height={44} />;
 
 	if (buttonType === "Dislike") {
 		actionType = "Dislike";
 		colorStyle = "buttonDislike";
-		mainComponent = <Entypo name="circle-with-cross" size={buttonSize} color="purple" />;
+		// mainComponent = <Entypo name="circle-with-cross" size={buttonSize} color="purple" />;
+		mainComponent = <CrossIcon width={44} height={44} />;
 	}
 	if (buttonType === "Superlike") {
 		actionType = "Superlike";
 		colorStyle = "buttonSuperLike";
-		mainComponent = <AntDesign name="staro" size={buttonSize} color="yellow" />;
+		// mainComponent = <AntDesign name="staro" size={buttonSize} color="yellow" />;
+		mainComponent = <StarIcon width={44} height={44} />;
 	}
 
 	async function handleDecide() {
@@ -219,27 +232,49 @@ export default function SwipeButton(props) {
 	);
 }
 
+// const styles = StyleSheet.create({
+// 	container: {
+// 		flex: 1,
+// 	},
+// 	button: {
+// 		flex: 1,
+// 		textAlign: "center",
+// 		width: 100,
+// 		height: 100,
+// 		borderRadius: 100,
+// 		color: "red",
+// 	},
+// 	buttonLike: {
+// 		backgroundColor: "green",
+// 	},
+// 	buttonDislike: {
+// 		backgroundColor: "red",
+// 	},
+// 	buttonSuperLike: {
+// 		backgroundColor: "yellow",
+// 	},
+// });
+
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
+	/* bouton rond taille fixe */
 	button: {
-		flex: 1,
-		textAlign: "center",
-		width: 100,
-		height: 100,
-		borderRadius: 100,
-		color: "red",
+		justifyContent: "center",
+		alignItems: "center",
+		width: 80,
+		height: 80,
+		borderRadius: 45,
+		backgroundColor: "#FFF5F0",
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 4,
+		elevation: 3,
 	},
-	buttonLike: {
-		backgroundColor: "green",
-	},
-	buttonDislike: {
-		backgroundColor: "red",
-	},
-	buttonSuperLike: {
-		backgroundColor: "yellow",
-	},
+
+	/* couleurs arrière-plan supplémentaires (non appliquées tant que JSX n’est pas modifié) */
+	buttonLike: { backgroundColor: "#FF4D80" },
+	buttonDislike: { backgroundColor: "#8A2BE2" },
+	buttonSuperLike: { backgroundColor: "#FFA500" },
 });
 
 # ./components/swipe/SwipeButton.jsx
@@ -257,19 +292,22 @@ export default function SwipeContainer(props) {
 
 	const placeholderImage = "../../assets/IllustrationPorfileBase.jpg";
 
-	if (!props.profile) return;
+	// if (!props.profile) return;
 
 	const userInfos = useSelector((state) => state.user.value);
 	const profile = props.profile;
-	// console.log(profile);
-	const profileID = profile.idProfile;
-	// console.log(profileID);
-	const photoList = profile.profile;
+	let profileID = 0;
+	let photoList = [];
+	try {
+		// console.log(profile);
+		profileID = profile.idProfile;
+		// console.log(profileID);
+		photoList = profile.profile;
+	} catch (error) {}
 
 	if (!photoList || photoList < 1) {
 		const imagePath = placeholderImage;
-	}
-	else {
+	} else {
 		imagePath = photoList[0];
 	}
 	function capitalize(str) {
@@ -278,7 +316,7 @@ export default function SwipeContainer(props) {
 
 	useEffect(() => {
 		const hashtagsList = ["violon", "randonnée", "chat"];
-		const informationList = ["Username", "Age", "Ville"];
+		const informationList = ["Emma", "25", "Paris"];
 
 		let tmpHashtagsListJSX = [];
 		let tmpInformationListJSX = [];
@@ -309,17 +347,16 @@ export default function SwipeContainer(props) {
 	return (
 		<View style={styles.container}>
 			<View style={styles.swipeContainer}>
-				<Image source={require("../../assets/IllustrationPorfileBase.jpg")} style={styles.image} resizeMode="cover" />
-				<Image source={require("../../assets/IllustrationPorfileBase.jpg")} style={styles.image} resizeMode="cover" />
+				<Image source={require(placeholderImage)} style={styles.image} resizeMode="cover" />
 
 				<View style={styles.textContainer}>
 					<View style={styles.userInformationsContainer}>{informationListJSX}</View>
 					<View style={styles.userHashTags}>{hashtagsListJSX}</View>
 
 					<View style={styles.choiceButtonList}>
-						<SwipeButton style={styles.choiceButton} type="Like" profileID={profileID} />
-						<SwipeButton style={styles.choiceButton} type="Superlike" profileID={profileID} />
 						<SwipeButton style={styles.choiceButton} type="Dislike" profileID={profileID} />
+						<SwipeButton style={styles.choiceButton} type="Superlike" profileID={profileID} />
+						<SwipeButton style={styles.choiceButton} type="Like" profileID={profileID} />
 					</View>
 				</View>
 			</View>
@@ -328,43 +365,47 @@ export default function SwipeContainer(props) {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#FFF5F0",
+	container: { flex: 1 },
+
+	/* l’image couvre toute la carte */
+	image: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 20,
 	},
-	swipeContainer: {
-		flex: 1,
-		alignItems: "center",
+
+	/* textes superposés sur l’image, au-dessus des boutons */
+	textContainer: {
+		position: "absolute",
+		left: 20,
+		right: 20,
+		bottom: 120, // place les textes au-dessus de la rangée de boutons
 	},
+
 	userInformationsContainer: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-bettween",
-		color: "black",
-	},
-	choiceButtonList: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
+		flexDirection: "colomn",
+		flexWrap: "wrap",
+		marginBottom: 4
 	},
 	userInformation: {
-		color: "black",
+		color: "#000", // noir (comme demandé)
+		fontWeight: "600",
+		fontSize: 18,
 	},
-	userHashTags: {
-		flex: 1,
+
+	/* hashtags */
+	userHashTags: { flexDirection: "row", flexWrap: "wrap", marginTop: 4 },
+	hashtag: { color: "#000", fontSize: 16 }, // noir
+
+	/* barre de boutons collée en bas de la card, sur l’image */
+	choiceButtonList: {
+		position: "absolute",
+		left: 0,
+		right: 0,
+		bottom: -100,
 		flexDirection: "row",
+		justifyContent: "space-around",
 		alignItems: "center",
-		color: "black",
-	},
-	hashtag: {
-		color: "black",
-	},
-	textContainer: {
-		flex: 1,
-		flexDirection: "colommn",
-		alignItems: "center",
-		justifyContent: "space-bettween",
 	},
 });
 
@@ -388,6 +429,21 @@ import App from './App';
 registerRootComponent(App);
 
 # ./index.js
+
+# ./metro.config.js
+// Anout d'un configuratioj nécessaire pour intruduire des fichiers SVG dans le projet
+const { getDefaultConfig } = require("expo/metro-config");
+module.exports = (() => {
+	const config = getDefaultConfig(__dirname);
+
+	config.transformer.babelTransformerPath = require.resolve("react-native-svg-transformer");
+	config.resolver.assetExts = config.resolver.assetExts.filter((ext) => ext !== "svg");
+	config.resolver.sourceExts.push("svg");
+
+	return config;
+})();
+
+# ./metro.config.js
 
 # ./package.json
 {
@@ -414,11 +470,13 @@ registerRootComponent(App);
     "react-native-deck-swiper": "^2.0.18",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+    "react-native-svg": "^15.12.1",
     "react-native-swiper": "^1.6.0",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "react-native-svg-transformer": "^1.5.1"
   },
   "private": true
 }
@@ -426,7 +484,6 @@ registerRootComponent(App);
 # ./package.json
 
 # ./reducers/user.js
-<<<<<<< HEAD
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -459,38 +516,8 @@ export const userSlice = createSlice({
 });
 
 export const { addToken, addTempInfo, addInfos } = userSlice.actions;
-=======
-import { createSlice } from '@reduxjs/toolkit';
-
-const initialState = {
-    value: {
-        token: null,
-        user: null,
-        tempInfos: null
-    },
-};
-
-export const userSlice = createSlice({
-    name: 'user',
-    initialState,
-    reducers: {
-        addToken: (state, action) => {
-            state.value.token = action.payload;
-        },
-        addTempInfo: (state, action) => {
-            if (!state.value.tempInfos) {
-                state.value.tempInfos = {};
-            }
-            for (const key of Object.keys(action.payload)) {
-                state.value.tempInfos[key] = action.payload[key];
-            }
-        }
-    },
-});
-
-export const { addToken, addTempInfo } = userSlice.actions;
->>>>>>> 10c41729ac6fc8188094c1dfcc1a92f6d14df827
 export default userSlice.reducer;
+
 # ./reducers/user.js
 
 # ./screens/DateScreen.jsx
@@ -1101,7 +1128,6 @@ export default function ({ navigation }) {
 	const [password, setPassword] = useState("");
 	const [validateDisabled, setValidateDisabled] = useState(false);
 	const dispatch = useDispatch();
-	const user = useSelector((state) => state.user.value);
 
 	const tryLogin = async () => {
 		try {
@@ -1262,82 +1288,86 @@ const styles = StyleSheet.create({
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../components/swipe/SwipeContainer";
 
 export default function SwipeScreen({ navigation }) {
-	const [profiles, setProfiles] = useState([]);
+	const swiperRef = useRef(null);
+	const [cards, setCards] = useState([]);
+	const [swiperKey, setSwiperKey] = useState(0);
 
-	const tmp_token =
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQzODQ3MTEsImV4cCI6NTM1NDM4NDcxMX0.ax3pxoHKJBbLllHLm0NDYrDw7cMd9e5cRLyjbQDlUbg";
-	async function fetchProfiles() {
-		try {
-			// const urlTmp = process.env.EXPO_PUBLIC_IP + "/profils/profil";
-			const urlTmp = "http://192.168.100.77:3000" + "/profils/profil";
-			console.log("urlTmp : " + urlTmp);
-
-			const response = await fetch(urlTmp, {
-				headers: {
-					"Content-Type": "application/json",
-					// authorization: userInfos.token,
-					authorization: tmp_token,
-				},
-			});
-
-			console.log("fin fetch");
-			const tmpProfiles = [];
-			console.log("Test");
-			const data = await response.json();
-			console.log(data);
-			const profilList = data.profilList;
-			for (let i = 0; i < profilList.length; i++) {
-				const photoList = profilList[i].photoList;
-				const idProfile = profilList[i]._id;
-
-				tmpProfiles.push({ photoList, idProfile });
-			}
-			console.log(profiles);
-			if (!data.result) {
-				return;
-			}
-			setProfiles(tmpProfiles);
-		} catch (error) {
-			console.error("Erreur réseau :", error);
-		}
-	}
+	const numberOfCards = 10;
 
 	useEffect(() => {
-		// Fetch initial des profils
-		fetchProfiles();
+		loadCards();
 	}, []);
 
-	// Fonction appelée depuis les boutons
-	function handleChoice(action) {}
+	// Charge les N premières cartes ou les recharge
+	function loadCards() {
+		setCards([...Array(numberOfCards).keys()]);
+		setSwiperKey((prevKey) => prevKey + 1); // Force Swiper to remount
+	}
 
-	const renderCard = (profile, index) => {
-		console.log(profile, index);
-		return (
-			<View style={styles.card}>
-				<SwipeContainer onChoice={handleChoice} profile={profile} />
-			</View>
-		);
-	};
+	// Fonction appelée depuis les boutons
+	function handleChoice(action) {
+		if (!swiperRef.current) return;
+		if (action === "Like") swiperRef.current.swipeRight();
+		if (action === "Dislike") swiperRef.current.swipeLeft();
+		if (action === "Superlike") swiperRef.current.swipeTop();
+	}
+
+	const renderCard = (index) => (
+		<View style={styles.card}>
+			<SwipeContainer onChoice={handleChoice} />
+		</View>
+	);
 
 	return (
 		<View style={styles.container}>
-			<Swiper cards={profiles} renderCard={renderCard} backgroundColor="transparent" verticalSwipe={false} onSwipedLeft={() => {}} onSwipedRight={() => {}} onSwipedTop={() => {}} />
+			<Swiper
+				key={swiperKey}
+				ref={swiperRef}
+				cards={cards}
+				renderCard={renderCard}
+				stackSize={2}
+				showSecondCard={true}
+				infinite={false}
+				onSwipedAll={loadCards}
+				backgroundColor="transparent"
+				onSwipedLeft={() => handleChoice("Like")}
+				onSwipedRight={() => handleChoice("Dislike")}
+				onSwipedTop={() => handleChoice("Superlike")}
+			/>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1 },
-	card: {
-		width: width * 0.9,
+	container: {
 		flex: 1,
+		backgroundColor: "#FFF5F0",
+	},
+
+	card: {
+		/* dimensions et centrage */
+		flex: 1,
+		width: width * 0.9,
+		height: height,
 		alignSelf: "center",
-		justifyContent: "center",
+
+		/* apparence conforme à la maquette */
+		backgroundColor: "#FFF5F0", // crème
+		borderRadius: 24,
+		overflow: "hidden",
+
+		/* ombre douce */
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 6,
+		elevation: 4, // Android
 	},
 });
 
@@ -1451,6 +1481,7 @@ Liste des fichiers trouvés et concaténés :
 ./components/swipe/SwipeContainer.jsx
 ./.expo/devices.json
 ./index.js
+./metro.config.js
 ./package.json
 ./reducers/user.js
 ./screens/DateScreen.jsx
@@ -1486,11 +1517,13 @@ Liste des fichiers trouvés et concaténés :
     "react-native-deck-swiper": "^2.0.18",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+    "react-native-svg": "^15.12.1",
     "react-native-swiper": "^1.6.0",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "react-native-svg-transformer": "^1.5.1"
   },
   "private": true
 }
