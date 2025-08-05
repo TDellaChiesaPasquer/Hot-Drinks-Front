@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  Pressable,
+  Image,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/headerBeginning";
@@ -95,103 +105,103 @@ export default function ({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#DFC9B4",
-		alignItems: "center",
-	},
-	bouton: {
-		alignItems: "center",
-		justifyContent: "center",
-		height: 36,
-		borderRadius: 15,
-		boxShadow: "0 2px 3px #896761",
-		width: width * 0.7,
-		backgroundColor: "#965a51c0",
-		margin: 10,
-	},
-	boutonText: {
-		fontWeight: "bold",
-		fontSize: 18,
-		color: "#F5EBE6",
-	},
-	input: {
-		backgroundColor: "#FFF5F0",
-		height: 45,
-		borderRadius: 50,
-		boxShadow: "0 2px 3px #896761",
-		paddingHorizontal: 12,
-		fontWeight: "bold",
-		color: "#965A51",
-		fontSize: 12,
-		width: width * 0.9,
-		margin: 10,
-	},
-	inputDate: {
-		backgroundColor: "#FFF5F0",
-		height: 45,
-		borderRadius: 50,
-		boxShadow: "0 2px 3px #896761",
-		paddingHorizontal: 12,
-		fontWeight: "bold",
-		color: "#965A51",
-		fontSize: 12,
-		width: width * 0.2,
-		marginVertical: 10,
-		textAlign: "center",
-	},
-	inputTitle: {
-		color: "#965A51",
-		fontWeight: "bold",
-        marginTop: 30
-	},
-	inputSub: {
-		color: "#BC8D85",
-		fontSize: 10,
-		fontStyle: "italic",
-	},
-	dateContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		width: "90%",
-	},
-	error: {
-		color: "red",
-        textAlign: 'center'
-	},
-	boutonChoixMultiple: {
-		width: width * 0.25,
-		height: width * 0.3,
-		borderRadius: 15,
-		alignItems: "center",
-		justifyContent: "flex-start",
-		boxShadow: "0 2px 3px #896761",
-        marginVertical: 30
-	},
-	boutonChoixMultipleText: {
-		fontWeight: "bold",
-		width: "90%",
-		textAlign: "center",
-		fontSize: 10,
-	},
-	multipleContainer: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		width: "90%",
-		alignItems: "center",
-	},
-	image: {
-		objectFit: "cover",
-		width: 0.18 * width,
-		height: 0.18 * width,
-		marginVertical: 8,
-	},
-	boutonChoixMultipleTextLegend: {
-		fontSize: 8,
-	},
-    bottom: {
-        position: 'absolute',
-        top: height * 0.7
-    }
+  container: {
+    flex: 1,
+    backgroundColor: "#DFC9B4",
+    alignItems: "center",
+  },
+  bouton: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 36,
+    borderRadius: 15,
+    boxShadow: "0 2px 3px #896761",
+    width: width * 0.7,
+    backgroundColor: "#965a51c0",
+    margin: 10,
+  },
+  boutonText: {
+    fontWeight: "bold",
+    fontSize: 18,
+    color: "#F5EBE6",
+  },
+  input: {
+    backgroundColor: "#FFF5F0",
+    height: 45,
+    borderRadius: 50,
+    boxShadow: "0 2px 3px #896761",
+    paddingHorizontal: 12,
+    fontWeight: "bold",
+    color: "#965A51",
+    fontSize: 12,
+    width: width * 0.9,
+    margin: 10,
+  },
+  inputDate: {
+    backgroundColor: "#FFF5F0",
+    height: 45,
+    borderRadius: 50,
+    boxShadow: "0 2px 3px #896761",
+    paddingHorizontal: 12,
+    fontWeight: "bold",
+    color: "#965A51",
+    fontSize: 12,
+    width: width * 0.2,
+    marginVertical: 10,
+    textAlign: "center",
+  },
+  inputTitle: {
+    color: "#965A51",
+    fontWeight: "bold",
+    marginTop: 30,
+  },
+  inputSub: {
+    color: "#BC8D85",
+    fontSize: 10,
+    fontStyle: "italic",
+  },
+  dateContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "90%",
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
+  },
+  boutonChoixMultiple: {
+    width: width * 0.25,
+    height: width * 0.3,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    boxShadow: "0 2px 3px #896761",
+    marginVertical: 30,
+  },
+  boutonChoixMultipleText: {
+    fontWeight: "bold",
+    width: "90%",
+    textAlign: "center",
+    fontSize: 10,
+  },
+  multipleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "90%",
+    alignItems: "center",
+  },
+  image: {
+    objectFit: "cover",
+    width: 0.18 * width,
+    height: 0.18 * width,
+    marginVertical: 8,
+  },
+  boutonChoixMultipleTextLegend: {
+    fontSize: 8,
+  },
+  bottom: {
+    position: "absolute",
+    top: height * 0.7,
+  },
 });

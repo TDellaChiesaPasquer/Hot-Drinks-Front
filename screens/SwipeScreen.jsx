@@ -1,82 +1,85 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../components/swipe/SwipeContainer";
 
 export default function SwipeScreen({ navigation }) {
-	const [profiles, setProfiles] = useState([]);
+	const swiperRef = useRef(null);
+	const [cards, setCards] = useState([]);
+	const [swiperKey, setSwiperKey] = useState(0);
 
-	const tmp_token =
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQzODQ3MTEsImV4cCI6NTM1NDM4NDcxMX0.ax3pxoHKJBbLllHLm0NDYrDw7cMd9e5cRLyjbQDlUbg";
-	async function fetchProfiles() {
-		try {
-			// const urlTmp = process.env.EXPO_PUBLIC_IP + "/profils/profil";
-			const urlTmp = process.env.EXPO_PUBLIC_IP + "/profils/profil";
-			console.log("urlTmp : " + urlTmp);
-      console.log("testA")
-
-			const response = await fetch(urlTmp, {
-				headers: {
-					"Content-Type": "application/json",
-					// authorization: userInfos.token,
-					authorization: tmp_token,
-				},
-			});
-
-			console.log("fin fetch");
-			const tmpProfiles = [];
-			console.log("Test");
-			const data = await response.json();
-			console.log(data);
-			const profilList = data.profilList;
-			for (let i = 0; i < profilList.length; i++) {
-				const photoList = profilList[i].photoList;
-				const idProfile = profilList[i]._id;
-
-				tmpProfiles.push({ photoList, idProfile });
-			}
-			console.log(profiles);
-			if (!data.result) {
-				return;
-			}
-			setProfiles(tmpProfiles);
-		} catch (error) {
-			console.error("Erreur réseau :", error);
-		}
-	}
+	const numberOfCards = 10;
 
 	useEffect(() => {
-		// Fetch initial des profils
-		fetchProfiles();
+		loadCards();
 	}, []);
 
-	// Fonction appelée depuis les boutons
-	function handleChoice(action) {}
+	// Charge les N premières cartes ou les recharge
+	function loadCards() {
+		setCards([...Array(numberOfCards).keys()]);
+		setSwiperKey((prevKey) => prevKey + 1); // Force Swiper to remount
+	}
 
-	const renderCard = (profile, index) => {
-		console.log(profile, index);
-		return (
-			<View style={styles.card}>
-				{/* <SwipeContainer onChoice={handleChoice} profile={profile} /> */}
-			</View>
-		);
-	};
+	// Fonction appelée depuis les boutons
+	function handleChoice(action) {
+		if (!swiperRef.current) return;
+		if (action === "Like") swiperRef.current.swipeRight();
+		if (action === "Dislike") swiperRef.current.swipeLeft();
+		if (action === "Superlike") swiperRef.current.swipeTop();
+	}
+
+	const renderCard = (index) => (
+		<View style={styles.card}>
+			<SwipeContainer onChoice={handleChoice} />
+		</View>
+	);
 
 	return (
 		<View style={styles.container}>
-			<Swiper cards={profiles} renderCard={renderCard} backgroundColor="transparent" verticalSwipe={false} onSwipedLeft={() => {}} onSwipedRight={() => {}} onSwipedTop={() => {}} />
+			<Swiper
+				key={swiperKey}
+				ref={swiperRef}
+				cards={cards}
+				renderCard={renderCard}
+				stackSize={2}
+				showSecondCard={true}
+				infinite={false}
+				onSwipedAll={loadCards}
+				backgroundColor="transparent"
+				onSwipedLeft={() => handleChoice("Like")}
+				onSwipedRight={() => handleChoice("Dislike")}
+				onSwipedTop={() => handleChoice("Superlike")}
+			/>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1 },
-	card: {
-		width: width * 0.9,
+	container: {
 		flex: 1,
+		backgroundColor: "#FFF5F0",
+	},
+
+	card: {
+		/* dimensions et centrage */
+		flex: 1,
+		width: width * 0.9,
+		height: height,
 		alignSelf: "center",
-		justifyContent: "center",
+
+		/* apparence conforme à la maquette */
+		backgroundColor: "#FFF5F0", // crème
+		borderRadius: 24,
+		overflow: "hidden",
+
+		/* ombre douce */
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 6,
+		elevation: 4, // Android
 	},
 });

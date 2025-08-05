@@ -19,25 +19,29 @@ import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MessagerieScreen from "./screens/MessagerieScreen";
 import HeaderMain from "./components/HeaderMain";
+import PhotoScreen from "./screens/PhotoScreen";
 
 import user from "./reducers/user";
 
 const store = configureStore({
-	reducer: { user },
+  reducer: { user },
 });
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const SignInNav = () => {
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-			<Stack.Screen name="SignIn" component={SignIn} />
-			<Stack.Screen name="DateScreen" component={DateScreen} />
-			<Stack.Screen name="GenderScreen" component={GenderScreen} />
-			<Stack.Screen name="RelationScreen" component={RelationScreen} />
-		</Stack.Navigator>
-	);
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false, gestureEnabled: false }}
+    >
+      <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
+      <Stack.Screen name="SignIn" component={SignIn} />
+      <Stack.Screen name="DateScreen" component={DateScreen} />
+      <Stack.Screen name="GenderScreen" component={GenderScreen} />
+      <Stack.Screen name="RelationScreen" component={RelationScreen} />
+    </Stack.Navigator>
+  );
 };
 
 const MainTabNav = () => {

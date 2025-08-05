@@ -42,3 +42,6 @@ yarn.lock
 
 # Environnement
 *.env
+
+# Fichiers temporaires
+projet.txt
