@@ -7,7 +7,7 @@ import SwipeContainer from "../components/swipe/SwipeContainer";
 export default function SwipeScreen({ navigation }) {
 	const [swipeProfilList, setSwipeProfilList] = useState([]);
 
-  useEffect(() => {
+	useEffect(() => {
 		const tmpProfileTab = [];
 
 		for (let index = 0; index < 10; index++) {
@@ -18,14 +18,14 @@ export default function SwipeScreen({ navigation }) {
 			);
 		}
 		setSwipeProfilList(tmpProfileTab);
-  }, []);
+	}, []);
 
 	return (
 		<View style={styles.container}>
-			{/* <Swiper style={styles.swiperWrapper} showsButtons={true}>
-				<View style={styles.slides}>{swipeProfilList}</View>
-			</Swiper> */}
-			<SwipeContainer />
+			<Swiper style={styles.swiperWrapper} showsButtons={true}>
+				{swipeProfilList}
+			</Swiper>
+			{/* <SwipeContainer /> */}
 		</View>
 	);
 }
@@ -36,8 +36,9 @@ const styles = StyleSheet.create({
 	},
 	swiperWrapper: {
 		flex: 1,
+		height: "100%",
 	},
 	slides: {
-		// flex: 1,
+		flex: 1,
 	},
 });

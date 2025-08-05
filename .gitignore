@@ -9,6 +9,9 @@ dist/
 web-build/
 expo-env.d.ts
 
+# Yarn
+.yarn.lock
+
 # Native
 .kotlin/
 *.orig.*
@@ -36,3 +39,5 @@ yarn.lock
 
 # typescript
 *.tsbuildinfo
+
+.env
