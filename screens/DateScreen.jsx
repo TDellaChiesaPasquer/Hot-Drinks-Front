@@ -82,10 +82,12 @@ export default function ({ navigation }) {
 				<Text style={styles.inputTitle}>Username</Text>
 				<Text style={styles.inputSub}>(Visible sur le profil)</Text>
 				<TextInput style={styles.input} placeholder={"Username"} placeholderTextColor={"#965A51"} value={username} onChangeText={(value) => setUsername(value)} maxLength={40} />
-				<Text style={styles.error}>{error}</Text>
-				<TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
-					<Text style={styles.boutonText}>Continuer</Text>
-				</TouchableOpacity>
+                <View style={styles.bottom}>
+                    <Text style={styles.error}>{error}</Text>
+                    <TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
+                        <Text style={styles.boutonText}>Continuer</Text>
+                    </TouchableOpacity>
+                </View>
 			</SafeAreaView>
 		</SafeAreaProvider>
 	);
@@ -123,6 +125,7 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		width: width * 0.9,
 		margin: 10,
+        marginTop: 30
 	},
 	inputDate: {
 		backgroundColor: "#FFF5F0",
@@ -140,6 +143,7 @@ const styles = StyleSheet.create({
 	inputTitle: {
 		color: "#965A51",
 		fontWeight: "bold",
+        marginTop: 40
 	},
 	inputSub: {
 		color: "#BC8D85",
@@ -151,8 +155,14 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-between",
 		width: "90%",
+        marginTop: 20
 	},
 	error: {
 		color: "red",
+        textAlign: 'center'
 	},
+    bottom: {
+        position: 'absolute',
+        top: height * 0.7
+    }
 });

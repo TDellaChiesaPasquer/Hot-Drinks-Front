@@ -15,12 +15,14 @@ export default function ({ navigation }) {
 	const [disabled, setDisabled] = useState(false);
 	const [relation, setRelation] = useState("");
 	const dispatch = useDispatch();
+    console.log(user)
 	const sanitizeInputs = async () => {
 		setDisabled(true);
 		if (relation === "") {
 			setError("Selectionnez un type de relation");
 			setDisabled(false);
 		}
+        console.log( user.date)
 		const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/userInfos", {
 			method: "PUT",
 			headers: {
@@ -28,10 +30,10 @@ export default function ({ navigation }) {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				birthdate: user.date,
-				username: user.username,
-				gender: user.gender,
-				orientation: user.orientation,
+				birthdate: user.tempInfos.date,
+				username: user.tempInfos.username,
+				gender: user.tempInfos.gender,
+				orientation: user.tempInfos.orientation,
 				relationship: relation,
 			}),
 		});
@@ -41,7 +43,8 @@ export default function ({ navigation }) {
 			setDisabled(false);
 			return;
 		}
-            setDisabled(false);
+        setDisabled(false);
+        navigation.navigate('SwipeScreen');
 	};
 	return (
 		<SafeAreaProvider>
@@ -82,10 +85,12 @@ export default function ({ navigation }) {
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Relation amicale</Text>
 					</TouchableOpacity>
 				</View>
-				<Text style={styles.error}>{error}</Text>
-				<TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
-					<Text style={styles.boutonText}>Valider</Text>
-				</TouchableOpacity>
+                <View style={styles.bottom}>
+                    <Text style={styles.error}>{error}</Text>
+                    <TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
+                        <Text style={styles.boutonText}>Valider</Text>
+                    </TouchableOpacity>
+                </View>
 			</SafeAreaView>
 		</SafeAreaProvider>
 	);
@@ -140,6 +145,7 @@ const styles = StyleSheet.create({
 	inputTitle: {
 		color: "#965A51",
 		fontWeight: "bold",
+        marginTop: 30
 	},
 	inputSub: {
 		color: "#BC8D85",
@@ -154,6 +160,7 @@ const styles = StyleSheet.create({
 	},
 	error: {
 		color: "red",
+        textAlign: 'center'
 	},
 	boutonChoixMultiple: {
 		width: width * 0.25,
@@ -162,6 +169,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "flex-start",
 		boxShadow: "0 2px 3px #896761",
+        marginVertical: 30
 	},
 	boutonChoixMultipleText: {
 		fontWeight: "bold",
@@ -184,4 +192,8 @@ const styles = StyleSheet.create({
 	boutonChoixMultipleTextLegend: {
 		fontSize: 8,
 	},
+    bottom: {
+        position: 'absolute',
+        top: height * 0.7
+    }
 });

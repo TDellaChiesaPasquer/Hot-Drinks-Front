@@ -5,7 +5,6 @@ const { width } = Dimensions.get("window");
 import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../components/swipe/SwipeContainer";
 
-
 export default function SwipeScreen({ navigation }) {
 	const swiperRef = useRef(null);
 	const [cards, setCards] = useState([]);

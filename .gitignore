@@ -34,8 +34,9 @@ yarn.lock
 .DS_Store
 *.pem
 
-# local env files
+# Environnement
 .env*.local
+.env
 
 # typescript
 *.tsbuildinfo
