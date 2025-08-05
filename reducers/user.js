@@ -22,9 +22,12 @@ export const userSlice = createSlice({
             for (const key of Object.keys(action.payload)) {
                 state.value.tempInfos[key] = action.payload[key];
             }
+        },
+        addInfos: (state, action) => {
+            state.value.user = action.payload;
         }
     },
 });
 
-export const { addToken, addTempInfo } = userSlice.actions;
+export const { addToken, addTempInfo, addInfos } = userSlice.actions;
 export default userSlice.reducer;
