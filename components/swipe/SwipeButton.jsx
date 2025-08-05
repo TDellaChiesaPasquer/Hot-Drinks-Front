@@ -37,27 +37,30 @@ export default function SwipeButton(props) {
 		mainComponent = <StarIcon width={44} height={44} />;
 	}
 
-	async function handleDecide() {
-		console.log(actionType);
+async function handleDecide() {
+	console.log(actionType);
 
-		try {
-			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/swipe", {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: userInfos.token,
-				},
-				body: JSON.stringify({
-					action: actionType,
-					userId: idProfile,
-				}),
-			});
-			const data = await response.json();
-			console.log(data);
-		} catch (error) {
-			console.error("Erreur réseau :", error);
-		}
+	try {
+		const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/swipe", {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				authorization:
+				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU",
+				// authorization: userInfos.token,
+			},
+			body: JSON.stringify({
+				action: actionType,
+				userId: idProfile,
+			}),
+		});
+		const data = await response.json();
+		console.log(data);
+	} catch (error) {
+		console.error("Erreur réseau :", error);
 	}
+}
+
 
 	return (
 		<View style={styles.container}>

@@ -10,10 +10,43 @@ export default function SwipeContainer(props) {
 	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
 
 	const placeholderImage = "../../assets/IllustrationPorfileBase.jpg";
-	const placeholderAsset = require(placeholderImage);
-	const images = Array(10).fill(placeholderAsset);
 
-	// if (!props.profile) return;
+	function placeholder(nombre) {
+		return Array(nombre).fill(require(placeholderImage));
+	}
+
+	function fillImages(profilList, placeholderAsset) {
+		if (!Array.isArray(profilList)) return placeholder(3);
+		const imgs = profilList.map((p) => (p.photoList && p.photoList.length > 0 ? { uri: p.photoList[0].trim() } : placeholderAsset));
+		return imgs.length > 0 ? imgs : placeholder(3);
+	}
+
+	const placeholderAsset = require(placeholderImage);
+	const [images, setImages] = useState(placeholder(3));
+
+	useEffect(() => {
+		const fetchImages = async () => {
+			try {
+				console.log("avant le fetch");
+				const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/profil", {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						authorization:
+							"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU",
+						// authorization: userInfos.token,
+					},
+				});
+				console.log("après le fetch");
+				const data = await response.json();
+				console.log("data : "+data)
+				setImages(fillImages(data.profilList, placeholderAsset));
+			} catch (e) {
+				setImages(placeholder(3));
+			}
+		};
+		fetchImages();
+	}, []);
 
 	const userInfos = useSelector((state) => state.user.value);
 	const profile = props.profile;
@@ -68,7 +101,7 @@ export default function SwipeContainer(props) {
 	return (
 		<View style={styles.container}>
 			<View style={styles.swipeContainer}>
-				<Swiper style={styles.carousel} showsButtons={true} loop={false} autoplay={false}>
+				<Swiper style={styles.carousel} showsButtons={true} loop={false} autoplay={false} showsPagination={true}>
 					{images.map((src, idx) => (
 						<Image key={idx} source={src} style={styles.image} resizeMode="cover" />
 					))}
