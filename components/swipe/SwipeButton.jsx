@@ -61,25 +61,47 @@ export default function SwipeButton(props) {
 	);
 }
 
+// const styles = StyleSheet.create({
+// 	container: {
+// 		flex: 1,
+// 	},
+// 	button: {
+// 		flex: 1,
+// 		textAlign: "center",
+// 		width: 100,
+// 		height: 100,
+// 		borderRadius: 100,
+// 		color: "red",
+// 	},
+// 	buttonLike: {
+// 		backgroundColor: "green",
+// 	},
+// 	buttonDislike: {
+// 		backgroundColor: "red",
+// 	},
+// 	buttonSuperLike: {
+// 		backgroundColor: "yellow",
+// 	},
+// });
+
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
+	/* bouton rond taille fixe */
 	button: {
-		flex: 1,
-		textAlign: "center",
-		width: 100,
-		height: 100,
-		borderRadius: 100,
-		color: "red",
+		justifyContent: "center",
+		alignItems: "center",
+		width: 90,
+		height: 90,
+		borderRadius: 45,
+		backgroundColor: "#FFF5F0",
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 4,
+		elevation: 3,
 	},
-	buttonLike: {
-		backgroundColor: "green",
-	},
-	buttonDislike: {
-		backgroundColor: "red",
-	},
-	buttonSuperLike: {
-		backgroundColor: "yellow",
-	},
+
+	/* couleurs arrière-plan supplémentaires (non appliquées tant que JSX n’est pas modifié) */
+	buttonLike: { backgroundColor: "#FF4D80" },
+	buttonDislike: { backgroundColor: "#8A2BE2" },
+	buttonSuperLike: { backgroundColor: "#FFA500" },
 });

@@ -10,19 +10,22 @@ export default function SwipeContainer(props) {
 
 	const placeholderImage = "../../assets/IllustrationPorfileBase.jpg";
 
-	if (!props.profile) return;
+	// if (!props.profile) return;
 
 	const userInfos = useSelector((state) => state.user.value);
 	const profile = props.profile;
-	// console.log(profile);
-	const profileID = profile.idProfile;
-	// console.log(profileID);
-	const photoList = profile.profile;
+	let profileID = 0;
+	let photoList = [];
+	try {
+		// console.log(profile);
+		profileID = profile.idProfile;
+		// console.log(profileID);
+		photoList = profile.profile;
+	} catch (error) {}
 
 	if (!photoList || photoList < 1) {
 		const imagePath = placeholderImage;
-	}
-	else {
+	} else {
 		imagePath = photoList[0];
 	}
 	function capitalize(str) {
@@ -62,8 +65,7 @@ export default function SwipeContainer(props) {
 	return (
 		<View style={styles.container}>
 			<View style={styles.swipeContainer}>
-				<Image source={require("../../assets/IllustrationPorfileBase.jpg")} style={styles.image} resizeMode="cover" />
-				<Image source={require("../../assets/IllustrationPorfileBase.jpg")} style={styles.image} resizeMode="cover" />
+				<Image source={require(placeholderImage)} style={styles.image} resizeMode="cover" />
 
 				<View style={styles.textContainer}>
 					<View style={styles.userInformationsContainer}>{informationListJSX}</View>
@@ -81,42 +83,40 @@ export default function SwipeContainer(props) {
 }
 
 const styles = StyleSheet.create({
+	/* fond brun derrière l’image */
 	container: {
 		flex: 1,
-		backgroundColor: "#FFF5F0",
 	},
-	swipeContainer: {
-		flex: 1,
-		alignItems: "center",
+
+	/* image : 60 % de la hauteur, coins arrondis en haut */
+	image: {
+		width: "100%",
+		height: "60%",
+		borderTopLeftRadius: 20,
+		borderTopRightRadius: 20,
 	},
-	userInformationsContainer: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-bettween",
-		color: "black",
-	},
-	choiceButtonList: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	userInformation: {
-		color: "black",
-	},
-	userHashTags: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		color: "black",
-	},
-	hashtag: {
-		color: "black",
-	},
+
+	/* zone inférieure crème */
 	textContainer: {
 		flex: 1,
-		flexDirection: "colommn",
+		backgroundColor: "#FFF5F0",
+		paddingHorizontal: 20,
+		paddingTop: 16,
+	},
+
+	/* « Emma, 25, Paris » */
+	userInformationsContainer: { flexDirection: "row", flexWrap: "wrap" },
+	userInformation: { color: "#000", fontWeight: "600" },
+
+	/* hashtags */
+	userHashTags: { flexDirection: "row", flexWrap: "wrap", marginTop: 2 },
+	hashtag: { color: "#000" },
+
+	/* barre de boutons */
+	choiceButtonList: {
+		flexDirection: "row",
+		justifyContent: "space-around",
 		alignItems: "center",
-		justifyContent: "space-bettween",
+		marginTop: 12,
 	},
 });
