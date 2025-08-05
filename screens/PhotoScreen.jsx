@@ -15,55 +15,90 @@ import ImagePickerComponent from "../components/ImagePickerComponent";
 const { width, height } = Dimensions.get("window");
 
 export default function ImagePickerScreen({ navigation }) {
-  //   const [photo, setPhoto] = useState(null);
 
-  //   const pickImage = async () => {
-  //     let result = await ImagePicker.launchImageLibraryAsync({
-  //       mediaTypes: ["images"],
-  //       allowsEditing: true,
-  //       aspect: [4, 3],
-  //       quality: 1,
-  //     });
-
-  //     //console.log(result);
-
-  //     if (!result.canceled) {
-  //       const uri = result.assets[0].uri;
-  //       console.log("uri=", uri);
-  //       //   const next = [...photo];
-  //       //   next[index] = uri;
-  //       setPhoto(uri);
-  //     } else {
-  //       alert("Tu dois sélectionner au moins une image pour valider ton profil.");
-  //     }
-  //   };
 
   const addedPhoto = [];
   for (let i = 0; i < 9; i++) {
     addedPhoto.push(<ImagePickerComponent key={i} />);
   }
 
-  //   const removeImage = (index) => {
-  //     if (!photo[index]) return;
 
-  //     const renderItem = ({ index }) => (
-  //       <TouchableOpacity
-  //         style={styles.photoBox}
-  //         onPress={() => pickImage(index)}
-  //         onLongPress={() => removeImage(index)}
-  //         disabled={loading}
-  //       >
-  //         {photo[index] ? (
-  //           <Image source={{ uri: photo[index] }} style={styles.image} />
-  //         ) : (
-  //           <Ionicons name="add" size={32} color="#555" />
-  //         )}
-  //       </TouchableOpacity>
-  //     );
-  //   };
 
-  //console.log("photo=", photo);
+// const handleSubmitPhotos = async () => {
+// if (photo.length === 0) {
+//     return;
+// }
+//   const response = await fetch(process.env.EXPO_PUBLIC_IP+"/users/addPhoto"),{
+//        method: 'POST',
+//        body: formData,
 
+//   }
+//     const data = await response.json()
+
+//     console.log(data)
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+//   if (city.length === 0) {
+//       return;
+//     }
+
+//     // 1st request: get geographic data from API
+//     fetch(`https://api-adresse.data.gouv.fr/search/?q=${city}`)
+//       .then((response) => response.json())
+//       .then((data) => {
+//         // Nothing is done if no city is found by API
+//         if (data.features.length === 0) {
+//           return;
+//         }
+
+//         const firstCity = data.features[0];
+//         const newPlace = {
+//           name: firstCity.properties.city,
+//           latitude: firstCity.geometry.coordinates[1],
+//           longitude: firstCity.geometry.coordinates[0],
+//         };
+
+//         // 2nd request : send new place to backend to register it in database
+//         fetch(`${BACKEND_ADDRESS}/places`, {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json" },
+//           body: JSON.stringify({
+//             nickname: user.nickname,
+//             name: newPlace.name,
+//             latitude: newPlace.latitude,
+//             longitude: newPlace.longitude,
+//           }),
+//         })
+//           .then((response) => response.json())
+//           .then((data) => {
+//             // Dispatch in Redux store if the new place have been registered in database
+//             if (data.result) {
+//               dispatch(addPlace(newPlace));
+//               setCity("");
+//             }
+//           });
+//       });
+  };
+
+
+
+
+
+
+
+ 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
