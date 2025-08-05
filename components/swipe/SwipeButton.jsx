@@ -64,7 +64,13 @@ async function handleDecide() {
 
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity onPress={handleDecide} style={[styles.button, props.style]}>
+			<TouchableOpacity
+				onPress={() => {
+					handleDecide();
+					if (props.onSwipe) props.onSwipe(buttonType); // décllanche le swip à l'appuie sur un bouton
+				}}
+				style={[styles.button, props.style]}
+			>
 				{mainComponent}
 			</TouchableOpacity>
 		</View>

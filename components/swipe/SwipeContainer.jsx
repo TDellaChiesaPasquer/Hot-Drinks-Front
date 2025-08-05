@@ -113,7 +113,7 @@ export default function SwipeContainer(props) {
 
 					<View style={styles.choiceButtonList}>
 						{["Dislike", "Superlike", "Like"].map((type) => (
-							<SwipeButton key={type} style={styles.choiceButton} type={type} profileID={profileID} />
+							<SwipeButton key={type} style={styles.choiceButton} type={type} profileID={profileID} onSwipe={props.onChoice} />
 						))}
 					</View>
 				</View>
