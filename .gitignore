@@ -41,4 +41,4 @@ yarn.lock
 *.tsbuildinfo
 
 # Environnement
-.env
+*.env
