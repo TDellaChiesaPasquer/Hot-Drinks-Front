@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
 	},
 	error: {
 		color: "red",
+        textAlign: 'center'
 	},
     bottom: {
         position: 'absolute',

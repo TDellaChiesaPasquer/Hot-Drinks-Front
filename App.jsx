@@ -12,6 +12,7 @@ import GenderScreen from "./screens/GenderScreen";
 import RelationScreen from "./screens/RelationScreen";
 import SwipeScreen from "./screens/SwipeScreen";
 import SignIn from "./screens/SignIn";
+import LoadingScreen from "./screens/LoadingScreen";
 
 import user from "./reducers/user";
 
@@ -23,7 +24,7 @@ const Stack = createNativeStackNavigator();
 
 const SignInNav = () => {
 	return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
+		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false}}>
 			<Stack.Screen name="SignIn" component={SignIn} />
 			<Stack.Screen name="DateScreen" component={DateScreen} />
 			<Stack.Screen name="GenderScreen" component={GenderScreen} />
@@ -36,8 +37,8 @@ export default function App() {
 	return (
 		<Provider store={store}>
 			<NavigationContainer>
-				<Stack.Navigator screenOptions={{ headerShown: false }}>
-					
+				<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+					<Stack.Screen name="LoadingScreen" component={LoadingScreen}/>
 					<Stack.Screen name="SignInNav" component={SignInNav} />
 					<Stack.Screen name="SwipeScreen" component={SwipeScreen} />
 				</Stack.Navigator>

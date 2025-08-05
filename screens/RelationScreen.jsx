@@ -15,12 +15,14 @@ export default function ({ navigation }) {
 	const [disabled, setDisabled] = useState(false);
 	const [relation, setRelation] = useState("");
 	const dispatch = useDispatch();
+    console.log(user)
 	const sanitizeInputs = async () => {
 		setDisabled(true);
 		if (relation === "") {
 			setError("Selectionnez un type de relation");
 			setDisabled(false);
 		}
+        console.log( user.date)
 		const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/userInfos", {
 			method: "PUT",
 			headers: {
@@ -28,10 +30,10 @@ export default function ({ navigation }) {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				birthdate: user.date,
-				username: user.username,
-				gender: user.gender,
-				orientation: user.orientation,
+				birthdate: user.tempInfos.date,
+				username: user.tempInfos.username,
+				gender: user.tempInfos.gender,
+				orientation: user.tempInfos.orientation,
 				relationship: relation,
 			}),
 		});
@@ -41,7 +43,8 @@ export default function ({ navigation }) {
 			setDisabled(false);
 			return;
 		}
-            setDisabled(false);
+        setDisabled(false);
+        navigation.navigate('SwipeScreen');
 	};
 	return (
 		<SafeAreaProvider>
@@ -157,6 +160,7 @@ const styles = StyleSheet.create({
 	},
 	error: {
 		color: "red",
+        textAlign: 'center'
 	},
 	boutonChoixMultiple: {
 		width: width * 0.25,
