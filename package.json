@@ -15,6 +15,7 @@
     "@react-navigation/native-stack": "^7.3.24",
     "@reduxjs/toolkit": "^2.8.2",
     "expo": "~53.0.20",
+    "expo-image": "^2.4.0",
     "expo-status-bar": "~2.2.3",
     "lodash": "^4.17.21",
     "react": "19.0.0",
