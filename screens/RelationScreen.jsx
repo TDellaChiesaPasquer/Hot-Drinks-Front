@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
 	inputTitle: {
 		color: "#965A51",
 		fontWeight: "bold",
+        marginTop: 30
 	},
 	inputSub: {
 		color: "#BC8D85",
@@ -164,6 +165,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "flex-start",
 		boxShadow: "0 2px 3px #896761",
+        marginVertical: 30
 	},
 	boutonChoixMultipleText: {
 		fontWeight: "bold",
