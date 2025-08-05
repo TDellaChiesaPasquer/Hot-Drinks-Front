@@ -8,6 +8,9 @@ export default function SwipeButton(props) {
 	// Valeurs : Like, Dislike, SuperLike
 	const [buttonType, setButtonType] = useState(props.type);
 
+	// Id du profile affiché
+	const idProfile = props.profileID;
+	// Id de l'utilisateur connecté à l'app
 	const userInfos = useSelector((state) => state.user.value);
 
 	const buttonSize = 80;
@@ -30,23 +33,23 @@ export default function SwipeButton(props) {
 	async function handleDecide() {
 		console.log(actionType);
 
-		// try {
-		// 	const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/swipe", {
-		// 		method: "PUT",
-		// 		headers: {
-		// 			"Content-Type": "application/json",
-		// 			Authorization: userInfos.token,
-		// 		},
-		// 		body: JSON.stringify({
-		// 			action: actionType,
-		// 			userId: /* A ajouter */,
-		// 		}),
-		// 	});
-		// 	const data = await response.json();
-		// 	console.log(data);
-		// } catch (error) {
-		// 	console.error("Erreur réseau :", error);
-		// }
+		try {
+			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/swipe", {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: userInfos.token,
+				},
+				body: JSON.stringify({
+					action: actionType,
+					userId: idProfile,
+				}),
+			});
+			const data = await response.json();
+			console.log(data);
+		} catch (error) {
+			console.error("Erreur réseau :", error);
+		}
 	}
 
 	return (
