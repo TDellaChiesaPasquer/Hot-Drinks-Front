@@ -1,55 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 import SwipeButton from "./SwipeButton";
 
 export default function SwipeContainer() {
-	const [hashtagsList, setHashtagsList] = useState([]);
-	const [informationList, setInformationList] = useState([]);
-
-	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
 	const [informationListJSX, setInformationListJSX] = useState([]);
+	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
+
+	const userInfos = useSelector((state) => state.user.value);
 
 	function capitalize(str) {
 		return str.length > 1 ? str[0].toUpperCase() + str.slice(1) : str;
 	}
 
-	// async function handleLike() {
-	// 	try {
-	// 		const response = await fetch("http://localhost:3000/profils/profil", {
-	// 			method: "GET",
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 				Authorization: userInfos.token,
-	// 			},
-	// 			body: JSON.stringify({
-	// 				tweetId: props._id,
-	// 				liking: !liked,
-	// 			}),
-	// 		});
-	// 		const data = await response.json();
-	// 		console.log(data);
-	// 		if (!data.result) {
-	// 			return;
-	// 		}
-	// 		if (liked) {
-	// 			setNbreOfLikes(nbreOfLikes - 1);
-	// 			setLiked(false);
-	// 		} else {
-	// 			setNbreOfLikes(nbreOfLikes + 1);
-	// 			setLiked(true);
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Erreur réseau :", error);
-	// 	}
-	// }
+	async function fetchProfiles() {
+		try {
+			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/profil", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: userInfos.token,
+				},
+			});
+			const data = await response.json();
+			console.log(data);
+			if (!data.result) {
+				return;
+			}
+		} catch (error) {
+			console.error("Erreur réseau :", error);
+		}
+	}
+
+	// Fetch initial des profils
+	fetchProfiles();
 
 	useEffect(() => {
-		setHashtagsList(["violon", "randonnée", "chat"]);
-		setInformationList(["Username", "Age", "Ville"]);
-	}, []);
+		const hashtagsList = ["violon", "randonnée", "chat"];
+		const informationList = ["Username", "Age", "Ville"];
 
-	useEffect(() => {
 		let tmpHashtagsListJSX = [];
 		let tmpInformationListJSX = [];
 		for (let index = 0; index < informationList.length - 1; index++) {
@@ -67,7 +57,7 @@ export default function SwipeContainer() {
 		);
 		for (let index = 0; index < hashtagsList.length; index++) {
 			tmpHashtagsListJSX.push(
-				<Text ket={index} style={styles.hashtag}>
+				<Text key={index} style={styles.hashtag}>
 					#{capitalize(hashtagsList[index])}{" "}
 				</Text>
 			);
