@@ -13,7 +13,6 @@ export default function ({ navigation }) {
 	const [password, setPassword] = useState("");
 	const [validateDisabled, setValidateDisabled] = useState(false);
 	const dispatch = useDispatch();
-	const user = useSelector((state) => state.user.value);
 
 	const tryLogin = async () => {
 		try {

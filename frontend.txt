@@ -1,0 +1,1532 @@
+Arborescence (profondeur max 4, sans node_modules) :
+.
+├── app.json
+├── App.jsx
+├── assets
+│   ├── adaptive-icon.png
+│   ├── favicon.png
+│   ├── icon.png
+│   ├── IllustrationPorfileBase.jpg
+│   ├── images
+│   │   └── boat.png
+│   ├── splash-icon.png
+│   └── swipeButtons
+│       ├── cross.svg
+│       ├── heart.svg
+│       └── star.svg
+├── components
+│   ├── headerBeginning.jsx
+│   └── swipe
+│       ├── SwipeButton.jsx
+│       └── SwipeContainer.jsx
+├── frontend.txt
+├── Hot-Drinks.code-workspace
+├── index.js
+├── metro.config.js
+├── package.json
+├── package-lock.json
+├── reducers
+│   └── user.js
+├── screens
+│   ├── DateScreen.jsx
+│   ├── GenderScreen.jsx
+│   ├── LoadingScreen.jsx
+│   ├── RelationScreen.jsx
+│   ├── SignIn.jsx
+│   ├── SwipeScreen.jsx
+│   └── Test.jsx
+└── yarn.lock
+
+8 directories, 29 files
+
+
+
+# ./app.json
+{
+  "expo": {
+    "name": "Hot-Drinks",
+    "slug": "Hot-Drinks",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
+
+# ./app.json
+
+# ./App.jsx
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
+
+import DateScreen from "./screens/DateScreen";
+import GenderScreen from "./screens/GenderScreen";
+import RelationScreen from "./screens/RelationScreen";
+import SwipeScreen from "./screens/SwipeScreen";
+import SignIn from "./screens/SignIn";
+import LoadingScreen from "./screens/LoadingScreen";
+
+import user from "./reducers/user";
+
+const store = configureStore({
+	reducer: { user },
+});
+
+const Stack = createNativeStackNavigator();
+
+const SignInNav = () => {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+			<Stack.Screen name="SignIn" component={SignIn} />
+			<Stack.Screen name="DateScreen" component={DateScreen} />
+			<Stack.Screen name="GenderScreen" component={GenderScreen} />
+			<Stack.Screen name="RelationScreen" component={RelationScreen} />
+		</Stack.Navigator>
+	);
+};
+
+export default function App() {
+	return (
+		<Provider store={store}>
+			<NavigationContainer>
+				<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+					{/* <Stack.Screen name="LoadingScreen" component={LoadingScreen}/>
+					<Stack.Screen name="SignInNav" component={SignInNav} /> */}
+					<Stack.Screen name="SwipeScreen" component={SwipeScreen} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</Provider>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+});
+
+# ./App.jsx
+
+# ./components/headerBeginning.jsx
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+
+const { width, height } = Dimensions.get("window");
+
+export default function () {
+	return (
+		<View style={styles.header}>
+			<Text style={styles.text}>Hot Drinks</Text>
+		</View>
+	);
+}
+
+const styles = StyleSheet.create({
+	header: {
+		width: width,
+		height: 30,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	text: {
+		fontSize: 24,
+		fontWeight: "bold",
+		color: "#6A3931",
+	},
+});
+
+# ./components/headerBeginning.jsx
+
+# ./components/swipe/SwipeButton.jsx
+import React, { useState } from "react";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+
+import HeartIcon from "../../assets/swipeButtons/heart.svg";
+import StarIcon from "../../assets/swipeButtons/star.svg";
+import CrossIcon from "../../assets/swipeButtons/cross.svg";
+
+export default function SwipeButton(props) {
+	// Valeurs : Like, Dislike, SuperLike
+	const [buttonType, setButtonType] = useState(props.type);
+
+	// Id du profile affiché
+	const idProfile = props.profileID;
+	// Id de l'utilisateur connecté à l'app
+	const userInfos = useSelector((state) => state.user.value);
+
+	const buttonSize = 80;
+
+	let actionType = "Like";
+	let colorStyle = "buttonLike";
+	// let mainComponent = <AntDesign name="heart" size={buttonSize} color="red" />;
+	let mainComponent = <HeartIcon width={44} height={44} />;
+
+	if (buttonType === "Dislike") {
+		actionType = "Dislike";
+		colorStyle = "buttonDislike";
+		// mainComponent = <Entypo name="circle-with-cross" size={buttonSize} color="purple" />;
+		mainComponent = <CrossIcon width={44} height={44} />;
+	}
+	if (buttonType === "Superlike") {
+		actionType = "Superlike";
+		colorStyle = "buttonSuperLike";
+		// mainComponent = <AntDesign name="staro" size={buttonSize} color="yellow" />;
+		mainComponent = <StarIcon width={44} height={44} />;
+	}
+
+	async function handleDecide() {
+		console.log(actionType);
+
+		try {
+			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/swipe", {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: userInfos.token,
+				},
+				body: JSON.stringify({
+					action: actionType,
+					userId: idProfile,
+				}),
+			});
+			const data = await response.json();
+			console.log(data);
+		} catch (error) {
+			console.error("Erreur réseau :", error);
+		}
+	}
+
+	return (
+		<View style={styles.container}>
+			<TouchableOpacity onPress={handleDecide} style={styles.button}>
+				{mainComponent}
+			</TouchableOpacity>
+		</View>
+	);
+}
+
+// const styles = StyleSheet.create({
+// 	container: {
+// 		flex: 1,
+// 	},
+// 	button: {
+// 		flex: 1,
+// 		textAlign: "center",
+// 		width: 100,
+// 		height: 100,
+// 		borderRadius: 100,
+// 		color: "red",
+// 	},
+// 	buttonLike: {
+// 		backgroundColor: "green",
+// 	},
+// 	buttonDislike: {
+// 		backgroundColor: "red",
+// 	},
+// 	buttonSuperLike: {
+// 		backgroundColor: "yellow",
+// 	},
+// });
+
+const styles = StyleSheet.create({
+	/* bouton rond taille fixe */
+	button: {
+		justifyContent: "center",
+		alignItems: "center",
+		width: 80,
+		height: 80,
+		borderRadius: 45,
+		backgroundColor: "#FFF5F0",
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 4,
+		elevation: 3,
+	},
+
+	/* couleurs arrière-plan supplémentaires (non appliquées tant que JSX n’est pas modifié) */
+	buttonLike: { backgroundColor: "#FF4D80" },
+	buttonDislike: { backgroundColor: "#8A2BE2" },
+	buttonSuperLike: { backgroundColor: "#FFA500" },
+});
+
+# ./components/swipe/SwipeButton.jsx
+
+# ./components/swipe/SwipeContainer.jsx
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
+
+import SwipeButton from "./SwipeButton";
+
+export default function SwipeContainer(props) {
+	const [informationListJSX, setInformationListJSX] = useState([]);
+	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
+
+	const placeholderImage = "../../assets/IllustrationPorfileBase.jpg";
+
+	// if (!props.profile) return;
+
+	const userInfos = useSelector((state) => state.user.value);
+	const profile = props.profile;
+	let profileID = 0;
+	let photoList = [];
+	try {
+		// console.log(profile);
+		profileID = profile.idProfile;
+		// console.log(profileID);
+		photoList = profile.profile;
+	} catch (error) {}
+
+	if (!photoList || photoList < 1) {
+		const imagePath = placeholderImage;
+	} else {
+		imagePath = photoList[0];
+	}
+	function capitalize(str) {
+		return str.length > 1 ? str[0].toUpperCase() + str.slice(1) : str;
+	}
+
+	useEffect(() => {
+		const hashtagsList = ["violon", "randonnée", "chat"];
+		const informationList = ["Emma", "25", "Paris"];
+
+		let tmpHashtagsListJSX = [];
+		let tmpInformationListJSX = [];
+		for (let index = 0; index < informationList.length - 1; index++) {
+			tmpHashtagsListJSX.push(
+				<Text key={index + 10} style={styles.userInformation}>
+					{informationList[index]}
+					{", "}
+				</Text>
+			);
+		}
+		tmpHashtagsListJSX.push(
+			<Text key={informationList.length - 1 + 10} style={styles.userInformation}>
+				{informationList[informationList.length - 1]}
+			</Text>
+		);
+		for (let index = 0; index < hashtagsList.length; index++) {
+			tmpHashtagsListJSX.push(
+				<Text key={index} style={styles.hashtag}>
+					#{capitalize(hashtagsList[index])}{" "}
+				</Text>
+			);
+		}
+		setHashtagsListJSX(tmpHashtagsListJSX);
+		setInformationListJSX(tmpInformationListJSX);
+	}, []);
+
+	return (
+		<View style={styles.container}>
+			<View style={styles.swipeContainer}>
+				<Image source={require(placeholderImage)} style={styles.image} resizeMode="cover" />
+
+				<View style={styles.textContainer}>
+					<View style={styles.userInformationsContainer}>{informationListJSX}</View>
+					<View style={styles.userHashTags}>{hashtagsListJSX}</View>
+
+					<View style={styles.choiceButtonList}>
+						<SwipeButton style={styles.choiceButton} type="Dislike" profileID={profileID} />
+						<SwipeButton style={styles.choiceButton} type="Superlike" profileID={profileID} />
+						<SwipeButton style={styles.choiceButton} type="Like" profileID={profileID} />
+					</View>
+				</View>
+			</View>
+		</View>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: { flex: 1 },
+
+	/* l’image couvre toute la carte */
+	image: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 20,
+	},
+
+	/* textes superposés sur l’image, au-dessus des boutons */
+	textContainer: {
+		position: "absolute",
+		left: 20,
+		right: 20,
+		bottom: 120, // place les textes au-dessus de la rangée de boutons
+	},
+
+	userInformationsContainer: {
+		flexDirection: "colomn",
+		flexWrap: "wrap",
+		marginBottom: 4
+	},
+	userInformation: {
+		color: "#000", // noir (comme demandé)
+		fontWeight: "600",
+		fontSize: 18,
+	},
+
+	/* hashtags */
+	userHashTags: { flexDirection: "row", flexWrap: "wrap", marginTop: 4 },
+	hashtag: { color: "#000", fontSize: 16 }, // noir
+
+	/* barre de boutons collée en bas de la card, sur l’image */
+	choiceButtonList: {
+		position: "absolute",
+		left: 0,
+		right: 0,
+		bottom: -100,
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "center",
+	},
+});
+
+# ./components/swipe/SwipeContainer.jsx
+
+# ./.expo/devices.json
+{
+  "devices": []
+}
+
+# ./.expo/devices.json
+
+# ./index.js
+import { registerRootComponent } from 'expo';
+
+import App from './App';
+
+// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
+// It also ensures that whether you load the app in Expo Go or in a native build,
+// the environment is set up appropriately
+registerRootComponent(App);
+
+# ./index.js
+
+# ./metro.config.js
+// Anout d'un configuratioj nécessaire pour intruduire des fichiers SVG dans le projet
+const { getDefaultConfig } = require("expo/metro-config");
+module.exports = (() => {
+	const config = getDefaultConfig(__dirname);
+
+	config.transformer.babelTransformerPath = require.resolve("react-native-svg-transformer");
+	config.resolver.assetExts = config.resolver.assetExts.filter((ext) => ext !== "svg");
+	config.resolver.sourceExts.push("svg");
+
+	return config;
+})();
+
+# ./metro.config.js
+
+# ./package.json
+{
+  "name": "hot-drinks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@react-native-google-signin/google-signin": "^15.0.0",
+    "@react-navigation/bottom-tabs": "6",
+    "@react-navigation/native": "6",
+    "@react-navigation/native-stack": "6",
+    "@reduxjs/toolkit": "^2.8.2",
+    "expo": "~53.0.20",
+    "expo-status-bar": "~2.2.3",
+    "lodash": "^4.17.21",
+    "react": "19.0.0",
+    "react-native": "0.79.5",
+    "react-native-deck-swiper": "^2.0.18",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.11.1",
+    "react-native-svg": "^15.12.1",
+    "react-native-swiper": "^1.6.0",
+    "react-redux": "^9.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "react-native-svg-transformer": "^1.5.1"
+  },
+  "private": true
+}
+
+# ./package.json
+
+# ./reducers/user.js
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+    value: {
+        token: null,
+        user: null,
+        tempInfos: null
+    },
+};
+
+export const userSlice = createSlice({
+    name: 'user',
+    initialState,
+    reducers: {
+        addToken: (state, action) => {
+            state.value.token = action.payload;
+        },
+        addTempInfo: (state, action) => {
+            if (!state.value.tempInfos) {
+                state.value.tempInfos = {};
+            }
+            for (const key of Object.keys(action.payload)) {
+                state.value.tempInfos[key] = action.payload[key];
+            }
+        },
+        addInfos: (state, action) => {
+            state.value.user = action.payload;
+        }
+    },
+});
+
+export const { addToken, addTempInfo, addInfos } = userSlice.actions;
+export default userSlice.reducer;
+
+# ./reducers/user.js
+
+# ./screens/DateScreen.jsx
+import { useState } from "react";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+import HeaderBeginning from "../components/headerBeginning";
+import { addTempInfo } from "../reducers/user";
+
+const { width, height } = Dimensions.get("window");
+
+export default function ({ navigation }) {
+	const [day, setDay] = useState("");
+	const [month, setMonth] = useState("");
+	const [year, setYear] = useState("");
+	const [username, setUsername] = useState("");
+	const [error, setError] = useState("");
+	const [disabled, setDisabled] = useState(false);
+	const dispatch = useDispatch();
+
+	const sanitizeInputs = () => {
+		setDisabled(true);
+		const date = new Date(`${year}-${month}-${day}`);
+		if (isNaN(date.valueOf())) {
+			setError("Date non valide");
+			setDisabled(false);
+			return;
+		}
+		const currentDate = new Date();
+		if (currentDate.valueOf() - date.valueOf() < 18 * 365 * 24 * 60 * 60 * 1000) {
+			setError("Vous devez avoir 18 ans ou plus");
+			setDisabled(false);
+			return;
+		}
+		if (username === "") {
+			setError("Remplissez un username");
+			setDisabled(false);
+			return;
+		}
+		if (username.length > 40) {
+			setError("Votre username ne peut pas faire plus de 40 caractères");
+			setDisabled(false);
+			return;
+		}
+		dispatch(addTempInfo({date: `${year}-${month}-${day}`, username}));
+		navigation.navigate("GenderScreen");
+	};
+
+	return (
+		<SafeAreaProvider>
+			<SafeAreaView style={styles.container}>
+				<HeaderBeginning />
+				<Text style={styles.inputTitle}>Date de naissance</Text>
+				<Text style={styles.inputSub}>(Âge minimum de 18 ans)</Text>
+				<View style={styles.dateContainer}>
+					<TextInput
+						style={styles.inputDate}
+						placeholder="JJ"
+						placeholderTextColor={"#965A51"}
+						textContentType="birthdateDay"
+						value={day}
+						onChangeText={(value) => setDay(value)}
+						maxLength={2}
+					/>
+					<TextInput
+						style={styles.inputDate}
+						placeholder="MM"
+						placeholderTextColor={"#965A51"}
+						textContentType="birthdateMonth"
+						value={month}
+						onChangeText={(value) => setMonth(value)}
+						maxLength={2}
+					/>
+					<TextInput
+						style={styles.inputDate}
+						placeholder="AAAA"
+						placeholderTextColor={"#965A51"}
+						textContentType="birthdateYear"
+						value={year}
+						onChangeText={(value) => setYear(value)}
+						maxLength={4}
+					/>
+				</View>
+				<Text style={styles.inputTitle}>Username</Text>
+				<Text style={styles.inputSub}>(Visible sur le profil)</Text>
+				<TextInput style={styles.input} placeholder={"Username"} placeholderTextColor={"#965A51"} value={username} onChangeText={(value) => setUsername(value)} maxLength={40} />
+                <View style={styles.bottom}>
+                    <Text style={styles.error}>{error}</Text>
+                    <TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
+                        <Text style={styles.boutonText}>Continuer</Text>
+                    </TouchableOpacity>
+                </View>
+			</SafeAreaView>
+		</SafeAreaProvider>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+	},
+	bouton: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		backgroundColor: "#965a51c0",
+		margin: 10,
+	},
+	boutonText: {
+		fontWeight: "bold",
+		fontSize: 18,
+		color: "#F5EBE6",
+	},
+	input: {
+		backgroundColor: "#FFF5F0",
+		height: 45,
+		borderRadius: 50,
+		boxShadow: "0 2px 3px #896761",
+		paddingHorizontal: 12,
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		width: width * 0.9,
+		margin: 10,
+        marginTop: 30
+	},
+	inputDate: {
+		backgroundColor: "#FFF5F0",
+		height: 45,
+		borderRadius: 50,
+		boxShadow: "0 2px 3px #896761",
+		paddingHorizontal: 12,
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		width: width * 0.2,
+		marginVertical: 10,
+		textAlign: "center",
+	},
+	inputTitle: {
+		color: "#965A51",
+		fontWeight: "bold",
+        marginTop: 40
+	},
+	inputSub: {
+		color: "#BC8D85",
+		fontSize: 10,
+		fontStyle: "italic",
+	},
+	dateContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		width: "90%",
+        marginTop: 20
+	},
+	error: {
+		color: "red",
+        textAlign: 'center'
+	},
+    bottom: {
+        position: 'absolute',
+        top: height * 0.7
+    }
+});
+
+# ./screens/DateScreen.jsx
+
+# ./screens/GenderScreen.jsx
+import { useState } from "react";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+import HeaderBeginning from "../components/headerBeginning";
+import { addTempInfo } from "../reducers/user";
+
+const { width, height } = Dimensions.get("window");
+
+export default function ({ navigation }) {
+	const [error, setError] = useState("");
+	const [jeSuis, setJeSuis] = useState("");
+	const [jeRecherche, setJeRecherche] = useState("");
+	const [disabled, setDisabled] = useState(false);
+	const dispatch = useDispatch();
+	const sanitizeInputs = () => {
+		setDisabled(true);
+		if (jeSuis === "") {
+			setError("Indiquez votre genre");
+			setDisabled(false);
+			return;
+		}
+		if (jeRecherche === "") {
+			setError("Indiquez votre cible");
+			setDisabled(false);
+			return;
+		}
+		dispatch(addTempInfo({ gender: jeSuis, orientation: jeRecherche }));
+		navigation.navigate("RelationScreen");
+	};
+	return (
+		<SafeAreaProvider>
+			<SafeAreaView style={styles.container}>
+				<HeaderBeginning />
+				<Text style={styles.inputTitle}>Je suis</Text>
+				<View style={styles.multipleContainer}>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: jeSuis === "Homme" ? "#BC8D85" : "#FFF5F0" }]} onPress={() => setJeSuis("Homme")}>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeSuis === "Homme" ? "#F5EBE6" : "#965A51" }]}>Homme</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: jeSuis === "Femme" ? "#BC8D85" : "#FFF5F0" }]} onPress={() => setJeSuis("Femme")}>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeSuis === "Femme" ? "#F5EBE6" : "#965A51" }]}>Femme</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: jeSuis === "Non binaire" ? "#BC8D85" : "#FFF5F0" }]} onPress={() => setJeSuis("Non binaire")}>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeSuis === "Non binaire" ? "#F5EBE6" : "#965A51" }]}>Non binaire</Text>
+					</TouchableOpacity>
+				</View>
+				<Text style={styles.inputTitle}>Je recherche</Text>
+				<View style={styles.multipleContainer}>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: jeRecherche === "Homme" ? "#BC8D85" : "#FFF5F0" }]} onPress={() => setJeRecherche("Homme")}>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeRecherche === "Homme" ? "#F5EBE6" : "#965A51" }]}>Homme</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: jeRecherche === "Femme" ? "#BC8D85" : "#FFF5F0" }]} onPress={() => setJeRecherche("Femme")}>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeRecherche === "Femme" ? "#F5EBE6" : "#965A51" }]}>Femme</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: jeRecherche === "Tout" ? "#BC8D85" : "#FFF5F0" }]} onPress={() => setJeRecherche("Tout")}>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeRecherche === "Tout" ? "#F5EBE6" : "#965A51" }]}>Tout</Text>
+					</TouchableOpacity>
+				</View>
+                <View style={styles.bottom}>
+                    <Text style={styles.error}>{error}</Text>
+                    <TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
+                        <Text style={styles.boutonText}>Continuer</Text>
+                    </TouchableOpacity>
+                </View>
+			</SafeAreaView>
+		</SafeAreaProvider>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+        position: 'relative',
+	},
+	bouton: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		backgroundColor: "#965a51c0",
+		margin: 10,
+	},
+	boutonText: {
+		fontWeight: "bold",
+		fontSize: 18,
+		color: "#F5EBE6",
+	},
+	input: {
+		backgroundColor: "#FFF5F0",
+		height: 45,
+		borderRadius: 50,
+		boxShadow: "0 2px 3px #896761",
+		paddingHorizontal: 12,
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		width: width * 0.9,
+		margin: 10,
+	},
+	inputDate: {
+		backgroundColor: "#FFF5F0",
+		height: 45,
+		borderRadius: 50,
+		boxShadow: "0 2px 3px #896761",
+		paddingHorizontal: 12,
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		width: width * 0.2,
+		marginVertical: 10,
+		textAlign: "center",
+	},
+	inputTitle: {
+		color: "#965A51",
+		fontWeight: "bold",
+        marginTop: 30
+	},
+	inputSub: {
+		color: "#BC8D85",
+		fontSize: 10,
+		fontStyle: "italic",
+	},
+	dateContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		width: "90%",
+	},
+	error: {
+		color: "red",
+        textAlign: 'center'
+	},
+	boutonChoixMultiple: {
+		width: width * 0.25,
+		height: width * 0.25,
+		borderRadius: 15,
+		alignItems: "center",
+		justifyContent: "center",
+		boxShadow: "0 2px 3px #896761",
+        marginVertical: 30
+	},
+	boutonChoixMultipleText: {
+		fontWeight: "bold",
+		width: "80%",
+		textAlign: "center",
+		lineHeight: 30,
+	},
+	multipleContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		width: "90%",
+		alignItems: "center",
+	},
+    bottom: {
+        position: 'absolute',
+        top: height * 0.7
+    }
+});
+
+# ./screens/GenderScreen.jsx
+
+# ./screens/LoadingScreen.jsx
+import { useDispatch, useSelector } from "react-redux";
+import { StyleSheet, View, Text } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useEffect } from "react";
+
+export default function ({navigation}) {
+    const user = useSelector(state => state.user.value);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        (async () => {
+            if (!user.token) {
+                navigation.navigate('SignInNav', {path: 'SignIn'});
+                return;
+            }
+            const response = await fetch(process.env.EXPO_PUBLIC_IP + '/users/infos',{
+                headers: {
+                    authorization: user.token
+                }
+            });
+            const data = await response.json();
+            if (!data.result) {
+                navigation.navigate('SignInNav', {path: 'SignIn'});
+                return;
+            }
+            const newUser = data.user;
+            dispatch
+            if (!newUser.birthdate) {
+                navigation.navigate('SignInNav', {path: 'DateScreen'});
+                return;
+            }
+            dispatch(addInfos(newUser));
+            navigation.navigate('SwipeScreen');
+        })();
+    }, [])
+    return <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+            <Text>Hot drinks</Text>
+        </SafeAreaView>
+    </SafeAreaProvider>
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#DFC9B4",
+        alignItems: "center",
+    },
+});
+# ./screens/LoadingScreen.jsx
+
+# ./screens/RelationScreen.jsx
+import { useState } from "react";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable, Image } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+import HeaderBeginning from "../components/headerBeginning";
+import { addTempInfo } from "../reducers/user";
+
+const { width, height } = Dimensions.get("window");
+
+const boat = require("../assets/images/boat.png");
+
+export default function ({ navigation }) {
+	const user = useSelector((state) => state.user.value);
+	const [error, setError] = useState("");
+	const [disabled, setDisabled] = useState(false);
+	const [relation, setRelation] = useState("");
+	const dispatch = useDispatch();
+    console.log(user)
+	const sanitizeInputs = async () => {
+		setDisabled(true);
+		if (relation === "") {
+			setError("Selectionnez un type de relation");
+			setDisabled(false);
+		}
+        console.log( user.date)
+		const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/userInfos", {
+			method: "PUT",
+			headers: {
+				authorization: user.token,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				birthdate: user.tempInfos.date,
+				username: user.tempInfos.username,
+				gender: user.tempInfos.gender,
+				orientation: user.tempInfos.orientation,
+				relationship: relation,
+			}),
+		});
+		const data = await response.json();
+		if (!data.result) {
+			setError("Une erreur a eu lieu");
+			setDisabled(false);
+			return;
+		}
+        setDisabled(false);
+        navigation.navigate('SwipeScreen');
+	};
+	return (
+		<SafeAreaProvider>
+			<SafeAreaView style={styles.container}>
+				<HeaderBeginning />
+				<Text style={styles.inputTitle}>Que recherches-tu ?</Text>
+				<View style={styles.multipleContainer}>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: relation === "Chocolat chaud" ? "#8A3535" : "#FFF5F0" }]} onPress={() => setRelation("Chocolat chaud")}>
+						<Image source={boat} style={styles.image} />
+						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Chocolat chaud" ? "#F5EBE6" : "#965A51" }]}>Chocolat chaud</Text>
+						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Chocolat chaud" ? "#F5EBE6" : "#965A51" }]}>Pour la vie</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: relation === "Allongé" ? "#6A3931" : "#FFF5F0" }]} onPress={() => setRelation("Allongé")}>
+						<Image source={boat} style={styles.image} />
+						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Allongé" ? "#F5EBE6" : "#965A51" }]}>Allongé</Text>
+						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Allongé" ? "#F5EBE6" : "#965A51" }]}>Relation sérieuse</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: relation === "Thé" ? "#E69B5C" : "#FFF5F0" }]} onPress={() => setRelation("Thé")}>
+						<Image source={boat} style={styles.image} />
+						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Thé" ? "#F5EBE6" : "#965A51" }]}>Thé</Text>
+						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Thé" ? "#F5EBE6" : "#965A51" }]}>Plus si affinités</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.multipleContainer}>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: relation === "Expresso" ? "#632912" : "#FFF5F0" }]} onPress={() => setRelation("Expresso")}>
+						<Image source={boat} style={styles.image} />
+						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Expresso" ? "#F5EBE6" : "#965A51" }]}>Expresso</Text>
+						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Expresso" ? "#F5EBE6" : "#965A51" }]}>Sans prise de tête</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: relation === "Ristretto" ? "#3D190B" : "#FFF5F0" }]} onPress={() => setRelation("Ristretto")}>
+						<Image source={boat} style={styles.image} />
+						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Ristretto" ? "#F5EBE6" : "#965A51" }]}>Ristretto</Text>
+						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Ristretto" ? "#F5EBE6" : "#965A51" }]}>Un shot de plaisir</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: relation === "Matcha" ? "#C4E1B8" : "#FFF5F0" }]} onPress={() => setRelation("Matcha")}>
+						<Image source={boat} style={styles.image} />
+						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Matcha</Text>
+						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Relation amicale</Text>
+					</TouchableOpacity>
+				</View>
+                <View style={styles.bottom}>
+                    <Text style={styles.error}>{error}</Text>
+                    <TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
+                        <Text style={styles.boutonText}>Valider</Text>
+                    </TouchableOpacity>
+                </View>
+			</SafeAreaView>
+		</SafeAreaProvider>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+	},
+	bouton: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		backgroundColor: "#965a51c0",
+		margin: 10,
+	},
+	boutonText: {
+		fontWeight: "bold",
+		fontSize: 18,
+		color: "#F5EBE6",
+	},
+	input: {
+		backgroundColor: "#FFF5F0",
+		height: 45,
+		borderRadius: 50,
+		boxShadow: "0 2px 3px #896761",
+		paddingHorizontal: 12,
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		width: width * 0.9,
+		margin: 10,
+	},
+	inputDate: {
+		backgroundColor: "#FFF5F0",
+		height: 45,
+		borderRadius: 50,
+		boxShadow: "0 2px 3px #896761",
+		paddingHorizontal: 12,
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		width: width * 0.2,
+		marginVertical: 10,
+		textAlign: "center",
+	},
+	inputTitle: {
+		color: "#965A51",
+		fontWeight: "bold",
+        marginTop: 30
+	},
+	inputSub: {
+		color: "#BC8D85",
+		fontSize: 10,
+		fontStyle: "italic",
+	},
+	dateContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		width: "90%",
+	},
+	error: {
+		color: "red",
+        textAlign: 'center'
+	},
+	boutonChoixMultiple: {
+		width: width * 0.25,
+		height: width * 0.3,
+		borderRadius: 15,
+		alignItems: "center",
+		justifyContent: "flex-start",
+		boxShadow: "0 2px 3px #896761",
+        marginVertical: 30
+	},
+	boutonChoixMultipleText: {
+		fontWeight: "bold",
+		width: "90%",
+		textAlign: "center",
+		fontSize: 10,
+	},
+	multipleContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		width: "90%",
+		alignItems: "center",
+	},
+	image: {
+		objectFit: "cover",
+		width: 0.18 * width,
+		height: 0.18 * width,
+		marginVertical: 8,
+	},
+	boutonChoixMultipleTextLegend: {
+		fontSize: 8,
+	},
+    bottom: {
+        position: 'absolute',
+        top: height * 0.7
+    }
+});
+
+# ./screens/RelationScreen.jsx
+
+# ./screens/SignIn.jsx
+import { useState } from "react";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useDispatch, useSelector } from "react-redux";
+import { addToken } from "../reducers/user";
+
+const { width, height } = Dimensions.get("window");
+
+export default function ({ navigation }) {
+	const [emailVisible, setEmailVisible] = useState(false);
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [validateDisabled, setValidateDisabled] = useState(false);
+	const dispatch = useDispatch();
+
+	const tryLogin = async () => {
+		try {
+			setValidateDisabled(true);
+			if (email === "" || password === "") {
+				setValidateDisabled(false);
+				return;
+			}
+			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/signup", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					email,
+					password,
+				}),
+			});
+			const data = await response.json();
+			if (!data.result) {
+				setValidateDisabled(false);
+				return;
+			}
+			dispatch(addToken(data.token));
+			setValidateDisabled(false);
+			setEmailVisible(false);
+			navigation.navigate("DateScreen");
+			return;
+		} catch (error) {
+			setValidateDisabled(false);
+		}
+	};
+	const modalEmail = (
+		<Modal
+			animationType="slide"
+			transparent={true}
+			visible={emailVisible}
+			onRequestClose={() => {
+				setEmailVisible(false);
+			}}
+		>
+			<View style={styles.modalContainer}>
+				<View style={styles.modalEmail}>
+					<Pressable style={styles.crossModalDiv} onPress={() => setEmailVisible(false)}>
+						<FontAwesome6 name="xmark" size={24} style={styles.crossModal} />
+					</Pressable>
+					<Text style={styles.modalTitle}>Create account</Text>
+					<TextInput style={styles.input} placeholder="Email" placeholderTextColor={"#965A51"} type={"email"} value={email} onChangeText={(value) => setEmail(value)} />
+					<TextInput
+						style={styles.input}
+						placeholder="Password"
+						placeholderTextColor={"#965A51"}
+						type={"password"}
+						secureTextEntry={true}
+						value={password}
+						onChangeText={(value) => setPassword(value)}
+					/>
+					<TouchableOpacity style={styles.bouton} disabled={validateDisabled} onPress={() => tryLogin()}>
+						<Text style={styles.boutonText}>Connect</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+	return (
+		<SafeAreaProvider>
+			<SafeAreaView style={styles.container}>
+				{modalEmail}
+				<TouchableOpacity style={styles.boutonGoogle} onPress={() => setEmailVisible(true)}>
+					<Text style={styles.boutonText}>CONNECTION PAR EMAIL</Text>
+				</TouchableOpacity>
+			</SafeAreaView>
+		</SafeAreaProvider>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+	},
+	bouton: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		backgroundColor: "#965A51",
+		margin: 10,
+	},
+	boutonText: {
+		fontWeight: "bold",
+		fontSize: 18,
+		color: "#F5EBE6",
+	},
+	boutonGoogle: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		margin: 10,
+		backgroundColor: "#DE4F24",
+	},
+	modalContainer: {
+		flex: 1,
+		backgroundColor: "rgba(0,0,0,0.5)",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	modalEmail: {
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+		padding: 10,
+		borderRadius: 20,
+		position: "relative",
+	},
+	input: {
+		backgroundColor: "#FFF5F0",
+		height: 45,
+		borderRadius: 50,
+		boxShadow: "0 2px 3px #896761",
+		paddingHorizontal: 12,
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		width: width * 0.7,
+		margin: 10,
+	},
+	modalTitle: {
+		color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 16,
+		margin: 10,
+	},
+	crossModal: {
+		color: "#965A51",
+	},
+	crossModalDiv: {
+		position: "absolute",
+		top: -10,
+		right: -10,
+		width: 26,
+		height: 26,
+		backgroundColor: "white",
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: "100%",
+	},
+});
+
+# ./screens/SignIn.jsx
+
+# ./screens/SwipeScreen.jsx
+import React, { useRef, useState, useEffect } from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
+const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
+
+import Swiper from "react-native-deck-swiper";
+import SwipeContainer from "../components/swipe/SwipeContainer";
+
+export default function SwipeScreen({ navigation }) {
+	const swiperRef = useRef(null);
+	const [cards, setCards] = useState([]);
+	const [swiperKey, setSwiperKey] = useState(0);
+
+	const numberOfCards = 10;
+
+	useEffect(() => {
+		loadCards();
+	}, []);
+
+	// Charge les N premières cartes ou les recharge
+	function loadCards() {
+		setCards([...Array(numberOfCards).keys()]);
+		setSwiperKey((prevKey) => prevKey + 1); // Force Swiper to remount
+	}
+
+	// Fonction appelée depuis les boutons
+	function handleChoice(action) {
+		if (!swiperRef.current) return;
+		if (action === "Like") swiperRef.current.swipeRight();
+		if (action === "Dislike") swiperRef.current.swipeLeft();
+		if (action === "Superlike") swiperRef.current.swipeTop();
+	}
+
+	const renderCard = (index) => (
+		<View style={styles.card}>
+			<SwipeContainer onChoice={handleChoice} />
+		</View>
+	);
+
+	return (
+		<View style={styles.container}>
+			<Swiper
+				key={swiperKey}
+				ref={swiperRef}
+				cards={cards}
+				renderCard={renderCard}
+				stackSize={2}
+				showSecondCard={true}
+				infinite={false}
+				onSwipedAll={loadCards}
+				backgroundColor="transparent"
+				onSwipedLeft={() => handleChoice("Like")}
+				onSwipedRight={() => handleChoice("Dislike")}
+				onSwipedTop={() => handleChoice("Superlike")}
+			/>
+		</View>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#FFF5F0",
+	},
+
+	card: {
+		/* dimensions et centrage */
+		flex: 1,
+		width: width * 0.9,
+		height: height,
+		alignSelf: "center",
+
+		/* apparence conforme à la maquette */
+		backgroundColor: "#FFF5F0", // crème
+		borderRadius: 24,
+		overflow: "hidden",
+
+		/* ombre douce */
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 6,
+		elevation: 4, // Android
+	},
+});
+
+# ./screens/SwipeScreen.jsx
+
+# ./screens/Test.jsx
+import { useState } from "react";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+
+const { width, height } = Dimensions.get("window");
+
+export default function ({ navigation }) {
+	const user = useSelector((state) => state.user.value);
+	return (
+		<SafeAreaProvider>
+			<SafeAreaView style={styles.container}>
+				<Text>{user.token}</Text>
+			</SafeAreaView>
+		</SafeAreaProvider>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+	},
+	bouton: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		backgroundColor: "#965A51",
+		margin: 10,
+	},
+	boutonText: {
+		fontWeight: "bold",
+		fontSize: 18,
+		color: "#F5EBE6",
+	},
+	boutonGoogle: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		margin: 10,
+		backgroundColor: "#DE4F24",
+	},
+	modalContainer: {
+		flex: 1,
+		backgroundColor: "rgba(0,0,0,0.5)",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	modalEmail: {
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+		padding: 10,
+		borderRadius: 20,
+		position: "relative",
+	},
+	input: {
+		backgroundColor: "#FFF5F0",
+		height: 45,
+		borderRadius: 50,
+		boxShadow: "0 2px 3px #896761",
+		paddingHorizontal: 12,
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		width: width * 0.7,
+		margin: 10,
+	},
+	modalTitle: {
+		color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 16,
+		margin: 10,
+	},
+	crossModal: {
+		color: "#965A51",
+	},
+	crossModalDiv: {
+		position: "absolute",
+		top: -10,
+		right: -10,
+		width: 26,
+		height: 26,
+		backgroundColor: "white",
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: "100%",
+	},
+});
+
+# ./screens/Test.jsx
+
+
+Liste des fichiers trouvés et concaténés :
+./app.json
+./App.jsx
+./components/headerBeginning.jsx
+./components/swipe/SwipeButton.jsx
+./components/swipe/SwipeContainer.jsx
+./.expo/devices.json
+./index.js
+./metro.config.js
+./package.json
+./reducers/user.js
+./screens/DateScreen.jsx
+./screens/GenderScreen.jsx
+./screens/LoadingScreen.jsx
+./screens/RelationScreen.jsx
+./screens/SignIn.jsx
+./screens/SwipeScreen.jsx
+./screens/Test.jsx
+
+# ./package.json
+{
+  "name": "hot-drinks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@react-native-google-signin/google-signin": "^15.0.0",
+    "@react-navigation/bottom-tabs": "6",
+    "@react-navigation/native": "6",
+    "@react-navigation/native-stack": "6",
+    "@reduxjs/toolkit": "^2.8.2",
+    "expo": "~53.0.20",
+    "expo-status-bar": "~2.2.3",
+    "lodash": "^4.17.21",
+    "react": "19.0.0",
+    "react-native": "0.79.5",
+    "react-native-deck-swiper": "^2.0.18",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.11.1",
+    "react-native-svg": "^15.12.1",
+    "react-native-swiper": "^1.6.0",
+    "react-redux": "^9.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "react-native-svg-transformer": "^1.5.1"
+  },
+  "private": true
+}
+
+# ./package.json
+
