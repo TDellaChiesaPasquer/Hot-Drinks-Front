@@ -11,6 +11,7 @@ import {
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 const { width, height } = Dimensions.get("window");
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function ImagePickerScreen(props) {
   const [photo, setPhoto] = useState(null);
@@ -46,10 +47,9 @@ export default function ImagePickerScreen(props) {
           <Image source={photo} style={styles.addedPhoto} />
           <TouchableOpacity
             onPress={() => handleDelete()}
-            style={{ position: "absolute", top: 5, right: 5 }}
-            activeOpacity={0.8}
+            style={styles.deletePhotoDiv}
           >
-            <Text>x</Text>
+            <FontAwesome6 name="xmark" size={24} style={styles.deleteCross} />
           </TouchableOpacity>
         </View>
       ) : (
@@ -99,5 +99,23 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
-  deleteCross: {},
+  deletePhotoDiv: {
+    position: "absolute",
+    top: -10,
+    right: -10,
+    width: 26,
+    height: 26,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "100%",
+  },
+
+  deleteCross: {
+    fontSize: 24,
+    color: "#965A51",
+    backgroundColor: "#F5EBE6",
+    borderRadius: "50%",
+    padding: 1,
+  },
 });
