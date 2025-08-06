@@ -27,7 +27,7 @@ import user from "./reducers/user";
 import map from "./reducers/map";
 
 const store = configureStore({
-  reducer: { user, map },
+	reducer: { user, map },
 });
 
 const Stack = createNativeStackNavigator();
@@ -38,13 +38,12 @@ const SignInNav = () => {
     <Stack.Navigator
       screenOptions={{ headerShown: false, gestureEnabled: false }}
     >
-      {/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="DateScreen" component={DateScreen} />
       <Stack.Screen name="GenderScreen" component={GenderScreen} />
       <Stack.Screen name="RelationScreen" component={RelationScreen} />
       <Stack.Screen name="MapScreen" component={MapScreen} />
-      {/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
+      <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
     </Stack.Navigator>
   );
 };

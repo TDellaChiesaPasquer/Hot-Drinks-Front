@@ -11,15 +11,27 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ImagePickerComponent from "../components/ImagePickerComponent";
+import { useDispatch } from "react-redux";
+import { addPhoto, removePhoto } from "../reducers/user";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ImagePickerScreen({ navigation }) {
+  const [photoUriList, setPhotoUriList] = useState([]);
 
+  const addUriToList = (uri) => {
+    setPhotoUriList([...photoUriList, uri]);
+  };
+
+  const removeUriToList = (uri) => {
+    setPhotoUriList(photoUriList.filter((e) => e !== uri));
+  };
 
   const addedPhoto = [];
   for (let i = 0; i < 9; i++) {
-    addedPhoto.push(<ImagePickerComponent key={i} />);
+    addedPhoto.push(
+      <ImagePickerComponent key={i} addUriToList={addUriToList} />
+    );
   }
 
 
@@ -118,6 +130,12 @@ export default function ImagePickerScreen({ navigation }) {
               <Text style={styles.prevTextButton}>{"<"}</Text>
             </TouchableOpacity>
 
+            {/* <TouchableOpacity
+              style={styles.validationButton}
+              onPress={() => navigation.navigate("MainTabNav")}
+            >
+              <Text style={styles.textValidateButton}>Valider</Text>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.validationButton}
               onPress={() => navigation.navigate("MapScreen")}
@@ -137,10 +155,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#DFC9B4",
     alignItems: "center",
   },
-  //   image: {
-  //     width: 200,
-  //     height: 200,
-  //   },
 
   containerPhoto: {
     width: width,

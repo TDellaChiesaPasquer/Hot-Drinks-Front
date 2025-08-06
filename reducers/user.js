@@ -1,11 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    value: {
-        token: null,
-        user: null,
-        tempInfos: null
-    },
+  value: {
+    token: null,
+    user: null,
+    tempInfos: null,
+    tempPhotosList: [],
+  },
 };
 
 export const userSlice = createSlice({
