@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, ScrollView, View, Text, StyleSheet } from "react-native";
+import { StatusBar, ScrollView, View, Text, StyleSheet, Dimensions } from "react-native";
 import { Image } from "expo-image";
 import { useSelector } from "react-redux";
+
+// import Carousel from "react-native-snap-carousel";
 import Swiper from "react-native-swiper";
 
 import SwipeButton from "./SwipeButton";
@@ -9,6 +11,8 @@ import { capitalize } from "../../Utils/utils.js";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
+
+// const screenWidth = Dimensions.get("window").width;
 
 function getPlaceholders(placeholderCount, placeholderSrc) {
 	return Array(placeholderCount).fill(placeholderSrc);
@@ -62,14 +66,14 @@ const placeholderData = {
 		{ value: "chat", star: true },
 		{ value: "cinéma", star: false }, // exemple d'un goût non étoilé qui ne sera pas affiché
 	],
-	idProfile: "placeholder_id",
+	idProfile: null,
 };
 
 /**
- * Formate les données du profil selon les règles spécifiées
- * @param {Object} profileData - Données brutes du profil
- * @param {Object} placeholderSrc - Source de l'image placeholder
- * @return {Object} Données formatées du profil
+ * Formate les données du profil l'affichage attendu pour le profile de swipe
+ * @param {Object} profileData - Vrai données reçues depuis le backend
+ * @param {Object} placeholderSrc - Données fake en cas de non-réception (pour le test)
+ * @return {Object} Données formatées pour le profil swipe
  */
 function formatProfileData(profileData, placeholderSrc) {
 	// Initialiser avec les données par défaut
@@ -77,13 +81,10 @@ function formatProfileData(profileData, placeholderSrc) {
 		informationList: ["Anonyme", "?", "Distance inconnue"],
 		hashtagsList: [],
 		images: getPlaceholders(NB_PLACEHOLDERS || 10, placeholderSrc),
-		profileID: null,
+		username: null,
 	};
 
 	if (!profileData) return formattedData;
-
-	// ID du profil pour les actions de swipe
-	formattedData.profileID = profileData.idProfile || null;
 
 	// Username - utiliser directement
 	if (profileData.username) {
@@ -121,10 +122,11 @@ function formatProfileData(profileData, placeholderSrc) {
 }
 
 export default function SwipeContainer(props) {
+	// console.log("SwipeContainer - props.profile : ");
+	// console.log(props.profile);
 	const profileData = props.profile || placeholderData;
-	console.log("SwipeContainer - profileData : ");
-	console.log(profileData);
-	const onChoiceCallback = props.onChoice;
+	// console.log("SwipeContainer - profileData : ");
+	// console.log(profileData);
 
 	// Formater les données du profil
 	const formattedData = formatProfileData(profileData, PLACEHOLDER_SRC);
@@ -165,7 +167,7 @@ export default function SwipeContainer(props) {
 
 					<View style={styles.buttons}>
 						{["Dislike", "Superlike", "Like"].map(function (buttonType) {
-							return <SwipeButton key={buttonType} type={buttonType} profileID={formattedData.profileID} onSwipe={onChoiceCallback} />;
+							return <SwipeButton key={buttonType} type={buttonType} onChoice={props.onChoice} />;
 						})}
 					</View>
 				</View>

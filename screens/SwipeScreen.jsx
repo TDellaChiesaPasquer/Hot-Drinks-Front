@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../components/swipe/SwipeContainer";
+import PagerView from "react-native-pager-view";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -12,7 +13,6 @@ const maxNumberOfCards = 10;
 
 export default function SwipeScreen(props) {
 	const swiperReference = useRef(null);
-	const [newProfiles, setNewProfiles] = useState(false);
 	const [profileList, setProfileList] = useState([]);
 	const [cardList, setCardList] = useState([]);
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
@@ -20,26 +20,29 @@ export default function SwipeScreen(props) {
 	const enTest = true;
 	// const dbUtilisee = "Audrey";
 	const dbUtilisee = "Cyrille";
-	const db = [
-		{
-			Audrey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU",
-		},
-		{
-			Cyrille: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkzNzg4Nzg5NmU2ODA4NTUzNjM3ZGEiLCJpYXQiOjE3NTQ0OTUxMTIsImV4cCI6NTM1NDQ5NTExMn0.WjDHi5_UCcni4rGG9uK3U8fFk-9EYwUDeVld1ladd3w",
-		},
-	];
+	const db = {
+		Audrey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU",
+		Cyrille: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkzYjkwZDA5NjdiOTE1OTgwZTRmNzciLCJpYXQiOjE3NTQ1MTE2NjAsImV4cCI6NTM1NDUxMTY2MH0.1ZoACw0cH5rbtQp5oD0Nmsh4wMnUsP3BHYTQvmseT1M",
+	};
+	const tokenTmp = db[dbUtilisee];
 
-	const userToken = useSelector(function (state) {
-		if (enTest)
-			return db[dbUtilisee];
-		return state.user.value.token;
-	});
+	let userToken = null;
+	if (enTest) {
+		userToken = tokenTmp;
+	} else
+		userToken = useSelector(function (state) {
+			return state.user.value.token;
+		});
 
-	useEffect(function () {
-		fetchProfilesFromAPI();
-	}, []);
+	useEffect(
+		function () {
+			fetchProfilesFromAPI();
+		},
+		[]
+	);
 
 	function fetchProfilesFromAPI() {
+		// console.log("début fetchProfilesFromAPI");
 		fetch(process.env.EXPO_PUBLIC_IP + "/profils/profil", {
 			headers: {
 				"Content-Type": "application/json",
@@ -47,6 +50,8 @@ export default function SwipeScreen(props) {
 			},
 		})
 			.then(function (response) {
+				// if (response) console.log("response : ");
+				// if (response) console.log(response);
 				return response.json();
 			})
 			.then(function (jsonResponse) {
@@ -83,16 +88,22 @@ export default function SwipeScreen(props) {
 		}
 	}
 
-	function sendSwipeToServer(cardIndexInList, userAction) {
-		const profileIdToSend = profileList[cardIndexInList]?.idProfile || "";
+	function handleSwipe(cardIndex, action) {
+		const profile = profileList[cardIndex];
+		if (profile && profile.username) {
+			sendSwipeToServer(profile.username, action);
+		}
+	}
+
+	function sendSwipeToServer(username, userAction) {
 		const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
 
-		// console.log("profileIdToSend : " + profileIdToSend);
-		// console.log("userAction :" + userAction);
+		// console.log("username : " + username);
+		// console.log("userAction : " + userAction);
 
 		const payload = {
-			action: userAction,
-			userId: profileIdToSend,
+			action: userAction.toLowerCase(),
+			username: username,
 		};
 		const fetchOptions = {
 			method: "PUT",
@@ -127,6 +138,7 @@ export default function SwipeScreen(props) {
 		<SafeAreaProvider>
 			<SafeAreaView style={styles.container}>
 				<Swiper
+					cardStyle={styles.card}
 					key={swiperComponentKey}
 					ref={swiperReference}
 					cards={cardList}
@@ -136,21 +148,10 @@ export default function SwipeScreen(props) {
 					infinite={false}
 					onSwipedAll={fetchProfilesFromAPI}
 					backgroundColor="transparent"
-					onSwipedLeft={function (cardIndex) {
-						sendSwipeToServer(cardIndex, "Dislike");
-					}}
-					onSwipedRight={function (cardIndex) {
-						sendSwipeToServer(cardIndex, "Like");
-					}}
-					onSwipedTop={function (cardIndex) {
-						sendSwipeToServer(cardIndex, "Superlike");
-					}}
+					onSwipedLeft={(cardIndex) => handleSwipe(cardIndex, "Dislike")}
+					onSwipedRight={(cardIndex) => handleSwipe(cardIndex, "Like")}
+					onSwipedTop={(cardIndex) => handleSwipe(cardIndex, "Superlike")}
 					verticalSwipe={false}
-					onSwipedAll={() => {
-						console.log("New profiles");
-						fetchProfilesFromAPI();
-						setNewProfiles(!newProfiles);
-					}}
 				/>
 			</SafeAreaView>
 		</SafeAreaProvider>
