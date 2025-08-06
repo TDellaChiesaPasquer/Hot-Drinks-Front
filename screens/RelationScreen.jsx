@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import HeaderBeginning from "../components/headerBeginning";
+import HeaderBeginning from "../components/HeaderBeginning";
 import { addTempInfo } from "../reducers/user";
 
 const { width, height } = Dimensions.get("window");
