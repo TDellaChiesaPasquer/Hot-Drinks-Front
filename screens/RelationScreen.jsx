@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import HeaderBeginning from "../components/headerBeginning";
+import HeaderBeginning from "../components/HeaderBeginning";
 import { addTempInfo } from "../reducers/user";
 
 const { width, height } = Dimensions.get("window");
@@ -25,6 +25,7 @@ export default function ({ navigation }) {
 	const [disabled, setDisabled] = useState(false);
 	const [relation, setRelation] = useState("");
 	const dispatch = useDispatch();
+	
 	const sanitizeInputs = async () => {
 		setDisabled(true);
 		if (relation === "") {
