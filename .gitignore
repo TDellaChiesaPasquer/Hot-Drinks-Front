@@ -40,8 +40,8 @@ yarn.lock
 # typescript
 *.tsbuildinfo
 
-# Environnement
 *.env
+.env
 
 # Fichiers temporaires
 *projet.txt

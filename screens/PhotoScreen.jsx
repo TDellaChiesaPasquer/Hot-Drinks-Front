@@ -11,17 +11,63 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ImagePickerComponent from "../components/ImagePickerComponent";
+import { useDispatch } from "react-redux";
+import { addPhoto, removePhoto } from "../reducers/user";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ImagePickerScreen({ navigation }) {
+  const [photoUriList, setPhotoUriList] = useState([]);
 
+  const addUriToList = (uri) => {
+    setPhotoUriList([...photoUriList, uri]);
+  };
+
+  const removeUriToList = (uri) => {
+    setPhotoUriList(photoUriList.filter((e) => e !== uri));
+  };
 
   const addedPhoto = [];
   for (let i = 0; i < 9; i++) {
-    addedPhoto.push(<ImagePickerComponent key={i} />);
+    addedPhoto.push(
+      <ImagePickerComponent key={i} addUriToList={addUriToList} />
+    );
   }
 
+<<<<<<< HEAD
+  const handleSubmitPhotos = async () => {
+    const formData = new FormData();
+    // console.log("click", photo);
+    console.log(photoUriList);
+    if (photoUriList.length === 0) {
+      return;
+    }
+    console.log("test");
+    for (let i = 0; i < photoUriList.length; i++) {
+      formData.append("photoFromFront" + i, {
+        uri: photoUriList[i],
+        name: "photo.jpg",
+        type: "image/jpeg",
+      });
+    }
+    console.log("test");
+    const response = await fetch(
+      process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    navigation.navigate("MainTabNav");
+    console.log("data=", data);
+    if (photoUriList.length === 0) {
+      console.log("photo=", photoUriList);
+      return;
+    }
+  };
+
+=======
 
 
 // const handleSubmitPhotos = async () => {
@@ -99,6 +145,7 @@ export default function ImagePickerScreen({ navigation }) {
 
 
 
+>>>>>>> 99e989854463e5b7135d5028c78f7f80a6843082
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -118,9 +165,19 @@ export default function ImagePickerScreen({ navigation }) {
               <Text style={styles.prevTextButton}>{"<"}</Text>
             </TouchableOpacity>
 
+            {/* <TouchableOpacity
+              style={styles.validationButton}
+              onPress={() => navigation.navigate("MainTabNav")}
+            >
+              <Text style={styles.textValidateButton}>Valider</Text>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.validationButton}
-              onPress={() => navigation.navigate("SwipeScreen")}
+<<<<<<< HEAD
+              onPress={() => handleSubmitPhotos()}
+=======
+              onPress={() => navigation.navigate("MapScreen")}
+>>>>>>> 99e989854463e5b7135d5028c78f7f80a6843082
             >
               <Text style={styles.textValidateButton}>Valider</Text>
             </TouchableOpacity>
@@ -137,10 +194,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#DFC9B4",
     alignItems: "center",
   },
-  //   image: {
-  //     width: 200,
-  //     height: 200,
-  //   },
 
   containerPhoto: {
     width: width,
