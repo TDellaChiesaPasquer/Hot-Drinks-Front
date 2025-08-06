@@ -18,10 +18,20 @@ export default function SwipeScreen(props) {
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
 
 	const enTest = true;
+	// const dbUtilisee = "Audrey";
+	const dbUtilisee = "Cyrille";
+	const db = [
+		{
+			Audrey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU",
+		},
+		{
+			Cyrille: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkzNzg4Nzg5NmU2ODA4NTUzNjM3ZGEiLCJpYXQiOjE3NTQ0OTUxMTIsImV4cCI6NTM1NDQ5NTExMn0.WjDHi5_UCcni4rGG9uK3U8fFk-9EYwUDeVld1ladd3w",
+		},
+	];
 
 	const userToken = useSelector(function (state) {
 		if (enTest)
-			return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU";
+			return db[dbUtilisee];
 		return state.user.value.token;
 	});
 
