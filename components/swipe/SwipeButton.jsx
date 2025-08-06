@@ -1,44 +1,69 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-// import HeartIcon from "../../assets/swipeButtons/heart.svg";
-// import StarIcon from "../../assets/swipeButtons/star.svg";
-// import CrossIcon from "../../assets/swipeButtons/cross.svg";
+
+// Import intile si on n'utilise pas les SGV
+import HeartIcon from "../../assets/swipeButtons/heart.svg";
+import StarIcon from "../../assets/swipeButtons/star.svg";
+import CrossIcon from "../../assets/swipeButtons/cross.svg";
+
+// Icones d'expo (inutiles si on utilise le SVG)
 import { FontAwesome } from "@expo/vector-icons";
+
+// Variable globale : choix entre SVG ou icônes Expo
+const isFromSVG = false;
+
+// Taille de l'icône
+const iconSize = 40;
 
 export default function SwipeButton(props) {
 	const [buttonType] = useState(props.type);
 
-	const iconeSize = 40;
-
-	let mainComponent = (
-		// <HeartIcon width={iconeSize} height={iconeSize} />
-		// Icone pleine Expo : cœur
-		<FontAwesome name="heart" size={iconeSize} color="#FF4D80" />
-	);
-	if (buttonType === "Dislike") {
-		mainComponent = (
-			// <CrossIcon width={iconeSize} height={iconeSize} />
-			// Icone pleine Expo : croix
-			<FontAwesome name="times" size={iconeSize} color="#8A2BE2" />
-		);
-	}
-	if (buttonType === "Superlike") {
-		mainComponent = (
-			// <StarIcon width={iconeSize} height={iconeSize} />
-			// Icone pleine Expo : étoile
-			<FontAwesome name="star" size={iconeSize} color="#FFA500" />
-		);
+	// Choix du composant graphique principal
+	function getMainComponent(type) {
+		if (isFromSVG) return getSVGComponent(type);
+		return getExpoIconComponent(type);
 	}
 
+	// Sous-fonction pour les SVG (non utilisée ici)
+	function getSVGComponent(type) {
+		if (type === "Like") {
+			return <HeartIcon width={iconSize} height={iconSize} />;
+		}
+		if (type === "Dislike") {
+			return <CrossIcon width={iconSize} height={iconSize} />;
+		}
+		if (type === "Superlike") {
+			return <StarIcon width={iconSize} height={iconSize} />;
+		}
+		return null;
+	}
+
+	// Sous-fonction pour les icônes Expo
+	function getExpoIconComponent(type) {
+		if (type === "Like") {
+			return <FontAwesome name="heart" size={iconSize} color="#FF4D80" />;
+		}
+		if (type === "Dislike") {
+			return <FontAwesome name="times" size={iconSize} color="#8A2BE2" />;
+		}
+		if (type === "Superlike") {
+			return <FontAwesome name="star" size={iconSize} color="#FFA500" />;
+		}
+		return null;
+	}
+
+	// Gestion du clic sur le bouton
+	function handlePress() {
+		if (props.onSwipe) {
+			props.onSwipe(buttonType);
+		}
+	}
+
+	// Affichage final
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity
-				onPress={() => {
-					if (props.onSwipe) props.onSwipe(buttonType);
-				}}
-				style={[styles.button, props.style]}
-			>
-				{mainComponent}
+			<TouchableOpacity onPress={handlePress} style={[styles.button, props.style]}>
+				{getMainComponent(buttonType)}
 			</TouchableOpacity>
 		</View>
 	);
