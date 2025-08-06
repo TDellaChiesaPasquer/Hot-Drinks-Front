@@ -57,16 +57,16 @@ export default function App({navigation}) {
     })();
   }, []);
   // ____________________________________FETCH GEOLOC_______________________________
-const getGeolocalisation = async () => {
-setDisabled(true)
-if(location === "") {
-  setError (error: "Une erreur a eu lieu !")
-}
-if(!data.result) {
-  setError(false),
-  setDisabled(true)
-  return;
-}
+// const getGeolocalisation = async () => {
+// setDisabled(true)
+// if(location === "") {
+//   setError (error: "Une erreur a eu lieu !")
+// }
+// if(!data.result) {
+//   setError(false),
+//   setDisabled(true)
+//   return;
+// }
 
   const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/location", {
     method: "Put",
