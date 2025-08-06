@@ -27,7 +27,7 @@ import user from "./reducers/user";
 import map from "./reducers/map";
 
 const store = configureStore({
-	reducer: { user, map },
+  reducer: { user, map },
 });
 
 const Stack = createNativeStackNavigator();
@@ -83,9 +83,49 @@ const MainTabNav = () => {
       </Tab.Navigator>
     </SafeAreaView>
   );
+  return (
+    <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: styles.tabBar,
+          header: ({ route }) => {
+            return <HeaderMain route={route} />;
+          },
+          tabBarIcon: ({ color, size }) => {
+            let icon;
+            if (route.name === "MessagerieNav") {
+              icon = (
+                <MaterialCommunityIcons
+                  name="message-outline"
+                  size={30}
+                  color={color}
+                />
+              );
+            } else {
+              icon = <Feather name="coffee" size={30} color={color} />;
+            }
+            return icon;
+          },
+          tabBarActiveTintColor: "#965A51",
+          tabBarInactiveTintColor: "#BC8D85",
+          tabBarShowLabel: false,
+          tabBarIconStyle: styles.tabBarIcon,
+        })}
+      >
+        <Tab.Screen name="SwipeScreen" component={SwipeScreen} />
+        <Tab.Screen name="MessagerieNav" component={MessagerieNav} />
+      </Tab.Navigator>
+    </SafeAreaView>
+  );
 };
 
 const MessagerieNav = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
+      <Stack.Screen name="ConversationScreen" component={ConversationScreen} />
+    </Stack.Navigator>
+  );
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
@@ -110,9 +150,38 @@ export default function App() {
       </SafeAreaProvider>
     </Provider>
   );
+  return (
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false, gestureEnabled: false }}
+          >
+            <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+            <Stack.Screen name="SignInNav" component={SignInNav} />
+            <Stack.Screen name="MainTabNav" component={MainTabNav} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
+  );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  tabBar: {
+    backgroundColor: "#F5EBE6",
+    borderTopWidth: 0,
+  },
+  tabBarNavContainer: {
+    flex: 1,
+    backgroundColor: "#F5EBE6",
+  },
+  tabBarIcon: {
+    fontSize: 30,
+  },
   container: {
     flex: 1,
   },

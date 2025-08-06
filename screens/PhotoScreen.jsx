@@ -72,25 +72,9 @@ export default function ImagePickerScreen({ navigation }) {
         <View>
           <Text style={styles.title}>Ajoute au moins une photo</Text>
           <View>
-            <View style={styles.containerPhoto}>
-              {addedPhoto}
-              {/* {photo && <Image source={{ uri: photo }} style={styles.image} />} */}
-            </View>
+            <View style={styles.containerPhoto}>{addedPhoto}</View>
           </View>
           <View style={styles.bottomButtons}>
-            <TouchableOpacity
-              style={styles.prevButton}
-              onPress={() => navigation.navigate("RelationScreen")}
-            >
-              <Text style={styles.prevTextButton}>{"<"}</Text>
-            </TouchableOpacity>
-
-            {/* <TouchableOpacity
-              style={styles.validationButton}
-              onPress={() => navigation.navigate("MainTabNav")}
-            >
-              <Text style={styles.textValidateButton}>Valider</Text>
-            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.validationButton}
               onPress={() => handleSubmitPhotos()}
