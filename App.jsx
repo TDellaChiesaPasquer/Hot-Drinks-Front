@@ -5,8 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Feather from '@expo/vector-icons/Feather';
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Feather from "@expo/vector-icons/Feather";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -35,69 +35,84 @@ const SignInNav = () => {
     <Stack.Navigator
       screenOptions={{ headerShown: false, gestureEnabled: false }}
     >
-      {/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
+      <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="DateScreen" component={DateScreen} />
       <Stack.Screen name="GenderScreen" component={GenderScreen} />
       <Stack.Screen name="RelationScreen" component={RelationScreen} />
+      <Stack.Screen name="MainTabNav" component={MainTabNav} />
     </Stack.Navigator>
   );
 };
 
 const MainTabNav = () => {
-  return <SafeAreaView style={styles.tabBarNavContainer} edges={['top']}>
-    <Tab.Navigator screenOptions={({route}) => ({
-      tabBarStyle: styles.tabBar,
-      header: ({route}) => {return <HeaderMain route={route}/>},
-      tabBarIcon: ({color, size}) => {
-        let icon;
-        if (route.name === 'MessagerieScreen') {
-          icon = <MaterialCommunityIcons name="message-outline" size={30} color={color}/>
-        } else {
-          icon = <Feather name="coffee" size={30} color={color} />
-        }
-        return icon;
-      },
-      tabBarActiveTintColor:'#965A51',
-      tabBarInactiveTintColor: '#BC8D85',
-      tabBarShowLabel: false,
-      tabBarIconStyle: styles.tabBarIcon
-      })}>
-      <Tab.Screen name="SwipeScreen" component={SwipeScreen}/>
-      <Tab.Screen name="MessagerieScreen" component={MessagerieScreen}/>
-    </Tab.Navigator>
-  </SafeAreaView>
-}
+  return (
+    <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: styles.tabBar,
+          header: ({ route }) => {
+            return <HeaderMain route={route} />;
+          },
+          tabBarIcon: ({ color, size }) => {
+            let icon;
+            if (route.name === "MessagerieScreen") {
+              icon = (
+                <MaterialCommunityIcons
+                  name="message-outline"
+                  size={30}
+                  color={color}
+                />
+              );
+            } else {
+              icon = <Feather name="coffee" size={30} color={color} />;
+            }
+            return icon;
+          },
+          tabBarActiveTintColor: "#965A51",
+          tabBarInactiveTintColor: "#BC8D85",
+          tabBarShowLabel: false,
+          tabBarIconStyle: styles.tabBarIcon,
+        })}
+      >
+        <Tab.Screen name="SwipeScreen" component={SwipeScreen} />
+        <Tab.Screen name="MessagerieScreen" component={MessagerieScreen} />
+      </Tab.Navigator>
+    </SafeAreaView>
+  );
+};
 
 export default function App() {
-	return (
-		<Provider store={store}>
+  return (
+    <Provider store={store}>
       <SafeAreaProvider>
         <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-            <Stack.Screen name="LoadingScreen" component={LoadingScreen}/>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false, gestureEnabled: false }}
+          >
+            <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
             <Stack.Screen name="SignInNav" component={SignInNav} />
             <Stack.Screen name="MainTabNav" component={MainTabNav} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>
-		</Provider>
-	);
+    </Provider>
+  );
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
+  container: {
+    flex: 1,
+  },
   tabBar: {
-    backgroundColor: '#F5EBE6',
-    borderTopWidth: 0
+    backgroundColor: "#F5EBE6",
+    borderTopWidth: 0,
   },
   tabBarNavContainer: {
     flex: 1,
-    backgroundColor: '#F5EBE6'
+    backgroundColor: "#F5EBE6",
   },
   tabBarIcon: {
-    fontSize: 30
-  }
+    fontSize: 30,
+  },
 });

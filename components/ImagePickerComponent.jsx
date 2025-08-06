@@ -11,7 +11,7 @@ import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 const { width, height } = Dimensions.get("window");
 
-export default function ImagePickerScreen() {
+export default function ImagePickerScreen(props) {
   const [photo, setPhoto] = useState(null);
 
   const pickImage = async () => {
@@ -29,6 +29,7 @@ export default function ImagePickerScreen() {
       console.log("uri=", uri);
       //   const next = [...photo];
       //   next[index] = uri;
+      props.addUriToList(uri);
       setPhoto(uri);
     } else {
       alert("Tu dois sélectionner au moins une image pour valider ton profil.");
