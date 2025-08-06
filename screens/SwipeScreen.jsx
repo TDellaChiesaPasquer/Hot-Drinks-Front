@@ -10,8 +10,6 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const maxNumberOfCards = 10;
 
-const PLACEHOLDER_SRC = require("../assets/IllustrationPorfileBase.jpg");
-
 export default function SwipeScreen(props) {
 	const swiperReference = useRef(null);
 	const [newProfiles, setNewProfiles] = useState(false);
@@ -22,9 +20,9 @@ export default function SwipeScreen(props) {
 	const enTest = true;
 
 	const userToken = useSelector(function (state) {
-		if (enTest) return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU";
+		if (enTest)
+			return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU";
 		return state.user.value.token;
-
 	});
 
 	useEffect(function () {
@@ -90,7 +88,7 @@ export default function SwipeScreen(props) {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
-				authorization: userData.token,
+				authorization: userToken,
 			},
 			body: JSON.stringify(payload),
 		};
@@ -110,7 +108,7 @@ export default function SwipeScreen(props) {
 		const profile = profileList[cardIndexInList];
 		return (
 			<View style={styles.card}>
-				<SwipeContainer profile={profile} onChoice={handleUserChoice} placeholderSrc={PLACEHOLDER_SRC} />
+				<SwipeContainer profile={profile} onChoice={handleUserChoice} />
 			</View>
 		);
 	}
