@@ -41,7 +41,6 @@ yarn.lock
 *.tsbuildinfo
 
 *.env
-.env
 
 # Fichiers temporaires
 *projet.txt

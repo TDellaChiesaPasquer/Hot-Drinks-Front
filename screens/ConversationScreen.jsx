@@ -139,9 +139,14 @@ const styles = StyleSheet.create({
   avatar: {
     width: 60,
     height: 60,
-    borderRadius: '100%',
     objectFit: 'cover',
-    backgroundColor: '#965A51'
+  },
+  avatarContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: '100%',
+    backgroundColor: '#965A51',
+    overflow: 'hidden'
   },
   conversationHeader: {
     alignItems: 'center',
