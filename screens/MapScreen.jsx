@@ -12,7 +12,7 @@ import { Dimensions } from "react-native";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
 
@@ -25,6 +25,7 @@ export default function App({ navigation }) {
   const [permission, setPermission] = useState(false);
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
+  const myLocationRef = useRef(myLocation);
 
   const [givenPosition, setGivenPosition] = useState(null);
   const user = useSelector((state) => state.user.value);
@@ -50,7 +51,11 @@ export default function App({ navigation }) {
           latitude,
           longitude,
         });
-        navigation.navigate("SwipeScreen");
+        myLocationRef.current = {
+          latitude,
+          longitude,
+        };
+        getGeolocalisation();
       } else {
         setPermission(true);
       }
@@ -61,7 +66,7 @@ export default function App({ navigation }) {
   const getGeolocalisation = async () => {
     setDisabled(true);
     console.log(myLocation);
-    if (!myLocation.latitude) {
+    if (!myLocationRef.current.latitude) {
       setError("Ajouter une position !");
       setDisabled(false);
       return;
@@ -75,8 +80,8 @@ export default function App({ navigation }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          latitude: myLocation.latitude,
-          longitude: myLocation.longitude,
+          latitude: myLocationRef.current.latitude,
+          longitude: myLocationRef.current.longitude,
         }),
       }
     );
@@ -98,6 +103,7 @@ export default function App({ navigation }) {
       latitude: touch_coordinates.latitude,
     };
     setMyLocation(newCity);
+    myLocationRef.current = newCity;
   };
 
   return (
