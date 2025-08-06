@@ -34,9 +34,9 @@ export default function ImagePickerScreen(props) {
       alert("Tu dois sélectionner au moins une image pour valider ton profil.");
     }
   };
-
+  // Hello \o/
   const handleDelete = () => {
-    setPhoto("")
+    setPhoto("");
   };
 
   return (
@@ -44,8 +44,12 @@ export default function ImagePickerScreen(props) {
       {photo ? (
         <View>
           <Image source={photo} style={styles.addedPhoto} />
-          <TouchableOpacity onPress={() => handleDelete()} style={{position: "absolute", top : 5, right : 5}} activeOpacity={0.8}>
-          <Text>x</Text>
+          <TouchableOpacity
+            onPress={() => handleDelete()}
+            style={{ position: "absolute", top: 5, right: 5 }}
+            activeOpacity={0.8}
+          >
+            <Text>x</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -95,7 +99,5 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
-  deleteCross:{
-    
-  }
+  deleteCross: {},
 });
