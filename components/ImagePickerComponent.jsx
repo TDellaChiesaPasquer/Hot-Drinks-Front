@@ -22,9 +22,7 @@ export default function ImagePickerScreen(props) {
       aspect: [4, 3],
       quality: 1,
     });
-
     //console.log(result);
-
     if (!result.canceled) {
       const uri = result.assets[0].uri;
       console.log("uri=", uri);
@@ -37,12 +35,18 @@ export default function ImagePickerScreen(props) {
     }
   };
 
+  const handleDelete = () => {
+    setPhoto("")
+  };
+
   return (
     <TouchableOpacity onPress={pickImage} style={styles.addPhotoButton}>
       {photo ? (
         <View>
           <Image source={photo} style={styles.addedPhoto} />
-<Button> </Button>
+          <TouchableOpacity onPress={() => handleDelete()} style={{position: "absolute", top : 5, right : 5}} activeOpacity={0.8}>
+          <Text>x</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <Text style={styles.textButton}>+</Text>
@@ -90,4 +94,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+
+  deleteCross:{
+    
+  }
 });

@@ -34,82 +34,37 @@ export default function ImagePickerScreen({ navigation }) {
     );
   }
 
-
-
-// const handleSubmitPhotos = async () => {
-// if (photo.length === 0) {
-//     return;
-// }
-//   const response = await fetch(process.env.EXPO_PUBLIC_IP+"/users/addPhoto"),{
-//        method: 'POST',
-//        body: formData,
-
-//   }
-//     const data = await response.json()
-
-//     console.log(data)
-
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-//   if (city.length === 0) {
-//       return;
-//     }
-
-//     // 1st request: get geographic data from API
-//     fetch(`https://api-adresse.data.gouv.fr/search/?q=${city}`)
-//       .then((response) => response.json())
-//       .then((data) => {
-//         // Nothing is done if no city is found by API
-//         if (data.features.length === 0) {
-//           return;
-//         }
-
-//         const firstCity = data.features[0];
-//         const newPlace = {
-//           name: firstCity.properties.city,
-//           latitude: firstCity.geometry.coordinates[1],
-//           longitude: firstCity.geometry.coordinates[0],
-//         };
-
-//         // 2nd request : send new place to backend to register it in database
-//         fetch(`${BACKEND_ADDRESS}/places`, {
-//           method: "POST",
-//           headers: { "Content-Type": "application/json" },
-//           body: JSON.stringify({
-//             nickname: user.nickname,
-//             name: newPlace.name,
-//             latitude: newPlace.latitude,
-//             longitude: newPlace.longitude,
-//           }),
-//         })
-//           .then((response) => response.json())
-//           .then((data) => {
-//             // Dispatch in Redux store if the new place have been registered in database
-//             if (data.result) {
-//               dispatch(addPlace(newPlace));
-//               setCity("");
-//             }
-//           });
-//       });
-// };
-
-
-
-
-
-
-
+  const handleSubmitPhotos = async () => {
+    const formData = new FormData();
+    // console.log("click", photo);
+    console.log(photoUriList);
+    if (photoUriList.length === 0) {
+      return;
+    }
+    console.log("test");
+    for (let i = 0; i < photoUriList.length; i++) {
+      formData.append("photoFromFront" + i, {
+        uri: photoUriList[i],
+        name: "photo.jpg",
+        type: "image/jpeg",
+      });
+    }
+    console.log("test");
+    const response = await fetch(
+      process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    navigation.navigate("MainTabNav");
+    console.log("data=", data);
+    if (photoUriList.length === 0) {
+      console.log("photo=", photoUriList);
+      return;
+    }
+  };
 
   return (
     <SafeAreaProvider>
@@ -138,7 +93,7 @@ export default function ImagePickerScreen({ navigation }) {
             </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.validationButton}
-              onPress={() => navigation.navigate("MapScreen")}
+              onPress={() => handleSubmitPhotos()}
             >
               <Text style={styles.textValidateButton}>Valider</Text>
             </TouchableOpacity>
