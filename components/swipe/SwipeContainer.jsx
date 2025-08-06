@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Swiper from "react-native-swiper";
 
 import SwipeButton from "./SwipeButton";
-import { capitalize } from "../../Utils/utils.js"
+import { capitalize } from "../../Utils/utils.js";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
@@ -50,17 +50,19 @@ function extractAllImagesFromProfiles(profileList, placeholderSrc) {
 
 // Objet contenant les données placeholders structurées comme les vraies données
 const placeholderData = {
-  username: "Emma",
-  birthdate: new Date(new Date().setFullYear(new Date().getFullYear() - 25)).toISOString(),
-  distance: "15 km",
-  photoList: Array(NB_PLACEHOLDERS || 10).fill("").map(() => PLACEHOLDER_SRC),
-  tastesList: [
-    { value: "violon", star: true },
-    { value: "randonnée", star: true },
-    { value: "chat", star: true },
-    { value: "cinéma", star: false } // exemple d'un goût non étoilé qui ne sera pas affiché
-  ],
-  idProfile: "placeholder_id"
+	username: "Emma",
+	birthdate: new Date(new Date().setFullYear(new Date().getFullYear() - 25)).toISOString(),
+	distance: "15 km",
+	photoList: Array(NB_PLACEHOLDERS)
+		.fill("")
+		.map(() => PLACEHOLDER_SRC),
+	tastesList: [
+		{ value: "violon", star: true },
+		{ value: "randonnée", star: true },
+		{ value: "chat", star: true },
+		{ value: "cinéma", star: false }, // exemple d'un goût non étoilé qui ne sera pas affiché
+	],
+	idProfile: "placeholder_id",
 };
 
 /**
@@ -70,54 +72,52 @@ const placeholderData = {
  * @return {Object} Données formatées du profil
  */
 function formatProfileData(profileData, placeholderSrc) {
-  // Initialiser avec les données par défaut
-  const formattedData = {
-    informationList: ["Anonyme", "?", "Distance inconnue"],
-    hashtagsList: [],
-    images: getPlaceholders(NB_PLACEHOLDERS || 10, placeholderSrc),
-    profileID: null
-  };
-  
-  if (!profileData) return formattedData;
-  
-  // ID du profil pour les actions de swipe
-  formattedData.profileID = profileData.idProfile || null;
-  
-  // Username - utiliser directement
-  if (profileData.username) {
-    formattedData.informationList[0] = profileData.username;
-  }
-  
-  // Age - calculer à partir de birthdate
-  if (profileData.birthdate) {
-    const birthDate = new Date(profileData.birthdate);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    formattedData.informationList[1] = age.toString();
-  }
-  
-  // Distance - afficher directement sauf si contient NaN
-  if (profileData.distance && !profileData.distance.includes("NaN")) {
-    formattedData.informationList[2] = profileData.distance;
-  }
-  
-  // Photos - utiliser la fonction existante pour récupérer les photos
-  if (profileData.photoList && profileData.photoList.length > 0) {
-    formattedData.images = getAllPhotosFromProfile(profileData, placeholderSrc);
-  }
-  
-  // Hashtags - extraire les goûts avec star=true
-  if (profileData.tastesList && profileData.tastesList.length > 0) {
-    formattedData.hashtagsList = profileData.tastesList
-      .filter(taste => taste.star === true)
-      .map(taste => taste.value);
-  }
-  
-  return formattedData;
+	// Initialiser avec les données par défaut
+	const formattedData = {
+		informationList: ["Anonyme", "?", "Distance inconnue"],
+		hashtagsList: [],
+		images: getPlaceholders(NB_PLACEHOLDERS || 10, placeholderSrc),
+		profileID: null,
+	};
+
+	if (!profileData) return formattedData;
+
+	// ID du profil pour les actions de swipe
+	formattedData.profileID = profileData.idProfile || null;
+
+	// Username - utiliser directement
+	if (profileData.username) {
+		formattedData.informationList[0] = profileData.username;
+	}
+
+	// Age - calculer à partir de birthdate
+	if (profileData.birthdate) {
+		const birthDate = new Date(profileData.birthdate);
+		const today = new Date();
+		let age = today.getFullYear() - birthDate.getFullYear();
+		const monthDiff = today.getMonth() - birthDate.getMonth();
+		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+			age--;
+		}
+		formattedData.informationList[1] = age.toString();
+	}
+
+	// Distance - afficher directement sauf si contient NaN
+	if (profileData.distance && !profileData.distance.includes("NaN")) {
+		formattedData.informationList[2] = profileData.distance;
+	}
+
+	// Photos - utiliser la fonction existante pour récupérer les photos
+	if (profileData.photoList && profileData.photoList.length > 0) {
+		formattedData.images = getAllPhotosFromProfile(profileData, placeholderSrc);
+	}
+
+	// Hashtags - extraire les goûts avec star=true
+	if (profileData.tastesList && profileData.tastesList.length > 0) {
+		formattedData.hashtagsList = profileData.tastesList.filter((taste) => taste.star === true).map((taste) => taste.value);
+	}
+
+	return formattedData;
 }
 
 export default function SwipeContainer(props) {
