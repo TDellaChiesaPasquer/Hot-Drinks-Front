@@ -34,7 +34,7 @@ yarn.lock
 .DS_Store
 *.pem
 
-# local env files
+# Environnement
 .env*.local
 
 # typescript
@@ -42,3 +42,7 @@ yarn.lock
 
 *.env
 .env
+
+# Fichiers temporaires
+*projet.txt
+*frontend.txt

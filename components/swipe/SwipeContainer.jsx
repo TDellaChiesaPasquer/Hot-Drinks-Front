@@ -1,84 +1,85 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { useSelector } from "react-redux";
+import Swiper from "react-native-swiper";
+import PropTypes from "prop-types";
 
 import SwipeButton from "./SwipeButton";
 
-export default function SwipeContainer() {
-	const [informationListJSX, setInformationListJSX] = useState([]);
-	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
+const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
+const NB_PLACEHOLDERS = 3;
 
-	const userInfos = useSelector((state) => state.user.value);
+export default function SwipeContainer({ profile, onChoice }) {
+	const { token } = useSelector((state) => state.user.value);
 
-	function capitalize(str) {
-		return str.length > 1 ? str[0].toUpperCase() + str.slice(1) : str;
-	}
+	/* ---------- Helpers ---------- */
+	const placeholders = useMemo(() => Array(NB_PLACEHOLDERS).fill(PLACEHOLDER_SRC), []);
 
-	async function fetchProfiles() {
+	const pickFirstPhoto = (p) => (p?.photoList?.[0]?.trim() ? { uri: p.photoList[0].trim() } : PLACEHOLDER_SRC);
+
+	/* ---------- Images ---------- */
+	const [images, setImages] = useState(placeholders);
+
+	const fetchImages = useCallback(async () => {
 		try {
-			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/profils/profil", {
-				method: "GET",
+			const res = await fetch(`${process.env.EXPO_PUBLIC_IP}/profils/profil`, {
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: userInfos.token,
+					authorization: token,
 				},
 			});
-			const data = await response.json();
-			console.log(data);
-			if (!data.result) {
-				return;
-			}
-		} catch (error) {
-			console.error("Erreur réseau :", error);
+			const { profilList } = await res.json();
+			const imgs = Array.isArray(profilList) ? profilList.map(pickFirstPhoto) : placeholders;
+			setImages(imgs.length ? imgs : placeholders);
+		} catch (err) {
+			console.error("fetch /profils/profil:", err);
+			setImages(placeholders);
 		}
-	}
-
-	// Fetch initial des profils
-	fetchProfiles();
+	}, [token, placeholders]);
 
 	useEffect(() => {
-		const hashtagsList = ["violon", "randonnée", "chat"];
-		const informationList = ["Username", "Age", "Ville"];
+		fetchImages();
+	}, [fetchImages]);
 
-		let tmpHashtagsListJSX = [];
-		let tmpInformationListJSX = [];
-		for (let index = 0; index < informationList.length - 1; index++) {
-			tmpHashtagsListJSX.push(
-				<Text key={index + 10} style={styles.userInformation}>
-					{informationList[index]}
-					{", "}
-				</Text>
-			);
-		}
-		tmpHashtagsListJSX.push(
-			<Text key={informationList.length - 1 + 10} style={styles.userInformation}>
-				{informationList[informationList.length - 1]}
-			</Text>
-		);
-		for (let index = 0; index < hashtagsList.length; index++) {
-			tmpHashtagsListJSX.push(
-				<Text key={index} style={styles.hashtag}>
-					#{capitalize(hashtagsList[index])}{" "}
-				</Text>
-			);
-		}
-		setHashtagsListJSX(tmpHashtagsListJSX);
-		setInformationListJSX(tmpInformationListJSX);
-	}, []);
+	/* ---------- Textes à afficher ---------- */
+	const informationList = ["Emma", "25", "Paris"];
+	const hashtagsList = ["violon", "randonnée", "chat"];
 
+	const capitalize = (s) => (s?.length > 1 ? s[0].toUpperCase() + s.slice(1) : s);
+
+	/* ---------- Rendu ---------- */
 	return (
 		<View style={styles.container}>
-			<View style={styles.swipeContainer}>
-				<Image source={require("../../assets/IllustrationPorfileBase.jpg")} style={styles.image} resizeMode="cover" />
+			<View style={styles.card}>
+				<Swiper loop={false} showsButtons>
+					{images.map((src, i) => (
+						<Image key={i} source={src} style={styles.image} contentFit="cover" />
+					))}
+				</Swiper>
 
-				<View style={styles.textContainer}>
-					<View style={styles.userInformationsContainer}>{informationListJSX}</View>
-					<View style={styles.userHashTags}>{hashtagsListJSX}</View>
+				<View style={styles.overlay}>
+					<View style={styles.infos}>
+						{informationList.map((txt, i) => (
+							<Text key={i} style={styles.info}>
+								{txt}
+								{i < informationList.length - 1 && ", "}
+							</Text>
+						))}
+					</View>
 
-					<View style={styles.choiceButtonList}>
-						<SwipeButton style={styles.choiceButton} type="Like" />
-						<SwipeButton style={styles.choiceButton} type="Superlike" />
-						<SwipeButton style={styles.choiceButton} type="Dislike" />
+					<View style={styles.hashtags}>
+						{hashtagsList.map((tag, i) => (
+							<Text key={i} style={styles.hashtag}>
+								#{capitalize(tag)}{" "}
+							</Text>
+						))}
+					</View>
+
+					<View style={styles.buttons}>
+						{["Dislike", "Superlike", "Like"].map((type) => (
+							<SwipeButton key={type} type={type} profileID={profile?.idProfile} onSwipe={onChoice} />
+						))}
 					</View>
 				</View>
 			</View>
@@ -86,43 +87,32 @@ export default function SwipeContainer() {
 	);
 }
 
+/* ---------- Prop-Types ---------- */
+SwipeContainer.propTypes = {
+	profile: PropTypes.shape({
+		idProfile: PropTypes.number,
+		profile: PropTypes.array,
+	}),
+	onChoice: PropTypes.func.isRequired,
+};
+
+/* ---------- Styles ---------- */
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#FFF5F0",
-	},
-	swipeContainer: {
-		flex: 1,
-		alignItems: "center",
-	},
-	userInformationsContainer: {
-		flex: 1,
+	container: { flex: 1 },
+	card: { flex: 1, borderRadius: 20, overflow: "hidden" },
+	image: { width: "100%", height: "100%" },
+	overlay: { position: "absolute", left: 20, right: 20, bottom: 120 },
+	infos: { flexDirection: "row", flexWrap: "wrap" },
+	info: { color: "#000", fontWeight: "600", fontSize: 18 },
+	hashtags: { flexDirection: "row", flexWrap: "wrap", marginTop: 4 },
+	hashtag: { color: "#000", fontSize: 16 },
+	buttons: {
+		position: "absolute",
+		left: 0,
+		right: 0,
+		bottom: -100,
 		flexDirection: "row",
+		justifyContent: "space-around",
 		alignItems: "center",
-		justifyContent: "space-bettween",
-		color: "black",
-	},
-	choiceButtonList: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	userInformation: {
-		color: "black",
-	},
-	userHashTags: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		color: "black",
-	},
-	hashtag: {
-		color: "black",
-	},
-	textContainer: {
-		flex: 1,
-		flexDirection: "colommn",
-		alignItems: "center",
-		justifyContent: "space-bettween",
 	},
 });

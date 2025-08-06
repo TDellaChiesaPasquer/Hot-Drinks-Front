@@ -15,19 +15,20 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
-// import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 import { addPlace } from "../reducers/map";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App({navigation}) {
   const [myLocation, setMyLocation] = useState({});
-  // const [modalVisible, setModalVisible] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const [permission, setPermission] = useState(false);
   const [city, setCity] = useState("");
+  const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
   const [givenPosition, setGivenPosition] = useState(null);
-
+	const user = useSelector((state) => state.user.value);
   const locations = useSelector((state) => state.map.value.places);
   console.log(locations);
 
@@ -55,7 +56,32 @@ export default function App({navigation}) {
       }
     })();
   }, []);
+  // ____________________________________FETCH GEOLOC_______________________________
+const getGeolocalisation = async () => {
+setDisabled(true)
+if(location === "") {
+  setError (error: "Une erreur a eu lieu !")
+}
+if(!data.result) {
+  setError(false),
+  setDisabled(true)
+  return;
+}
 
+  const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/location", {
+    method: "Put",
+    headers: {
+      autorization: user.token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      latitude: user.latitude,
+      longitude: user.longitude
+    })
+  })
+    const data = await response.json();
+
+}
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
   const addCityByTouch = async (touch_coordinates) => {
     console.log(touch_coordinates);
@@ -90,7 +116,7 @@ export default function App({navigation}) {
             longitudeDelta: 0.0222,
           }}
           style={styles.map}
-          onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)}
+          onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)} disabled={disabled}
         >
           {givenPosition && (
             <Marker
