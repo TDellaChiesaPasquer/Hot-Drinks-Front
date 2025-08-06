@@ -51,7 +51,9 @@ export default function ({navigation}) {
     const otherUser = user.user ? otherUserNumber === 2 ? data.user2 : data.user1 : data.user1;
     const name = otherUser.username || '';
     return <TouchableOpacity key={otherUser._id} style={styles.contactContainer} onPress={() => navigation.navigate('ConversationScreen', {otherUserNumber, ...data})}>
-        <Image style={styles.avatar} source={otherUser.photoList.length === 0 ? '' : otherUser.photoList[0]}/>
+        <View style={styles.avatarContainer}>
+          <Image style={styles.avatar} source={otherUser.photoList.length === 0 ? '' : otherUser.photoList[0]}/>
+        </View>
         <Text style={styles.contactName}>{name.length >= 15 ? name.slice(0, 12) + '...' : name}</Text>
       </TouchableOpacity>
   })
