@@ -21,13 +21,14 @@ export default function ({route}) {
 
 const styles = StyleSheet.create({
   header: {
-    height: 40,
+    height: 50,
     alignItems: "center",
     justifyContent: "space-between",
     width: '100%',
     backgroundColor: '#F5EBE6',
     flexDirection: 'row',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    paddingBottom: 10
   },
   text: {
     fontSize: 30,
