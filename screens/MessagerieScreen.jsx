@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
@@ -29,29 +29,31 @@ export default function ({navigation}) {
     if (data.messageList.length === 0) {
       return null;
     }
-    const otherUser = user.user ? String(data.user1._id) === String(user.user._id) ? data.user2 : data.user1 : data.user1;
+    const otherUserNumber = String(data.user1._id) === String(user.user._id) ? 2 : 1;
+    const otherUser = user.user ? otherUserNumber === 2 ? data.user2 : data.user1 : data.user1;
     const name = otherUser.username;
     const lastMessage = data.messageList[data.messageList.length - 1];
-    return <View key={otherUser._id} style={styles.conversationContainer}>
+    return <TouchableOpacity key={otherUser._id} style={styles.conversationContainer} onPress={() => navigation.navigate('ConversationScreen', {otherUserNumber, ...data})}>
       <Image style={styles.avatar}/>
       <View style={styles.message}>
         <Text style={styles.username}>{name}</Text>
         <Text style={styles.messageInfo}>Dernier message, le {dayjs(lastMessage.date).format('DD/MM/YYYY')} à {dayjs(lastMessage.date).format('HH:mm')}</Text>
         <Text style={styles.messageContent}>{lastMessage.content.length > 30 ? lastMessage.content.slice(0, 30) + '...' : lastMessage.content}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   })
   const contactHTML = conversationData.map(data => {
-    const otherUser = user.user ? String(data.user1._id) === String(user.user._id) ? data.user2 : data.user1 : data.user1;
+    const otherUserNumber = String(data.user1._id) === String(user.user._id) ? 2 : 1;
+    const otherUser = user.user ? otherUserNumber === 2 ? data.user2 : data.user1 : data.user1;
     const name = otherUser.username;
-    return <View key={otherUser._id} style={styles.contactContainer}>
+    return <TouchableOpacity key={otherUser._id} style={styles.contactContainer} onPress={() => navigation.navigate('ConversationScreen', {otherUserNumber, ...data})}>
         <Image style={styles.avatar}/>
         <Text style={styles.contactName}>{name}</Text>
-      </View>
+      </TouchableOpacity>
   })
   return <View style={styles.container}>
     {contactHTML}
-    <Text>Messages</Text>
+    <Text style={styles.title}>Messages</Text>
     {conversationHTML}
   </View>
 }
@@ -105,5 +107,11 @@ const styles = StyleSheet.create({
   contactName: {
     color: '#965A51',
     fontWeight: 'bold'
+  },
+  title: {
+    color: "#965A51",
+		fontWeight: "bold",
+    fontSize: 18,
+    marginVertical: 10
   }
 })

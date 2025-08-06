@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
 	inputTitle: {
 		color: "#965A51",
 		fontWeight: "bold",
-        marginTop: 30
+    marginTop: 30
 	},
 	inputSub: {
 		color: "#BC8D85",
@@ -154,8 +154,8 @@ const styles = StyleSheet.create({
 		width: "90%",
 		alignItems: "center",
 	},
-    bottom: {
-        position: 'absolute',
-        top: height * 0.7
-    }
+  bottom: {
+      position: 'absolute',
+      top: height * 0.7
+  }
 });

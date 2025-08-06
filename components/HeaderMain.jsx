@@ -7,7 +7,7 @@ import Feather from '@expo/vector-icons/Feather';
 
 export default function ({route}) {
   let icon;
-  if (route.name === 'MessagerieScreen') {
+  if (route.name === 'MessagerieNav') {
     icon = <MaterialCommunityIcons name="message-outline" size={30} color="#BC8D85"/>
   } else {
     icon = <Feather name="coffee" size={30} color="#BC8D85" />

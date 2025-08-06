@@ -18,6 +18,7 @@ import SwipeScreen from "./screens/SwipeScreen";
 import SignIn from "./screens/SignIn";
 import LoadingScreen from "./screens/LoadingScreen";
 import MessagerieScreen from "./screens/MessagerieScreen";
+import ConversationScreen from "./screens/ConversationScreen";
 import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 
@@ -51,7 +52,7 @@ const MainTabNav = () => {
       header: ({route}) => {return <HeaderMain route={route}/>},
       tabBarIcon: ({color, size}) => {
         let icon;
-        if (route.name === 'MessagerieScreen') {
+        if (route.name === 'MessagerieNav') {
           icon = <MaterialCommunityIcons name="message-outline" size={30} color={color}/>
         } else {
           icon = <Feather name="coffee" size={30} color={color} />
@@ -64,9 +65,16 @@ const MainTabNav = () => {
       tabBarIconStyle: styles.tabBarIcon
       })}>
       <Tab.Screen name="SwipeScreen" component={SwipeScreen}/>
-      <Tab.Screen name="MessagerieScreen" component={MessagerieScreen}/>
+      <Tab.Screen name="MessagerieNav" component={MessagerieNav}/>
     </Tab.Navigator>
   </SafeAreaView>
+}
+
+const MessagerieNav = () => {
+  return <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Screen name="MessagerieScreen" component={MessagerieScreen}/>
+    <Stack.Screen name="ConversationScreen" component={ConversationScreen}/>
+  </Stack.Navigator>
 }
 
 export default function App() {
