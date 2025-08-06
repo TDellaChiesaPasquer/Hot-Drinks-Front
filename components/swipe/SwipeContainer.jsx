@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import { Image } from "expo-image";
 import Swiper from "react-native-swiper";
 
 import SwipeButton from "./SwipeButton";
@@ -9,7 +10,8 @@ export default function SwipeContainer(props) {
 	const [informationListJSX, setInformationListJSX] = useState([]);
 	const [hashtagsListJSX, setHashtagsListJSX] = useState([]);
 
-	const placeholderImage = "../../assets/IllustrationPorfileBase.jpg";
+	let placeholderImage = "../../assets/IllustrationPorfileBase.jpg";
+	autreImage = "https://images.pexels.com/photos/3992656/pexels-photo-3992656.jpeg"; // test
 
 	function placeholder(nombre) {
 		return Array(nombre).fill(require(placeholderImage));
@@ -17,7 +19,12 @@ export default function SwipeContainer(props) {
 
 	function fillImages(profilList, placeholderAsset) {
 		if (!Array.isArray(profilList)) return placeholder(3);
-		const imgs = profilList.map((p) => (p.photoList && p.photoList.length > 0 ? { uri: p.photoList[0].trim() } : placeholderAsset));
+		const imgs = profilList.map((p) => {
+			const url = p.photoList && p.photoList.length > 0 ? p.photoList[0].trim() : null;
+			if (url) console.log("Image URL from DB :", url);
+			return url ? { uri: url } : placeholderAsset;
+		});
+
 		return imgs.length > 0 ? imgs : placeholder(3);
 	}
 
@@ -39,9 +46,10 @@ export default function SwipeContainer(props) {
 				});
 				console.log("après le fetch");
 				const data = await response.json();
-				console.log("data : "+data)
+				// console.log("data : "+data)
 				setImages(fillImages(data.profilList, placeholderAsset));
-			} catch (e) {
+			} catch (error) {
+				console.log("Erreur fetch profiles : " + error);
 				setImages(placeholder(3));
 			}
 		};
@@ -103,7 +111,8 @@ export default function SwipeContainer(props) {
 			<View style={styles.swipeContainer}>
 				<Swiper style={styles.carousel} showsButtons={true} loop={false} autoplay={false} showsPagination={true}>
 					{images.map((src, idx) => (
-						<Image key={idx} source={src} style={styles.image} resizeMode="cover" />
+						// <Image key={idx} source={src} style={styles.image} contentFit="cover" transition={300} />
+						<Image key={idx} source={autreImage} style={styles.image} contentFit="cover" transition={300} />
 					))}
 				</Swiper>
 
