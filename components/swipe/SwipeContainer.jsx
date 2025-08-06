@@ -1,25 +1,19 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Image } from "expo-image";
-
 import { useSelector } from "react-redux";
-
 import Swiper from "react-native-swiper";
 import PropTypes from "prop-types";
 
 import SwipeButton from "./SwipeButton";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
-const NB_PLACEHOLDERS = 10;
+const NB_PLACEHOLDERS = 3;
 
 export default function SwipeContainer({ profile, onChoice }) {
 	const { token } = useSelector((state) => state.user.value);
 
 	/* ---------- Helpers ---------- */
-
-	// Utilisation de useMemo :
-	// En général, useMemo sert à mémoriser une valeur calculée pour éviter de la recalculer à chaque rendu inutilement.
-	// Ici, il permet de créer le tableau placeholders une seule fois et de ne pas le recréer à chaque rendu, même si le composant se ré-affiche.
 	const placeholders = useMemo(() => Array(NB_PLACEHOLDERS).fill(PLACEHOLDER_SRC), []);
 
 	const pickFirstPhoto = (p) => (p?.photoList?.[0]?.trim() ? { uri: p.photoList[0].trim() } : PLACEHOLDER_SRC);
