@@ -34,40 +34,6 @@ export default function ImagePickerScreen({ navigation }) {
     );
   }
 
-<<<<<<< HEAD
-  const handleSubmitPhotos = async () => {
-    const formData = new FormData();
-    // console.log("click", photo);
-    console.log(photoUriList);
-    if (photoUriList.length === 0) {
-      return;
-    }
-    console.log("test");
-    for (let i = 0; i < photoUriList.length; i++) {
-      formData.append("photoFromFront" + i, {
-        uri: photoUriList[i],
-        name: "photo.jpg",
-        type: "image/jpeg",
-      });
-    }
-    console.log("test");
-    const response = await fetch(
-      process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-    const data = await response.json();
-    navigation.navigate("MainTabNav");
-    console.log("data=", data);
-    if (photoUriList.length === 0) {
-      console.log("photo=", photoUriList);
-      return;
-    }
-  };
-
-=======
 
 
 // const handleSubmitPhotos = async () => {
@@ -145,7 +111,6 @@ export default function ImagePickerScreen({ navigation }) {
 
 
 
->>>>>>> 99e989854463e5b7135d5028c78f7f80a6843082
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -173,11 +138,7 @@ export default function ImagePickerScreen({ navigation }) {
             </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.validationButton}
-<<<<<<< HEAD
-              onPress={() => handleSubmitPhotos()}
-=======
               onPress={() => navigation.navigate("MapScreen")}
->>>>>>> 99e989854463e5b7135d5028c78f7f80a6843082
             >
               <Text style={styles.textValidateButton}>Valider</Text>
             </TouchableOpacity>
