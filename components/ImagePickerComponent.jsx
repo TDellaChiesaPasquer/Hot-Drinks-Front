@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  Button,
 } from "react-native";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
@@ -39,7 +40,10 @@ export default function ImagePickerScreen(props) {
   return (
     <TouchableOpacity onPress={pickImage} style={styles.addPhotoButton}>
       {photo ? (
-        <Image source={photo} style={styles.addedPhoto} />
+        <View>
+          <Image source={photo} style={styles.addedPhoto} />
+<Button> </Button>
+        </View>
       ) : (
         <Text style={styles.textButton}>+</Text>
       )}
