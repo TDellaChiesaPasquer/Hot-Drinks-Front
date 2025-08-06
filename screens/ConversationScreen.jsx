@@ -28,9 +28,9 @@ export default function ({navigation, route}) {
         date = `le ${messageDate.format('DD/MM/YYYY')} à ${messageDate.format('HH:mm')}`;
       }
     }
-    return <View key={message.date} style={[styles.messageDiv, {alignItems: otherUserNumber === message.number ? 'flex-start' : 'flex-end'}]}>
+    return <View key={message.date} style={[styles.messageDiv, {alignItems: otherUserNumber === message.creator ? 'flex-start' : 'flex-end'}]}>
       {date && <Text style={styles.messageDate}>{date}</Text>}
-      <View style={[styles.messageContentContainer, {backgroundColor: otherUserNumber === message.number ? '#BC8D85' : '#965A51'}]}>
+      <View style={[styles.messageContentContainer, {backgroundColor: otherUserNumber === message.creator ? '#BC8D85' : '#965A51'}]}>
         <Text style={styles.messageContent}>{message.content}</Text>
       </View>
     </View>

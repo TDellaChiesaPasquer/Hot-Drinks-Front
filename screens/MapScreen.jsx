@@ -56,30 +56,31 @@ export default function App({navigation}) {
       }
     })();
   }, []);
-  // ____________________________________FETCH GEOLOC_______________________________
-// const getGeolocalisation = async () => {
-// setDisabled(true)
-// if(location === "") {
-//   setError (error: "Une erreur a eu lieu !")
-// }
-// if(!data.result) {
-//   setError(false),
-//   setDisabled(true)
-//   return;
-// }
 
-  const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/location", {
-    method: "Put",
-    headers: {
-      autorization: user.token,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      latitude: user.latitude,
-      longitude: user.longitude
-    })
+  // ____________________________________FETCH GEOLOC_______________________________
+const getGeolocalisation = async () => {
+setDisabled(true)
+if(location === "") {
+  setError("Ajouter une position !")
+  setDisabled(true)
+}
+const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/location", {
+  method: "Put",
+  headers: {
+    autorization: user.token,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    latitude: user.latitude,
+    longitude: user.longitude
   })
-    const data = await response.json();
+})
+const data = await response.json();
+if(!data.result) {
+  setError(false),
+  setDisabled(true)
+  return;
+}
 
 }
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
