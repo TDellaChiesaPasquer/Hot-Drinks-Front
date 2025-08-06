@@ -34,7 +34,7 @@ const Tab = createBottomTabNavigator();
 const SignInNav = () => {
 	return (
 		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-			<Stack.Screen name="PhotoScreen" component={PhotoScreen} />
+			{/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
 			<Stack.Screen name="SignIn" component={SignIn} />
 			<Stack.Screen name="DateScreen" component={DateScreen} />
 			<Stack.Screen name="GenderScreen" component={GenderScreen} />
@@ -81,10 +81,9 @@ export default function App() {
 			<SafeAreaProvider>
 				<NavigationContainer>
 					<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-						{/* <Stack.Screen name="LoadingScreen" component={LoadingScreen}/>
+						<Stack.Screen name="LoadingScreen" component={LoadingScreen}/>
             <Stack.Screen name="SignInNav" component={SignInNav} />
-            <Stack.Screen name="MainTabNav" component={MainTabNav} /> */}
-						<Tab.Screen name="SwipeScreen" component={SwipeScreen} />
+            <Stack.Screen name="MainTabNav" component={MainTabNav} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</SafeAreaProvider>

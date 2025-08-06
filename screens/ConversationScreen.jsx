@@ -2,11 +2,15 @@ import { View, Text, StyleSheet, ScrollView, Dimensions, TextInput, KeyboardAvoi
 import { Image } from "expo-image";
 import dayjs from "dayjs";
 import { useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { updateConv } from "../reducers/user";
+
 const {width, height} = Dimensions.get('window');
 
 export default function ({navigation, route}) {
   const user = useSelector(state => state.user.value);
+  const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState('');
   const [sendDisabled, setSendDisabled] = useState(false);
   const [messageList, setMessageList] = useState(route.params.messageList);
@@ -62,12 +66,13 @@ export default function ({navigation, route}) {
     });
     const data2 = await response2.json();
     setMessageList(data2.conversation.messageList);
+    dispatch(updateConv(data2.conversation));
     setSendDisabled(false);
     return;
   }
-  console.log(otherUser.photoList.length === 0 ? '' : otherUser.photoList[0])
   return <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={80}>
     <View style={styles.conversationHeader}>
+      <AntDesign name="left" size={24} color='#965A51' style={styles.goBack} onPress={() => navigation.navigate('MessagerieScreen')}/>
       <Image style={styles.avatar} source={otherUser.photoList.length === 0 ? '' : otherUser.photoList[0]}/>
       <Text style={styles.username}>{otherUser.username}</Text>
     </View>
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
   conversationHeader: {
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: '90%',
+    width: '100%',
     flexDirection: 'row'
   },
   username: {
@@ -198,5 +203,8 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignItems: 'center',
     width: width
+  },
+  goBack: {
+    marginHorizontal: 10
   }
 })

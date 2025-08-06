@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
 		width: "90%",
 	},
 	error: {
+    textAlign: 'center',
 		color: "red",
 	},
 	boutonChoixMultiple: {
