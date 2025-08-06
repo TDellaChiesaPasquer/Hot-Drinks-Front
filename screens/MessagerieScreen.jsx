@@ -51,7 +51,7 @@ export default function ({navigation}) {
   })
   return <View style={styles.container}>
     {contactHTML}
-    <Text>Test messagerie</Text>
+    <Text>Messages</Text>
     {conversationHTML}
   </View>
 }

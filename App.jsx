@@ -35,7 +35,7 @@ const SignInNav = () => {
     <Stack.Navigator
       screenOptions={{ headerShown: false, gestureEnabled: false }}
     >
-      <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
+      {/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="DateScreen" component={DateScreen} />
       <Stack.Screen name="GenderScreen" component={GenderScreen} />
