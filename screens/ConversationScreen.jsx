@@ -73,7 +73,9 @@ export default function ({navigation, route}) {
   return <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={90}>
     <View style={styles.conversationHeader}>
       <AntDesign name="left" size={24} color='#965A51' style={styles.goBack} onPress={() => navigation.navigate('MessagerieScreen')}/>
-      <Image style={styles.avatar} source={otherUser.photoList.length === 0 ? '' : otherUser.photoList[0]}/>
+      <View style={styles.avatarContainer}>
+        <Image style={styles.avatar} source={otherUser.photoList.length === 0 ? '' : otherUser.photoList[0]}/>
+      </View>
       <Text style={styles.username}>{otherUser.username}</Text>
     </View>
     <ScrollView 
@@ -139,9 +141,14 @@ const styles = StyleSheet.create({
   avatar: {
     width: 60,
     height: 60,
-    borderRadius: '100%',
     objectFit: 'cover',
-    backgroundColor: '#965A51'
+  },
+  avatarContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: '100%',
+    backgroundColor: '#965A51',
+    overflow: 'hidden'
   },
   conversationHeader: {
     alignItems: 'center',

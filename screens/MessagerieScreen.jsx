@@ -52,67 +52,26 @@ export default function ({ navigation }) {
       : data.user1;
     const name = otherUser.username;
     const lastMessage = data.messageList[data.messageList.length - 1];
-    return (
-      <TouchableOpacity
-        key={otherUser._id}
-        style={styles.conversationContainer}
-        onPress={() =>
-          navigation.navigate("ConversationScreen", {
-            otherUserNumber,
-            ...data,
-          })
-        }
-      >
-        <Image
-          style={styles.avatar}
-          source={
-            otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]
-          }
-        />
-        <View style={styles.message}>
-          <Text style={styles.username}>{name}</Text>
-          <Text style={styles.messageInfo}>
-            Dernier message, le {dayjs(lastMessage.date).format("DD/MM/YYYY")} à{" "}
-            {dayjs(lastMessage.date).format("HH:mm")}
-          </Text>
-          <Text style={styles.messageContent}>
-            {lastMessage.content.length > 30
-              ? lastMessage.content.slice(0, 30) + "..."
-              : lastMessage.content}
-          </Text>
+    return <TouchableOpacity key={otherUser._id} style={styles.conversationContainer} onPress={() => navigation.navigate('ConversationScreen', {otherUserNumber, ...data})}>
+      <View style={styles.avatarContainer}>
+        <Image style={styles.avatar} source={otherUser.photoList.length === 0 ? '' : otherUser.photoList[0]}/>
+      </View>
+      <View style={styles.message}>
+        <Text style={styles.username}>{name}</Text>
+        <Text style={styles.messageInfo}>Dernier message, le {dayjs(lastMessage.date).format('DD/MM/YYYY')} à {dayjs(lastMessage.date).format('HH:mm')}</Text>
+        <Text style={styles.messageContent}>{lastMessage.content.length > 30 ? lastMessage.content.slice(0, 30) + '...' : lastMessage.content}</Text>
+      </View>
+    </TouchableOpacity>
+  })
+  const contactHTML = conversationData.map(data => {
+    const otherUserNumber = String(data.user1._id) === String(user.user._id) ? 2 : 1;
+    const otherUser = user.user ? otherUserNumber === 2 ? data.user2 : data.user1 : data.user1;
+    const name = otherUser.username || '';
+    return <TouchableOpacity key={otherUser._id} style={styles.contactContainer} onPress={() => navigation.navigate('ConversationScreen', {otherUserNumber, ...data})}>
+        <View style={styles.avatarContainer}>
+          <Image style={styles.avatar} source={otherUser.photoList.length === 0 ? '' : otherUser.photoList[0]}/>
         </View>
-      </TouchableOpacity>
-    );
-  });
-  const contactHTML = conversationData.map((data) => {
-    const otherUserNumber =
-      String(data.user1._id) === String(user.user._id) ? 2 : 1;
-    const otherUser = user.user
-      ? otherUserNumber === 2
-        ? data.user2
-        : data.user1
-      : data.user1;
-    const name = otherUser.username || "";
-    return (
-      <TouchableOpacity
-        key={otherUser._id}
-        style={styles.contactContainer}
-        onPress={() =>
-          navigation.navigate("ConversationScreen", {
-            otherUserNumber,
-            ...data,
-          })
-        }
-      >
-        <Image
-          style={styles.avatar}
-          source={
-            otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]
-          }
-        />
-        <Text style={styles.contactName}>
-          {name.length >= 15 ? name.slice(0, 12) + "..." : name}
-        </Text>
+        <Text style={styles.contactName}>{name.length >= 15 ? name.slice(0, 12) + '...' : name}</Text>
       </TouchableOpacity>
     );
   });
@@ -155,10 +114,14 @@ const styles = StyleSheet.create({
   avatar: {
     width: 60,
     height: 60,
-    borderRadius: "100%",
-    objectFit: "cover",
-    backgroundColor: "#965A51",
-    overflow: "hidden",
+    objectFit: 'cover',
+  },
+  avatarContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: '100%',
+    backgroundColor: '#965A51',
+    overflow: 'hidden'
   },
   username: {
     color: "#FFF5F0",
