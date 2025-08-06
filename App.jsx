@@ -21,6 +21,7 @@ import MessagerieScreen from "./screens/MessagerieScreen";
 import ConversationScreen from "./screens/ConversationScreen";
 import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
+import MapScreen from "./screens/MapScreen";
 
 import user from "./reducers/user";
 import map from "./reducers/map";
@@ -33,81 +34,98 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const SignInNav = () => {
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-			{/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
-			<Stack.Screen name="SignIn" component={SignIn} />
-			<Stack.Screen name="DateScreen" component={DateScreen} />
-			<Stack.Screen name="GenderScreen" component={GenderScreen} />
-			<Stack.Screen name="RelationScreen" component={RelationScreen} />
-			<Stack.Screen name="PhotoScreen" component={PhotoScreen} />
-			<Stack.Screen name="MapScreen" component={PhotoScreen} />
-
-		</Stack.Navigator>
-	);
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false, gestureEnabled: false }}
+    >
+      {/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
+      <Stack.Screen name="SignIn" component={SignIn} />
+      <Stack.Screen name="DateScreen" component={DateScreen} />
+      <Stack.Screen name="GenderScreen" component={GenderScreen} />
+      <Stack.Screen name="RelationScreen" component={RelationScreen} />
+      <Stack.Screen name="MapScreen" component={MapScreen} />
+      {/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
+    </Stack.Navigator>
+  );
 };
 
 const MainTabNav = () => {
-  return <SafeAreaView style={styles.tabBarNavContainer} edges={['top']}>
-    <Tab.Navigator screenOptions={({route}) => ({
-      tabBarStyle: styles.tabBar,
-      header: ({route}) => {return <HeaderMain route={route}/>},
-      tabBarIcon: ({color, size}) => {
-        let icon;
-        if (route.name === 'MessagerieNav') {
-          icon = <MaterialCommunityIcons name="message-outline" size={30} color={color}/>
-        } else {
-          icon = <Feather name="coffee" size={30} color={color} />
-        }
-        return icon;
-      },
-      tabBarActiveTintColor:'#965A51',
-      tabBarInactiveTintColor: '#BC8D85',
-      tabBarShowLabel: false,
-      tabBarIconStyle: styles.tabBarIcon
-      })}>
-      <Tab.Screen name="SwipeScreen" component={SwipeScreen}/>
-      <Tab.Screen name="MessagerieNav" component={MessagerieNav}/>
-    </Tab.Navigator>
-  </SafeAreaView>
-}
+  return (
+    <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: styles.tabBar,
+          header: ({ route }) => {
+            return <HeaderMain route={route} />;
+          },
+          tabBarIcon: ({ color, size }) => {
+            let icon;
+            if (route.name === "MessagerieNav") {
+              icon = (
+                <MaterialCommunityIcons
+                  name="message-outline"
+                  size={30}
+                  color={color}
+                />
+              );
+            } else {
+              icon = <Feather name="coffee" size={30} color={color} />;
+            }
+            return icon;
+          },
+          tabBarActiveTintColor: "#965A51",
+          tabBarInactiveTintColor: "#BC8D85",
+          tabBarShowLabel: false,
+          tabBarIconStyle: styles.tabBarIcon,
+        })}
+      >
+        <Tab.Screen name="SwipeScreen" component={SwipeScreen} />
+        <Tab.Screen name="MessagerieNav" component={MessagerieNav} />
+      </Tab.Navigator>
+    </SafeAreaView>
+  );
+};
 
 const MessagerieNav = () => {
-  return <Stack.Navigator screenOptions={{headerShown: false}}>
-    <Stack.Screen name="MessagerieScreen" component={MessagerieScreen}/>
-    <Stack.Screen name="ConversationScreen" component={ConversationScreen}/>
-  </Stack.Navigator>
-}
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
+      <Stack.Screen name="ConversationScreen" component={ConversationScreen} />
+    </Stack.Navigator>
+  );
+};
 
 export default function App() {
-	return (
-		<Provider store={store}>
-			<SafeAreaProvider>
-				<NavigationContainer>
-					<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-						<Stack.Screen name="LoadingScreen" component={LoadingScreen}/>
+  return (
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false, gestureEnabled: false }}
+          >
+            <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
             <Stack.Screen name="SignInNav" component={SignInNav} />
             <Stack.Screen name="MainTabNav" component={MainTabNav} />
-					</Stack.Navigator>
-				</NavigationContainer>
-			</SafeAreaProvider>
-		</Provider>
-	);
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
+  );
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	tabBar: {
-		backgroundColor: "#F5EBE6",
-		borderTopWidth: 0,
-	},
-	tabBarNavContainer: {
-		flex: 1,
-		backgroundColor: "#F5EBE6",
-	},
-	tabBarIcon: {
-		fontSize: 30,
-	},
+  container: {
+    flex: 1,
+  },
+  tabBar: {
+    backgroundColor: "#F5EBE6",
+    borderTopWidth: 0,
+  },
+  tabBarNavContainer: {
+    flex: 1,
+    backgroundColor: "#F5EBE6",
+  },
+  tabBarIcon: {
+    fontSize: 30,
+  },
 });

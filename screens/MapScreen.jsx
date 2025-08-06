@@ -19,16 +19,16 @@ import HeaderBeginning from "../components/HeaderBeginning";
 import { addPlace } from "../reducers/map";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function App({navigation}) {
+export default function App({ navigation }) {
   const [myLocation, setMyLocation] = useState({});
   const [disabled, setDisabled] = useState(false);
   const [permission, setPermission] = useState(false);
-  const [city, setCity] = useState("");
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
   const [givenPosition, setGivenPosition] = useState(null);
-	const user = useSelector((state) => state.user.value);
+  const user = useSelector((state) => state.user.value);
+  console.log(user);
   const locations = useSelector((state) => state.map.value.places);
   console.log(locations);
 
@@ -58,31 +58,36 @@ export default function App({navigation}) {
   }, []);
 
   // ____________________________________FETCH GEOLOC_______________________________
-const getGeolocalisation = async () => {
-setDisabled(true)
-if(location === "") {
-  setError("Ajouter une position !")
-  setDisabled(true)
-}
-const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/location", {
-  method: "Put",
-  headers: {
-    autorization: user.token,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    latitude: user.latitude,
-    longitude: user.longitude
-  })
-})
-const data = await response.json();
-if(!data.result) {
-  setError(false),
-  setDisabled(true)
-  return;
-}
-
-}
+  const getGeolocalisation = async () => {
+    setDisabled(true);
+    console.log(myLocation);
+    if (!myLocation.latitude) {
+      setError("Ajouter une position !");
+      setDisabled(false);
+      return;
+    }
+    const response = await fetch(
+      process.env.EXPO_PUBLIC_IP + "/users/location",
+      {
+        method: "PUT",
+        headers: {
+          authorization: user.token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          latitude: myLocation.latitude,
+          longitude: myLocation.longitude,
+        }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    if (!data.result) {
+      setError(false), setDisabled(false);
+      return;
+    }
+    setDisabled(false), navigation.navigate("MainTabNav");
+  };
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
   const addCityByTouch = async (touch_coordinates) => {
     console.log(touch_coordinates);
@@ -92,10 +97,7 @@ if(!data.result) {
       longitude: touch_coordinates.longitude,
       latitude: touch_coordinates.latitude,
     };
-    console.log(newCity);
-
-    dispatch(addPlace(newCity));
-    setCity(city);
+    setMyLocation(newCity);
   };
 
   return (
@@ -111,13 +113,14 @@ if(!data.result) {
           // scrollEnabled={true}
           // showsScale={true}
           initialRegion={{
-            latitude: myLocation.latitude || 48.88,
-            longitude: myLocation.longitude || 2.3,
+            latitude: 48.88,
+            longitude: 2.3,
             latitudeDelta: 0.0222,
             longitudeDelta: 0.0222,
           }}
           style={styles.map}
-          onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)} disabled={disabled}
+          onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)}
+          disabled={disabled}
         >
           {givenPosition && (
             <Marker
@@ -132,7 +135,8 @@ if(!data.result) {
       )}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("SwipeScreen")}
+        onPress={() => getGeolocalisation()}
+        disabled={disabled}
       >
         <Text style={styles.boutonText}>VALIDER</Text>
       </TouchableOpacity>
@@ -150,7 +154,7 @@ const styles = StyleSheet.create({
     height: 35,
     // width: ,
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
     color: "#3e7a5ec0",
     fontWeight: "bold",
     fontSize: 16,
