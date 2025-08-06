@@ -5,8 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Feather from '@expo/vector-icons/Feather';
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Feather from "@expo/vector-icons/Feather";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -25,24 +25,22 @@ import PhotoScreen from "./screens/PhotoScreen";
 import user from "./reducers/user";
 
 const store = configureStore({
-  reducer: { user },
+	reducer: { user },
 });
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const SignInNav = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
-    >
-      {/* <Stack.Screen name="PhotoScreen" component={PhotoScreen} /> */}
-      <Stack.Screen name="SignIn" component={SignIn} />
-      <Stack.Screen name="DateScreen" component={DateScreen} />
-      <Stack.Screen name="GenderScreen" component={GenderScreen} />
-      <Stack.Screen name="RelationScreen" component={RelationScreen} />
-    </Stack.Navigator>
-  );
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+			<Stack.Screen name="PhotoScreen" component={PhotoScreen} />
+			<Stack.Screen name="SignIn" component={SignIn} />
+			<Stack.Screen name="DateScreen" component={DateScreen} />
+			<Stack.Screen name="GenderScreen" component={GenderScreen} />
+			<Stack.Screen name="RelationScreen" component={RelationScreen} />
+		</Stack.Navigator>
+	);
 };
 
 const MainTabNav = () => {
@@ -80,15 +78,16 @@ const MessagerieNav = () => {
 export default function App() {
 	return (
 		<Provider store={store}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-            <Stack.Screen name="LoadingScreen" component={LoadingScreen}/>
+			<SafeAreaProvider>
+				<NavigationContainer>
+					<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+						{/* <Stack.Screen name="LoadingScreen" component={LoadingScreen}/>
             <Stack.Screen name="SignInNav" component={SignInNav} />
-            <Stack.Screen name="MainTabNav" component={MainTabNav} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
+            <Stack.Screen name="MainTabNav" component={MainTabNav} /> */}
+						<Tab.Screen name="SwipeScreen" component={SwipeScreen} />
+					</Stack.Navigator>
+				</NavigationContainer>
+			</SafeAreaProvider>
 		</Provider>
 	);
 }
@@ -97,15 +96,15 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 	},
-  tabBar: {
-    backgroundColor: '#F5EBE6',
-    borderTopWidth: 0
-  },
-  tabBarNavContainer: {
-    flex: 1,
-    backgroundColor: '#F5EBE6'
-  },
-  tabBarIcon: {
-    fontSize: 30
-  }
+	tabBar: {
+		backgroundColor: "#F5EBE6",
+		borderTopWidth: 0,
+	},
+	tabBarNavContainer: {
+		flex: 1,
+		backgroundColor: "#F5EBE6",
+	},
+	tabBarIcon: {
+		fontSize: 30,
+	},
 });

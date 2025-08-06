@@ -38,7 +38,7 @@ export default function ImagePickerScreen({ navigation }) {
 //     console.log(data)
 
 
-//}
+// }
 
 
 
@@ -90,7 +90,7 @@ export default function ImagePickerScreen({ navigation }) {
 //             }
 //           });
 //       });
-  //};
+// };
 
 
 
@@ -98,7 +98,7 @@ export default function ImagePickerScreen({ navigation }) {
 
 
 
- 
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
