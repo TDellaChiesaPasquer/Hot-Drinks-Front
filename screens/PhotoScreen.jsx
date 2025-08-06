@@ -34,7 +34,6 @@ export default function ImagePickerScreen({ navigation }) {
     );
   }
 
-<<<<<<< HEAD
   const handleSubmitPhotos = async () => {
     const formData = new FormData();
     // console.log("click", photo);
@@ -67,85 +66,6 @@ export default function ImagePickerScreen({ navigation }) {
     }
   };
 
-=======
-
-
-// const handleSubmitPhotos = async () => {
-// if (photo.length === 0) {
-//     return;
-// }
-//   const response = await fetch(process.env.EXPO_PUBLIC_IP+"/users/addPhoto"),{
-//        method: 'POST',
-//        body: formData,
-
-//   }
-//     const data = await response.json()
-
-//     console.log(data)
-
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-//   if (city.length === 0) {
-//       return;
-//     }
-
-//     // 1st request: get geographic data from API
-//     fetch(`https://api-adresse.data.gouv.fr/search/?q=${city}`)
-//       .then((response) => response.json())
-//       .then((data) => {
-//         // Nothing is done if no city is found by API
-//         if (data.features.length === 0) {
-//           return;
-//         }
-
-//         const firstCity = data.features[0];
-//         const newPlace = {
-//           name: firstCity.properties.city,
-//           latitude: firstCity.geometry.coordinates[1],
-//           longitude: firstCity.geometry.coordinates[0],
-//         };
-
-//         // 2nd request : send new place to backend to register it in database
-//         fetch(`${BACKEND_ADDRESS}/places`, {
-//           method: "POST",
-//           headers: { "Content-Type": "application/json" },
-//           body: JSON.stringify({
-//             nickname: user.nickname,
-//             name: newPlace.name,
-//             latitude: newPlace.latitude,
-//             longitude: newPlace.longitude,
-//           }),
-//         })
-//           .then((response) => response.json())
-//           .then((data) => {
-//             // Dispatch in Redux store if the new place have been registered in database
-//             if (data.result) {
-//               dispatch(addPlace(newPlace));
-//               setCity("");
-//             }
-//           });
-//       });
-// };
-
-
-
-
-
-
-
-
->>>>>>> 99e989854463e5b7135d5028c78f7f80a6843082
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -173,11 +93,7 @@ export default function ImagePickerScreen({ navigation }) {
             </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.validationButton}
-<<<<<<< HEAD
               onPress={() => handleSubmitPhotos()}
-=======
-              onPress={() => navigation.navigate("MapScreen")}
->>>>>>> 99e989854463e5b7135d5028c78f7f80a6843082
             >
               <Text style={styles.textValidateButton}>Valider</Text>
             </TouchableOpacity>
