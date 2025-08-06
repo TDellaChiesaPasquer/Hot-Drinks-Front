@@ -13,6 +13,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
 import { addTempInfo } from "../reducers/user";
+import dayjs from "dayjs";
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,7 +28,12 @@ export default function ({ navigation }) {
 
   const sanitizeInputs = () => {
     setDisabled(true);
-    const date = new Date(`${year}-${month}-${day}`);
+    if (Number(year) < 1900 || Number(year) > 2100 || Number(month) < 1 || Number(month) > 12 || Number(day) < 1 || Number(day) > 31) {
+      setError("Date non valide");
+      setDisabled(false);
+      return;
+    }
+    const date = dayjs(`${year}-${month}-${day}`);
     if (isNaN(date.valueOf())) {
       setError("Date non valide");
       setDisabled(false);
@@ -52,7 +58,7 @@ export default function ({ navigation }) {
       setDisabled(false);
       return;
     }
-    dispatch(addTempInfo({ date: `${year}-${month}-${day}`, username }));
+    dispatch(addTempInfo({ date: date.format('YYYY-MM-DD'), username }));
     navigation.navigate("GenderScreen");
   };
 

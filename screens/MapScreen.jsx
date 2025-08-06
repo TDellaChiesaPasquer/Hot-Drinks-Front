@@ -12,23 +12,24 @@ import { Dimensions } from "react-native";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
 
 import { addPlace } from "../reducers/map";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function App({navigation}) {
+export default function App({ navigation }) {
   const [myLocation, setMyLocation] = useState({});
   const [disabled, setDisabled] = useState(false);
   const [permission, setPermission] = useState(false);
-  const [city, setCity] = useState("");
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
+  const myLocationRef = useRef(myLocation);
 
   const [givenPosition, setGivenPosition] = useState(null);
-	const user = useSelector((state) => state.user.value);
+  const user = useSelector((state) => state.user.value);
+  console.log(user);
   const locations = useSelector((state) => state.map.value.places);
   console.log(locations);
 
@@ -50,38 +51,48 @@ export default function App({navigation}) {
           latitude,
           longitude,
         });
-        navigation.navigate("SwipeScreen");
+        myLocationRef.current = {
+          latitude,
+          longitude,
+        };
+        getGeolocalisation();
       } else {
         setPermission(true);
       }
     })();
   }, []);
+
   // ____________________________________FETCH GEOLOC_______________________________
-// const getGeolocalisation = async () => {
-// setDisabled(true)
-// if(location === "") {
-//   setError (error: "Une erreur a eu lieu !")
-// }
-// if(!data.result) {
-//   setError(false),
-//   setDisabled(true)
-//   return;
-// }
-
-  const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/location", {
-    method: "Put",
-    headers: {
-      autorization: user.token,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      latitude: user.latitude,
-      longitude: user.longitude
-    })
-  })
+  const getGeolocalisation = async () => {
+    setDisabled(true);
+    console.log(myLocation);
+    if (!myLocationRef.current.latitude) {
+      setError("Ajouter une position !");
+      setDisabled(false);
+      return;
+    }
+    const response = await fetch(
+      process.env.EXPO_PUBLIC_IP + "/users/location",
+      {
+        method: "PUT",
+        headers: {
+          authorization: user.token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          latitude: myLocationRef.current.latitude,
+          longitude: myLocationRef.current.longitude,
+        }),
+      }
+    );
     const data = await response.json();
-
-}
+    console.log(data);
+    if (!data.result) {
+      setError(false), setDisabled(false);
+      return;
+    }
+    setDisabled(false), navigation.navigate("MainTabNav");
+  };
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
   const addCityByTouch = async (touch_coordinates) => {
     console.log(touch_coordinates);
@@ -91,10 +102,8 @@ export default function App({navigation}) {
       longitude: touch_coordinates.longitude,
       latitude: touch_coordinates.latitude,
     };
-    console.log(newCity);
-
-    dispatch(addPlace(newCity));
-    setCity(city);
+    setMyLocation(newCity);
+    myLocationRef.current = newCity;
   };
 
   return (
@@ -110,13 +119,14 @@ export default function App({navigation}) {
           // scrollEnabled={true}
           // showsScale={true}
           initialRegion={{
-            latitude: myLocation.latitude || 48.88,
-            longitude: myLocation.longitude || 2.3,
+            latitude: 48.88,
+            longitude: 2.3,
             latitudeDelta: 0.0222,
             longitudeDelta: 0.0222,
           }}
           style={styles.map}
-          onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)} disabled={disabled}
+          onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)}
+          disabled={disabled}
         >
           {givenPosition && (
             <Marker
@@ -131,7 +141,8 @@ export default function App({navigation}) {
       )}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("SwipeScreen")}
+        onPress={() => getGeolocalisation()}
+        disabled={disabled}
       >
         <Text style={styles.boutonText}>VALIDER</Text>
       </TouchableOpacity>
@@ -149,12 +160,12 @@ const styles = StyleSheet.create({
     height: 35,
     // width: ,
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
     color: "#3e7a5ec0",
     fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
-    backgroundColor: "#81c0a4c0",
+    backgroundColor: "#896761",
     marginHorizontal: 30,
     boxShadow: "0 2px 3px #499a76c0",
     paddingTop: 7,
