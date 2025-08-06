@@ -58,7 +58,7 @@ export default function ({ navigation }) {
       setDisabled(false);
       return;
     }
-    dispatch(addTempInfo({ date: data.format('YYYY-MM-DD'), username }));
+    dispatch(addTempInfo({ date: date.format('YYYY-MM-DD'), username }));
     navigation.navigate("GenderScreen");
   };
 
