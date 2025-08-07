@@ -22,6 +22,8 @@ import ConversationScreen from "./screens/ConversationScreen";
 import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 import MapScreen from "./screens/MapScreen";
+import RdvScreen from "./screens/RdvScreen";
+
 
 import user from "./reducers/user";
 import map from "./reducers/map";
@@ -44,6 +46,7 @@ const SignUpNav = () => {
       <Stack.Screen name="RelationScreen" component={RelationScreen} />
       <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
       <Stack.Screen name="MapScreen" component={MapScreen} />
+      <Stack.Screen name="RdvScreen" component={RdvScreen} />
     </Stack.Navigator>
   );
 };
