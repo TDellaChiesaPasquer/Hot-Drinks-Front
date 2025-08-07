@@ -58,7 +58,7 @@ export default function ({ navigation }) {
       return;
     }
     setDisabled(false);
-    navigation.navigate("MapScreen");
+    navigation.navigate("PhotoScreen");
   };
   return (
     <SafeAreaProvider>

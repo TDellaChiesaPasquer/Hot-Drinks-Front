@@ -18,6 +18,7 @@ import HeaderBeginning from "../components/HeaderBeginning";
 
 import { addPlace } from "../reducers/map";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { addInfos } from "../reducers/user";
 
 export default function App({ navigation }) {
   const [myLocation, setMyLocation] = useState({});
@@ -91,12 +92,17 @@ export default function App({ navigation }) {
       setError(false), setDisabled(false);
       return;
     }
+    const response2 = await fetch(process.env.EXPO_PUBLIC_IP + "/users/infos", {
+      headers: {
+        authorization: user.token
+      }
+    });
+    const data2 = await response2.json();
+    dispatch(addInfos(data2.user));
     setDisabled(false), navigation.navigate("MainTabNav");
   };
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
   const addCityByTouch = async (touch_coordinates) => {
-    console.log(touch_coordinates);
-
     setGivenPosition(touch_coordinates);
     const newCity = {
       longitude: touch_coordinates.longitude,
@@ -108,10 +114,8 @@ export default function App({ navigation }) {
 
   return (
     //---------------------------------LOCALISATION INITIALE------------------------------------
-    <View style={styles.container}>
-      <SafeAreaView>
-        <HeaderBeginning />
-      </SafeAreaView>
+    <SafeAreaView style={styles.container}>
+      <HeaderBeginning />
       <Text style={styles.textStyle}>AJOUTE TA POSITION</Text>
       {permission && (
         <MapView
@@ -146,7 +150,7 @@ export default function App({ navigation }) {
       >
         <Text style={styles.boutonText}>VALIDER</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
