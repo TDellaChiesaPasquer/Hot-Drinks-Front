@@ -11,13 +11,14 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ImagePickerComponent from "../components/ImagePickerComponent";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPhoto, removePhoto } from "../reducers/user";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ImagePickerScreen({ navigation }) {
   const [photoUriList, setPhotoUriList] = useState([]);
+  const user = useSelector(state => state.user.value);
 
   const addUriToList = (uri) => {
     setPhotoUriList([...photoUriList, uri]);
@@ -54,10 +55,14 @@ export default function ImagePickerScreen({ navigation }) {
       process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length,
       {
         method: "POST",
+        headers: {
+          authorization: user.token
+        },
         body: formData,
       }
     );
     const data = await response.json();
+    console.log(data)
     if (data.result) {
       navigation.navigate("MapScreen");
       return;

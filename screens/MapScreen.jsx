@@ -103,8 +103,6 @@ export default function App({ navigation }) {
   };
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
   const addCityByTouch = async (touch_coordinates) => {
-    console.log(touch_coordinates);
-
     setGivenPosition(touch_coordinates);
     const newCity = {
       longitude: touch_coordinates.longitude,
