@@ -15,7 +15,7 @@ import DateScreen from "./screens/DateScreen";
 import GenderScreen from "./screens/GenderScreen";
 import RelationScreen from "./screens/RelationScreen";
 import SwipeScreen from "./screens/SwipeScreen";
-import SignIn from "./screens/SignIn";
+import SignUp from "./screens/SignUp";
 import LoadingScreen from "./screens/LoadingScreen";
 import MessagerieScreen from "./screens/MessagerieScreen";
 import ConversationScreen from "./screens/ConversationScreen";
@@ -33,12 +33,12 @@ const store = configureStore({
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const SignInNav = () => {
+const SignUpNav = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, gestureEnabled: false }}
     >
-      <Stack.Screen name="SignIn" component={SignIn} />
+      <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="DateScreen" component={DateScreen} />
       <Stack.Screen name="GenderScreen" component={GenderScreen} />
       <Stack.Screen name="RelationScreen" component={RelationScreen} />
@@ -103,7 +103,7 @@ export default function App() {
             screenOptions={{ headerShown: false, gestureEnabled: false }}
           >
             <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-            <Stack.Screen name="SignInNav" component={SignInNav} />
+            <Stack.Screen name="SignUpNav" component={SignUpNav} />
             <Stack.Screen name="MainTabNav" component={MainTabNav} />
           </Stack.Navigator>
         </NavigationContainer>
