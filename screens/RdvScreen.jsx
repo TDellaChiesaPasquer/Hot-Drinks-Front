@@ -20,6 +20,9 @@ const response = await (fetch `https://us1.locationiq.com/v1/reverse?key=${Your_
   const coordinate = {
     latitude: data.lat,
     longitude: data.lon,
+    address: data.address.government,
+    city: data.address.city,
+    country: data.address.country,
   }
 }
 return (
