@@ -19,7 +19,7 @@ export default function SwipeScreen(props) {
 	const [cardList, setCardList] = useState([]);
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
 
-	const enTest = false;
+	const enTest = true;
 	// const dbUtilisee = "Audrey";
 	const dbUtilisee = "Cyrille";
 	const db = {
