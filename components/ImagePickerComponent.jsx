@@ -114,8 +114,7 @@ const styles = StyleSheet.create({
   deleteCross: {
     fontSize: 24,
     color: "#965A51",
-    backgroundColor: "#F5EBE6",
-    borderRadius: "50%",
+    // backgroundColor: "#F5EBE6",
     padding: 1,
   },
 });
