@@ -15,18 +15,21 @@ export default function ({navigation, route}) {
   const [sendDisabled, setSendDisabled] = useState(false);
   const conversation =  user.user.conversationList.find(x => String(x._id) === String(route.params._id));
   const messageList = conversation.messageList;
+  const otherUserNumber = route.params.otherUserNumber;
   useEffect(() => {
-    (async () => {
-      await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + conversation._id, {
-        method: 'PUT',
-        headers: {
-          authorization: user.token
-        }
-      });
-    })();
+    const lastMessage = messageList.length !== 0 ? messageList[messageList.length - 1] : null;
+    if (messageList && lastMessage.creator === otherUserNumber && !lastMessage.seen) {
+      (async () => {
+        await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + conversation._id, {
+          method: 'PUT',
+          headers: {
+            authorization: user.token
+          }
+        });
+      })();
+    }
   }, [messageList]);
   const scrollViewRef = useRef();
-  const otherUserNumber = route.params.otherUserNumber;
   const otherUser = otherUserNumber === 2 ? route.params.user2 : route.params.user1;
   const currentDate = dayjs();
   const lastOwnSeenMessageIndex = messageList.findLastIndex(x => x.creator !== otherUserNumber && x.seen === true);
