@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../components/swipe/SwipeContainer";
 import PagerView from "react-native-pager-view";
+import SwipeButton from "../components/swipe/SwipeButton";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -22,7 +23,8 @@ export default function SwipeScreen(props) {
 	const dbUtilisee = "Cyrille";
 	const db = {
 		Audrey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU",
-		Cyrille: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkzYjkwZDA5NjdiOTE1OTgwZTRmNzciLCJpYXQiOjE3NTQ1MTE2NjAsImV4cCI6NTM1NDUxMTY2MH0.1ZoACw0cH5rbtQp5oD0Nmsh4wMnUsP3BHYTQvmseT1M",
+		Cyrille:
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NzExNTA5NjdiOTE1OTgwZTRmOGMiLCJ0b2tlbk51bWJlciI6NiwiaWF0IjoxNzU0NTYwNTc0LCJleHAiOjUzNTQ1NjA1NzR9.HVQMNJzi_m6X0GuTW6DCbkEUVIzf0ZnZ_U0Zb0o1Aws",
 	};
 	const tokenTmp = db[dbUtilisee];
 
@@ -34,12 +36,9 @@ export default function SwipeScreen(props) {
 			return state.user.value.token;
 		});
 
-	useEffect(
-		function () {
-			fetchProfilesFromAPI();
-		},
-		[]
-	);
+	useEffect(function () {
+		fetchProfilesFromAPI();
+	}, []);
 
 	function fetchProfilesFromAPI() {
 		// console.log("début fetchProfilesFromAPI");
@@ -50,8 +49,8 @@ export default function SwipeScreen(props) {
 			},
 		})
 			.then(function (response) {
-				// if (response) console.log("response : ");
-				// if (response) console.log(response);
+				if (response) console.log("response : ");
+				if (response) console.log(response);
 				return response.json();
 			})
 			.then(function (jsonResponse) {
@@ -90,20 +89,20 @@ export default function SwipeScreen(props) {
 
 	function handleSwipe(cardIndex, action) {
 		const profile = profileList[cardIndex];
-		if (profile && profile.username) {
-			sendSwipeToServer(profile.username, action);
+		if (profile && profile._id) {
+			sendSwipeToServer(profile._id, action);
 		}
 	}
 
-	function sendSwipeToServer(username, userAction) {
+	function sendSwipeToServer(userId, userAction) {
 		const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
 
-		// console.log("username : " + username);
-		// console.log("userAction : " + userAction);
+		console.log("userId : " + userId);
+		console.log("userAction : " + userAction);
 
 		const payload = {
 			action: userAction.toLowerCase(),
-			username: username,
+			userId: userId,
 		};
 		const fetchOptions = {
 			method: "PUT",
@@ -135,7 +134,7 @@ export default function SwipeScreen(props) {
 	}
 
 	return (
-		<SafeAreaProvider>
+		<SafeAreaProvider style={styles.pageCcontainer}>
 			<SafeAreaView style={styles.container}>
 				<Swiper
 					cardStyle={styles.card}
@@ -154,6 +153,12 @@ export default function SwipeScreen(props) {
 					verticalSwipe={false}
 				/>
 			</SafeAreaView>
+
+			<View style={styles.buttons}>
+				{["Dislike", "Superlike", "Like"].map(function (buttonType) {
+					return <SwipeButton key={buttonType} type={buttonType} onChoice={props.onChoice} />;
+				})}
+			</View>
 		</SafeAreaProvider>
 	);
 }
@@ -163,18 +168,35 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#FFF5F0",
 	},
+	pageContainer: {
+		flex: 1,
+		backgroundColor: "#FFF5F0",
+	},
 	card: {
 		flex: 1,
 		width: screenWidth * 0.9,
-		height: screenHeight,
+		height: screenHeight - screenHeight / 4,
 		alignSelf: "center",
 		backgroundColor: "#FFF5F0",
 		borderRadius: 24,
-		overflow: "hidden",
 		shadowColor: "#000",
-		shadowOpacity: 0.15,
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 6,
-		elevation: 4,
+		boxShadow: "0 2px 3px #896761",
+		// shadowOpacity: 0.15,
+		// shadowOffset: { width: 0, height: 2 },
+		// shadowRadius: 6,
+		// elevation: 4,
+		// overflow: "hidden",
+	},
+	buttons: {
+		position: "absolute",
+		flex: 1,
+		left: 50,
+		right: 10,
+		bottom: screenHeight - screenHeight * 0.77,
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "center",
+		alignContent: "center",
+		zIndex: 10,
 	},
 });

@@ -29,7 +29,7 @@ import user from "./reducers/user";
 import map from "./reducers/map";
 
 const store = configureStore({
-  reducer: { user, map },
+	reducer: { user, map },
 });
 
 const Stack = createNativeStackNavigator();
@@ -99,49 +99,48 @@ const MessagerieNav = () => {
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{ headerShown: false, gestureEnabled: false }}
-          >
-            <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-            <Stack.Screen name="SignUpNav" component={SignUpNav} />
-            <Stack.Screen name="MainTabNav" component={MainTabNav} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </Provider>
+		<Provider store={store}>
+			<SafeAreaProvider>
+				<NavigationContainer>
+					<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+						<Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+						<Stack.Screen name="SignUpNav" component={SignUpNav} />
+						<Stack.Screen name="MainTabNav" component={MainTabNav} />
+						{/* <Stack.Screen name="SwipeScreen" component={SwipeScreen} /> */}
+					</Stack.Navigator>
+				</NavigationContainer>
+			</SafeAreaProvider>
+		</Provider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  tabBar: {
-    backgroundColor: "#F5EBE6",
-    borderTopWidth: 0,
-  },
-  tabBarNavContainer: {
-    flex: 1,
-    backgroundColor: "#F5EBE6",
-  },
-  tabBarIcon: {
-    fontSize: 30,
-  },
-  container: {
-    flex: 1,
-  },
-  tabBar: {
-    backgroundColor: "#F5EBE6",
-    borderTopWidth: 0,
-  },
-  tabBarNavContainer: {
-    flex: 1,
-    backgroundColor: "#F5EBE6",
-  },
-  tabBarIcon: {
-    fontSize: 30,
-  },
+	container: {
+		flex: 1,
+	},
+	tabBar: {
+		backgroundColor: "#F5EBE6",
+		borderTopWidth: 0,
+	},
+	tabBarNavContainer: {
+		flex: 1,
+		backgroundColor: "#F5EBE6",
+	},
+	tabBarIcon: {
+		fontSize: 30,
+	},
+	container: {
+		flex: 1,
+	},
+	tabBar: {
+		backgroundColor: "#F5EBE6",
+		borderTopWidth: 0,
+	},
+	tabBarNavContainer: {
+		flex: 1,
+		backgroundColor: "#F5EBE6",
+	},
+	tabBarIcon: {
+		fontSize: 30,
+	},
 });
