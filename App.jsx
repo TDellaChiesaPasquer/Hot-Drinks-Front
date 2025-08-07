@@ -50,7 +50,6 @@ const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
 const SignUpNav = () => {
-<<<<<<< HEAD
 	return (
 		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
 			<Stack.Screen name="SignUp" component={SignUp} />
@@ -62,21 +61,6 @@ const SignUpNav = () => {
 			<Stack.Screen name="RdvScreen" component={RdvScreen} />
 		</Stack.Navigator>
 	);
-=======
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
-      >
-      <Stack.Screen name="SignUp" component={SignUp} />
-      <Stack.Screen name="DateScreen" component={DateScreen} />
-      <Stack.Screen name="GenderScreen" component={GenderScreen} />
-      <Stack.Screen name="RelationScreen" component={RelationScreen} />
-      <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
-      <Stack.Screen name="MapScreen" component={MapScreen} />
-      <Stack.Screen name="RdvScreen" component={RdvScreen} />
-    </Stack.Navigator>
-  );
->>>>>>> 8ff2aa0c787a1ab51c5414f7ce537cdb0d4986e0
 };
 
 const receiveNewMessage = async (event, token, dispatch) => {
@@ -95,9 +79,7 @@ const receiveNewMessage = async (event, token, dispatch) => {
 const MainTabNav = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user.value);
-	//   const userId = user.user._id;
-	const userId =
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NzExNTA5NjdiOTE1OTgwZTRmOGMiLCJ0b2tlbk51bWJlciI6NiwiaWF0IjoxNzU0NTYwNTc0LCJleHAiOjUzNTQ1NjA1NzR9.HVQMNJzi_m6X0GuTW6DCbkEUVIzf0ZnZ_U0Zb0o1Aws";
+	const userId = user.user._id;
 	const token = user.token;
 	useEffect(() => {
 		const channel = pusher.subscribe(userId);
@@ -129,9 +111,9 @@ const MainTabNav = () => {
 					tabBarIconStyle: styles.tabBarIcon,
 				})}
 			>
-				{/* <Tab.Screen name="MyProfileScreen" component={MyProfileNav} /> */}
+				<Tab.Screen name="MyProfileScreen" component={MyProfileNav} />
 				<Tab.Screen name="SwipeScreen" component={SwipeScreen} />
-				{/* <Tab.Screen name="MessagerieNav" component={MessagerieNav} /> */}
+				<Tab.Screen name="MessagerieNav" component={MessagerieNav} />
 			</Tab.Navigator>
 		</SafeAreaView>
 	);
@@ -188,8 +170,8 @@ export default function App() {
 			<SafeAreaProvider>
 				<NavigationContainer>
 					<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-						{/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-						<Stack.Screen name="SignUpNav" component={SignUpNav} /> */}
+						<Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+						<Stack.Screen name="SignUpNav" component={SignUpNav} />
 						<Stack.Screen name="MainTabNav" component={MainTabNav} />
 					</Stack.Navigator>
 				</NavigationContainer>
