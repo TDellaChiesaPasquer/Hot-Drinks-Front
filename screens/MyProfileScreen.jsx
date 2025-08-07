@@ -5,61 +5,54 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Button,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import PreferencesScreen from "./screens/PreferencesScreen";
-import SettingsScreen from "./screens/SettingsScreen";
-
-const Tab = createBottomTabNavigator();
-
-const ProfileTabNavigator = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName = "";
-
-          if (route.name === "MyProfile") {
-            iconName = "user";
-          } else if (route.name === "Preferences") {
-            iconName = "heart";
-          } else if (route.name === "Settings") {
-            iconName = "gear";
-          }
-
-          return <FontAwesome name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "#965A51",
-        tabBarInactiveTintColor: "#BC8D85",
-        headerShown: false,
-      })}
-    >
-      <Tab.Screen name="MyProfile" component={MyProfileScreen} />
-      <Tab.Screen name="Preferences" component={PreferencesScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
-  );
-};
 
 export default function ({ navigation }) {
-  const handleGoToPreferenceButton = () => {
-    addUser(nickname);
-    navigation.navigate("TabNavigator");
-  };
+  //   const handleGoToPreferenceButton = () => {
+  //     navigation.navigate("TopTabNavigator");
+  //   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={90}
-    >
-      <NavigationContainer>
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
-          <Tab.Screen name="PreferencesScreen" component={PreferencesScreen} />
-          <Tab.Screen name="SettingsScreen" component={SettingsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </KeyboardAvoidingView>
+    <View>
+      <View>
+        <TouchableOpacity onPress={() => navigation.navigate("MyProfileNav")} />
+        <TouchableOpacity onPress={() => navigation.navigate("MainTabNav")} />
+      </View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Mon Profil</Text>
+      </View>
+      <View style={styles.scrollContainer}>
+        <ScrollView style={styles.scrollView}>
+          <Text style={styles.text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </Text>
+        </ScrollView>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    color: "black",
+    backgroundColor: "green",
+  },
+
+  scrollContainer: {
+    flex: 1,
+  },
+
+  scrollView: {
+    backgroundColor: "#F5EBE6",
+  },
+  //   titleContainer: {
+  //     backgroundColor: "yellow",
+});
