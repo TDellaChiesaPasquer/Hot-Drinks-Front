@@ -1,26 +1,53 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useDispatch, useSelector } from "react-redux";
 import { addInfos, addToken } from "../reducers/user";
+import { useFocusEffect } from "@react-navigation/native";
+import { BackHandler } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ({ navigation }) {
 	const [emailVisible, setEmailVisible] = useState(false);
 	const [email, setEmail] = useState("");
+  const [error, setError] = useState('');
 	const [password, setPassword] = useState("");
 	const [validateDisabled, setValidateDisabled] = useState(false);
 	const dispatch = useDispatch();
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
 
 	const tryLogin = async () => {
 		try {
 			setValidateDisabled(true);
-			if (email === "" || password === "") {
+			if (email === "" || !/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim.test(email)) {
+        setError('Remplissez une email valide');
 				setValidateDisabled(false);
 				return;
 			}
+      if (password.length < 8) {
+        setError('Votre mot de passe doit faire au moins 8 caractères');
+				setValidateDisabled(false);
+				return;
+      }
+      if (password.length > 32) {
+        setError('Votre mot de passe doit faire au plus 32 caractères');
+				setValidateDisabled(false);
+				return
+      }
 			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/signup", {
 				method: "POST",
 				headers: {
@@ -33,6 +60,7 @@ export default function ({ navigation }) {
 			});
 			const data = await response.json();
 			if (!data.result) {
+        setError(String(data.error));
 				setValidateDisabled(false);
 				return;
 			}
@@ -48,21 +76,17 @@ export default function ({ navigation }) {
         setValidateDisabled(false);
         setEmailVisible(false);
         if (!data2.user.birthdate) {
-          console.log('test1')
           navigation.navigate('DateScreen');
           return;
         }
         if (data2.user.photoList.length === 0) {
-          console.log('test2')
           navigation.navigate('PhotoScreen');
           return;
         }
         if (!data2.user.latitude) {
-          console.log('test3')
           navigation.navigate('MapScreen');
           return;
         }
-          console.log('test4')
         dispatch(addInfos(data2.user));
         navigation.navigate('MainTabNav');
         return;
@@ -100,6 +124,7 @@ export default function ({ navigation }) {
 						value={password}
 						onChangeText={(value) => setPassword(value)}
 					/>
+          <Text style={styles.error}>{error}</Text>
 					<TouchableOpacity style={styles.bouton} disabled={validateDisabled} onPress={() => tryLogin()}>
 						<Text style={styles.boutonText}>Connect</Text>
 					</TouchableOpacity>
@@ -195,4 +220,8 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		borderRadius: "100%",
 	},
+  error: {
+    color: "red",
+    textAlign: "center",
+  },
 });

@@ -12,13 +12,15 @@ import { Dimensions } from "react-native";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useEffect } from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
 
 import { addPlace } from "../reducers/map";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { addInfos } from "../reducers/user";
+import { useFocusEffect } from "@react-navigation/native";
+import { BackHandler } from "react-native";
 
 export default function App({ navigation }) {
   const [myLocation, setMyLocation] = useState({});
@@ -33,6 +35,20 @@ export default function App({ navigation }) {
   console.log(user);
   const locations = useSelector((state) => state.map.value.places);
   console.log(locations);
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
+  
 
   useEffect(() => {
     (async () => {
