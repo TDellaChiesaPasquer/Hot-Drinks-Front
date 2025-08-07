@@ -14,10 +14,10 @@ const screenHeight = Dimensions.get("window").height;
 const maxNumberOfCards = 10;
 
 export default function SwipeScreen(props) {
-	const swiperReference = useRef(null);
-	const [profileList, setProfileList] = useState([]);
-	const [cardList, setCardList] = useState([]);
-	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
+  const swiperReference = useRef(null);
+  const [profileList, setProfileList] = useState([]);
+  const [cardList, setCardList] = useState([]);
+  const [swiperComponentKey, setSwiperComponentKey] = useState(0);
 
 	const enTest = true;
 	// const dbUtilisee = "Audrey";
@@ -29,17 +29,17 @@ export default function SwipeScreen(props) {
 	};
 	const tokenTmp = db[dbUtilisee];
 
-	let userToken = null;
-	if (enTest) {
-		userToken = tokenTmp;
-	} else
-		userToken = useSelector(function (state) {
-			return state.user.value.token;
-		});
+  let userToken = null;
+  if (enTest) {
+    userToken = tokenTmp;
+  } else
+    userToken = useSelector(function (state) {
+      return state.user.value.token;
+    });
 
-	useEffect(function () {
-		fetchProfilesFromAPI();
-	}, []);
+  useEffect(function () {
+    fetchProfilesFromAPI();
+  }, []);
 
 	function fetchProfilesFromAPI() {
 		// console.log("début fetchProfilesFromAPI");
@@ -75,28 +75,28 @@ export default function SwipeScreen(props) {
 			});
 	}
 
-	function handleUserChoice(choiceAction) {
-		if (!swiperReference.current) return;
-		if (choiceAction === "Like") {
-			swiperReference.current.swipeRight();
-		}
-		if (choiceAction === "Dislike") {
-			swiperReference.current.swipeLeft();
-		}
-		if (choiceAction === "Superlike") {
-			swiperReference.current.swipeTop();
-		}
-	}
+  function handleUserChoice(choiceAction) {
+    if (!swiperReference.current) return;
+    if (choiceAction === "Like") {
+      swiperReference.current.swipeRight();
+    }
+    if (choiceAction === "Dislike") {
+      swiperReference.current.swipeLeft();
+    }
+    if (choiceAction === "Superlike") {
+      swiperReference.current.swipeTop();
+    }
+  }
 
-	function handleSwipe(cardIndex, action) {
-		const profile = profileList[cardIndex];
-		if (profile && profile._id) {
-			sendSwipeToServer(profile._id, action);
-		}
-	}
+  function handleSwipe(cardIndex, action) {
+    const profile = profileList[cardIndex];
+    if (profile && profile._id) {
+      sendSwipeToServer(profile._id, action);
+    }
+  }
 
-	function sendSwipeToServer(userId, userAction) {
-		const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
+  function sendSwipeToServer(userId, userAction) {
+    const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
 
 		// console.log("userId : " + userId);
 		// console.log("userAction : " + userAction);
@@ -127,14 +127,14 @@ export default function SwipeScreen(props) {
 			});
 	}
 
-	function renderCardForIndex(cardIndexInList) {
-		const profile = profileList[cardIndexInList];
-		return (
-			<View style={styles.card}>
-				<SwipeContainer profile={profile} onChoice={handleUserChoice} />
-			</View>
-		);
-	}
+  function renderCardForIndex(cardIndexInList) {
+    const profile = profileList[cardIndexInList];
+    return (
+      <View style={styles.card}>
+        <SwipeContainer profile={profile} onChoice={handleUserChoice} />
+      </View>
+    );
+  }
 
 	return (
 		<View style={styles.container}>
