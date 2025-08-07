@@ -15,30 +15,7 @@ const { width, height } = Dimensions.get("window");
 export default function ({ navigation }) {
   const user = useSelector((state) => state.user.value);
   console.log(user);
-  const conversationData = user.user
-    ? user.user.conversationList
-    : [
-        {
-          _id: "68920e9e64826a1e816580bc",
-          user1: {
-            _id: "68920d7c1f4fa86456fe1828",
-            username: "Feu",
-          },
-          user2: {
-            _id: "6891f9af66e94bf8db0c2074",
-            username: "To",
-          },
-          messageList: [
-            {
-              creator: 2,
-              date: "2025-08-05T14:02:16.310Z",
-              content: "Test",
-              _id: "68920ee8ec43067fa26301bc",
-            },
-          ],
-          __v: 0,
-        },
-      ];
+  const conversationData = user.user.conversationList.sort();
   const conversationHTML = conversationData.map((data) => {
     if (data.messageList.length === 0) {
       return null;

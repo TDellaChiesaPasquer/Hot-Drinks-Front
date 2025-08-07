@@ -13,7 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 const isFromSVG = false;
 
 // Taille de l'icône
-const iconSize = 40;
+const iconSize = 34;
 
 export default function SwipeButton(props) {
 	const [buttonType] = useState(props.type);
@@ -55,6 +55,7 @@ export default function SwipeButton(props) {
 	// Gestion du clic sur le bouton
 	function handlePress() {
 		if (props.onChoice) {
+			console.log(buttonType);
 			props.onChoice(buttonType);
 		}
 	}
@@ -70,11 +71,18 @@ export default function SwipeButton(props) {
 }
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	containerBouton: {
+		height: "100%",
+		width: "100%",
+	},
 	button: {
 		justifyContent: "center",
 		alignItems: "center",
-		width: 70,
-		height: 70,
+		width: 60,
+		height: 60,
 		borderRadius: 45,
 		backgroundColor: "#FFF5F0",
 		shadowColor: "#000",
@@ -86,5 +94,4 @@ const styles = StyleSheet.create({
 	buttonLike: { backgroundColor: "#FF4D80" },
 	buttonDislike: { backgroundColor: "#8A2BE2" },
 	buttonSuperLike: { backgroundColor: "#FFA500" },
-	container: { flex: 1 },
 });
