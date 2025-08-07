@@ -111,9 +111,9 @@ const MainTabNav = () => {
 					tabBarIconStyle: styles.tabBarIcon,
 				})}
 			>
-				{/* <Tab.Screen name="MyProfileScreen" component={MyProfileNav} /> */}
+				<Tab.Screen name="MyProfileScreen" component={MyProfileNav} />
 				<Tab.Screen name="SwipeScreen" component={SwipeScreen} />
-				{/* <Tab.Screen name="MessagerieNav" component={MessagerieNav} /> */}
+				<Tab.Screen name="MessagerieNav" component={MessagerieNav} />
 			</Tab.Navigator>
 		</SafeAreaView>
 	);
@@ -170,8 +170,8 @@ export default function App() {
 			<SafeAreaProvider>
 				<NavigationContainer>
 					<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-						{/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-						<Stack.Screen name="SignUpNav" component={SignUpNav} /> */}
+						<Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+						<Stack.Screen name="SignUpNav" component={SignUpNav} />
 						<Stack.Screen name="MainTabNav" component={MainTabNav} />
 					</Stack.Navigator>
 				</NavigationContainer>
