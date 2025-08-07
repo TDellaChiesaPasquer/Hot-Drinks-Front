@@ -94,6 +94,9 @@ const MainTabNav = () => {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarStyle: styles.tabBar,
+          header: ({ route }) => {
+            return <HeaderMain route={route} />;
+          },
           tabBarIcon: ({ color, size }) => {
             let icon;
             if (route.name === "MessagerieNav") {
@@ -118,6 +121,7 @@ const MainTabNav = () => {
         <Tab.Screen name="MyProfileScreen" component={MyProfileNav} />
         <Tab.Screen name="SwipeScreen" component={SwipeScreen} />
         <Tab.Screen name="MessagerieNav" component={MessagerieNav} />
+
       </Tab.Navigator>
     </SafeAreaView>
   );
@@ -137,9 +141,6 @@ const MyProfileNav = () => {
     <TopTab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: styles.tabBar,
-        header: ({ route }) => {
-          return <HeaderMain route={route} />;
-        },
         tabBarIcon: ({ color, size }) => {
           let icon;
 
