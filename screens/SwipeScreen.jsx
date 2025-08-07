@@ -117,7 +117,9 @@ export default function SwipeScreen(props) {
 				return response.json();
 			})
 			.then(function (data) {
-				// Rien pour le moment
+				// console.log("sendSwipeToServer -data");
+				// console.log(data);
+				if (data.match) console.log("Vous avez un match !");
 			})
 			.catch(function (error) {
 				console.error("Erreur réseau lors du swipe :", error);
