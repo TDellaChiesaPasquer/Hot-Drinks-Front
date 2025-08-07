@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, Dimensions, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import dayjs from "dayjs";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { updateConv } from "../reducers/user";
@@ -13,11 +13,24 @@ export default function ({navigation, route}) {
   const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState('');
   const [sendDisabled, setSendDisabled] = useState(false);
-  const [messageList, setMessageList] = useState(route.params.messageList);
+  const conversation =  user.user.conversationList.find(x => String(x._id) === String(route.params._id));
+  const messageList = conversation.messageList;
+  useEffect(() => {
+    (async () => {
+      await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + conversation._id, {
+        method: 'PUT',
+        headers: {
+          authorization: user.token
+        }
+      });
+    })();
+  }, [messageList]);
   const scrollViewRef = useRef();
   const otherUserNumber = route.params.otherUserNumber;
   const otherUser = otherUserNumber === 2 ? route.params.user2 : route.params.user1;
   const currentDate = dayjs();
+  const lastOwnSeenMessageIndex = messageList.findLastIndex(x => x.creator !== otherUserNumber && x.seen === true);
+  console.log(messageList);
   const messagesHTML = messageList.map((message, index) => {
     let date;
     const messageDate = dayjs(message.date);
@@ -33,6 +46,7 @@ export default function ({navigation, route}) {
       <View style={[styles.messageContentContainer, {backgroundColor: otherUserNumber === message.creator ? '#BC8D85' : '#965A51'}]}>
         <Text style={styles.messageContent}>{message.content}</Text>
       </View>
+      {index === lastOwnSeenMessageIndex && <Text style={styles.vu}>Vu</Text>}
     </View>
   })
   const sendMessage = async () => {
@@ -55,20 +69,6 @@ export default function ({navigation, route}) {
       })
     });
     const data = await response.json();
-    if (!data.result) {
-      setSendDisabled(false);
-      return;
-    }
-    const response2 = await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + String(route.params._id), {
-      headers: {
-        authorization: user.token
-      }
-    });
-    const data2 = await response2.json();
-    setMessageList(data2.conversation.messageList);
-    dispatch(updateConv(data2.conversation));
-    setSendDisabled(false);
-    return;
   }
   return <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={90}>
     <View style={styles.conversationHeader}>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   messageDiv: {
     width: width * 0.9,
-    marginVertical: 5
+    marginVertical: 2
   },
   messageContentContainer: {
     maxWidth: width * 0.6,
@@ -213,5 +213,9 @@ const styles = StyleSheet.create({
   },
   goBack: {
     marginHorizontal: 10
+  },
+  vu: {
+    color: '#965A51',
+    fontSize: 10
   }
 })

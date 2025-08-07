@@ -20,14 +20,15 @@ const { width, height } = Dimensions.get("window");
 
 export default function ImagePickerScreen({ navigation }) {
   const [photoUriList, setPhotoUriList] = useState([]);
-  const user = useSelector(state => state.user.value);
+  const [disabled, setDisabled] = useState(false);
+  const user = useSelector((state) => state.user.value);
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
         return true;
       };
       const subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
+        "hardwareBackPress",
         onBackPress
       );
 
@@ -51,10 +52,12 @@ export default function ImagePickerScreen({ navigation }) {
   }
 
   const handleSubmitPhotos = async () => {
+    setDisabled(true);
     const formData = new FormData();
     // console.log("click", photo);
     console.log(photoUriList);
     if (photoUriList.length === 0) {
+      setDisabled(false);
       return;
     }
     console.log("test");
@@ -71,17 +74,19 @@ export default function ImagePickerScreen({ navigation }) {
       {
         method: "POST",
         headers: {
-          authorization: user.token
+          authorization: user.token,
         },
         body: formData,
       }
     );
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     if (data.result) {
       navigation.navigate("MapScreen");
+      setDisabled(false);
       return;
     }
+    setDisabled(false);
   };
 
   return (
@@ -96,6 +101,7 @@ export default function ImagePickerScreen({ navigation }) {
             <TouchableOpacity
               style={styles.validationButton}
               onPress={() => handleSubmitPhotos()}
+              disabled={disabled}
             >
               <Text style={styles.textValidateButton}>Valider</Text>
             </TouchableOpacity>
