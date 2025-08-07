@@ -121,6 +121,7 @@ const MainTabNav = () => {
         <Tab.Screen name="MyProfileScreen" component={MyProfileNav} />
         <Tab.Screen name="SwipeScreen" component={SwipeScreen} />
         <Tab.Screen name="MessagerieNav" component={MessagerieNav} />
+
       </Tab.Navigator>
     </SafeAreaView>
   );

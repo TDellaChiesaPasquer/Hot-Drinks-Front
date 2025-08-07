@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { ScrollView, View, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 
@@ -7,6 +7,7 @@ import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../components/swipe/SwipeContainer";
 import PagerView from "react-native-pager-view";
 import SwipeButton from "../components/swipe/SwipeButton";
+import SwipeProfileInformations from "../components/swipe/SwipeProfileInformations";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -49,8 +50,8 @@ export default function SwipeScreen(props) {
 			},
 		})
 			.then(function (response) {
-				if (response) console.log("response : ");
-				if (response) console.log(response);
+				// if (response) console.log("response : ");
+				// if (response) console.log(response);
 				return response.json();
 			})
 			.then(function (jsonResponse) {
@@ -97,8 +98,8 @@ export default function SwipeScreen(props) {
 	function sendSwipeToServer(userId, userAction) {
 		const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
 
-		console.log("userId : " + userId);
-		console.log("userAction : " + userAction);
+		// console.log("userId : " + userId);
+		// console.log("userAction : " + userAction);
 
 		const payload = {
 			action: userAction.toLowerCase(),
@@ -117,7 +118,9 @@ export default function SwipeScreen(props) {
 				return response.json();
 			})
 			.then(function (data) {
-				// Rien pour le moment
+				// console.log("sendSwipeToServer -data");
+				// console.log(data);
+				if (data.match) console.log("Vous avez un match !");
 			})
 			.catch(function (error) {
 				console.error("Erreur réseau lors du swipe :", error);
@@ -134,69 +137,81 @@ export default function SwipeScreen(props) {
 	}
 
 	return (
-		<SafeAreaProvider style={styles.pageCcontainer}>
-			<SafeAreaView style={styles.container}>
+		<View style={styles.container}>
+			<View style={styles.cardCcontainer}>
 				<Swiper
-					cardStyle={styles.card}
+					cardStyle={styles.innerCard}
 					key={swiperComponentKey}
 					ref={swiperReference}
 					cards={cardList}
 					renderCard={renderCardForIndex}
-					stackSize={2}
+					stackSize={5}
 					showSecondCard={true}
 					infinite={false}
 					onSwipedAll={fetchProfilesFromAPI}
 					backgroundColor="transparent"
 					onSwipedLeft={(cardIndex) => handleSwipe(cardIndex, "Dislike")}
 					onSwipedRight={(cardIndex) => handleSwipe(cardIndex, "Like")}
-					onSwipedTop={(cardIndex) => handleSwipe(cardIndex, "Superlike")}
 					verticalSwipe={false}
 				/>
-			</SafeAreaView>
-
+				{/* <SwipeProfileInformations style={styles.swipeProfileInformations} /> */}
+			</View>
 			<View style={styles.buttons}>
 				{["Dislike", "Superlike", "Like"].map(function (buttonType) {
-					return <SwipeButton key={buttonType} type={buttonType} onChoice={props.onChoice} />;
+					return <SwipeButton key={buttonType} type={buttonType} onChoice={handleUserChoice} />;
 				})}
 			</View>
-		</SafeAreaProvider>
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#FFF5F0",
+		width: "100%",
+		height: "100%",
+		backgroundColor: "#F5EBE6",
+		flexDirection: "column",
 	},
-	pageContainer: {
-		flex: 1,
-		backgroundColor: "#FFF5F0",
+
+	cardCcontainer: {
+		width: "100%",
+		height: "100%",
+		backgroundColor: "#F5EBE6",
+	},
+	innerCard: {
+		height: "85%",
+		width: "90%",
+		marginTop: "-5%",
+		justifyContent: "center",
+		alignItems: "center",
+		elevation: 4,
+		borderRadius: 20,
+		shadowColor: "#896761",
+		backgroundColor: "white",
+		backfaceVisibility: "hidden",
 	},
 	card: {
-		flex: 1,
-		width: screenWidth * 0.9,
-		height: screenHeight - screenHeight / 4,
-		alignSelf: "center",
-		backgroundColor: "#FFF5F0",
-		borderRadius: 24,
-		shadowColor: "#000",
-		boxShadow: "0 2px 3px #896761",
-		// shadowOpacity: 0.15,
-		// shadowOffset: { width: 0, height: 2 },
-		// shadowRadius: 6,
-		// elevation: 4,
-		// overflow: "hidden",
+		borderRadius: 20,
+		overflow: "hidden",
+		width: "100%",
+		height: "100%",
 	},
 	buttons: {
 		position: "absolute",
-		flex: 1,
-		left: 50,
-		right: 10,
-		bottom: screenHeight - screenHeight * 0.77,
+		left: screenWidth / 7,
+		right: screenWidth / 20,
+		height: "20%",
+		bottom: "2%",
 		flexDirection: "row",
 		justifyContent: "space-around",
 		alignItems: "center",
 		alignContent: "center",
-		zIndex: 10,
+		elevation: 5,
 	},
+	// swipeProfileInformations: {
+	// 	flex: 1,
+	// 	bottom: 0,
+	// 	zIndex: 12,
+	// },
 });
