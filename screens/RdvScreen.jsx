@@ -1,4 +1,3 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
   StyleSheet,
   Modal,
@@ -13,16 +12,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { addPlace } from "../reducers/map";
 
-
 export default function App({ navigation }) {
-
-https://us1.locationiq.com/v1/reverse?key=Your_API_Access_Token&lat=51.50344025&lon=-0.12770820958562096&format=json&
-
-  return (
+const addRvd = async () => {
+const response = await (fetch `https://us1.locationiq.com/v1/reverse?key=${Your_API_Access_Token}&lat={data.latitude}&lon=-{data.longitude}&format=json&`)
+  const data = await response.json();
+  console.log(data)
+  const coordinate = {
+    latitude: data.lat,
+    longitude: data.lon,
+  }
+}
+return (
     <>
-     <SafeAreaView style={styles.container}>
-          <HeaderBeginning />
-          </SafeAreaView>
+      {/* <SafeAreaView style={styles.container}>
+        <HeaderBeginning />
+      </SafeAreaView> */}
     </>
   );
 }
