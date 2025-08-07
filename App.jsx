@@ -79,9 +79,9 @@ const receiveNewMessage = async (event, token, dispatch) => {
 const MainTabNav = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user.value);
-	// const userId = user.user._id;
-	// const userId = user.user._id;
-	const userId = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NzExNTA5NjdiOTE1OTgwZTRmOGMiLCJ0b2tlbk51bWJlciI6NiwiaWF0IjoxNzU0NTYwNTc0LCJleHAiOjUzNTQ1NjA1NzR9.HVQMNJzi_m6X0GuTW6DCbkEUVIzf0ZnZ_U0Zb0o1Aws";
+	//   const userId = user.user._id;
+	const userId =
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NzExNTA5NjdiOTE1OTgwZTRmOGMiLCJ0b2tlbk51bWJlciI6NiwiaWF0IjoxNzU0NTYwNTc0LCJleHAiOjUzNTQ1NjA1NzR9.HVQMNJzi_m6X0GuTW6DCbkEUVIzf0ZnZ_U0Zb0o1Aws";
 	const token = user.token;
 	useEffect(() => {
 		const channel = pusher.subscribe(userId);
@@ -95,6 +95,9 @@ const MainTabNav = () => {
 			<Tab.Navigator
 				screenOptions={({ route }) => ({
 					tabBarStyle: styles.tabBar,
+					header: ({ route }) => {
+						return <HeaderMain route={route} />;
+					},
 					tabBarIcon: ({ color, size }) => {
 						let icon;
 						if (route.name === "MessagerieNav") {
@@ -132,9 +135,6 @@ const MyProfileNav = () => {
 		<TopTab.Navigator
 			screenOptions={({ route }) => ({
 				tabBarStyle: styles.tabBar,
-				header: ({ route }) => {
-					return <HeaderMain route={route} />;
-				},
 				tabBarIcon: ({ color, size }) => {
 					let icon;
 
