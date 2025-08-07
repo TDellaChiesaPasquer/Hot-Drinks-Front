@@ -94,6 +94,9 @@ const MainTabNav = () => {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarStyle: styles.tabBar,
+          header: ({ route }) => {
+            return <HeaderMain route={route} />;
+          },
           tabBarIcon: ({ color, size }) => {
             let icon;
             if (route.name === "MessagerieNav") {
@@ -137,9 +140,6 @@ const MyProfileNav = () => {
     <TopTab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: styles.tabBar,
-        header: ({ route }) => {
-          return <HeaderMain route={route} />;
-        },
         tabBarIcon: ({ color, size }) => {
           let icon;
 
