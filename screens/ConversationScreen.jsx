@@ -30,7 +30,6 @@ export default function ({navigation, route}) {
   const otherUser = otherUserNumber === 2 ? route.params.user2 : route.params.user1;
   const currentDate = dayjs();
   const lastOwnSeenMessageIndex = messageList.findLastIndex(x => x.creator !== otherUserNumber && x.seen === true);
-  console.log(messageList);
   const messagesHTML = messageList.map((message, index) => {
     let date;
     const messageDate = dayjs(message.date);
@@ -69,6 +68,7 @@ export default function ({navigation, route}) {
       })
     });
     const data = await response.json();
+    setSendDisabled(false);
   }
   return <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={90}>
     <View style={styles.conversationHeader}>
