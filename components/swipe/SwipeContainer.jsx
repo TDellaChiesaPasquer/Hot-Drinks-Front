@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, ScrollView, View, Text, StyleSheet, Dimensions } from "react-native";
+import { StatusBar, View, Text, StyleSheet, Dimensions } from "react-native";
 import { Image } from "expo-image";
 import { useSelector } from "react-redux";
 
@@ -11,7 +11,8 @@ import { capitalize } from "../../Utils/utils.js";
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
 
-// const screenWidth = Dimensions.get("window").width;
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 function getPlaceholders(placeholderCount, placeholderSrc) {
 	return Array(placeholderCount).fill(placeholderSrc);
@@ -140,34 +141,32 @@ export default function SwipeContainer(props) {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.card}>
-				<Swiper loop={false} showsButtons>
-					{imagesList.map(function (imageSource, imageIndex) {
-						return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
+			<Swiper loop={false} showsButtons>
+				{imagesList.map(function (imageSource, imageIndex) {
+					return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
+				})}
+			</Swiper>
+
+			<View style={styles.overlay}>
+				<View style={styles.infos}>
+					{informationList.map(function (infoText, infoIndex) {
+						return (
+							<Text key={infoIndex} style={[styles.info, { color: textColor }]}>
+								{infoText}
+								{infoIndex < informationList.length - 1 ? ", " : ""}
+							</Text>
+						);
 					})}
-				</Swiper>
+				</View>
 
-				<View style={styles.overlay}>
-					<View style={styles.infos}>
-						{informationList.map(function (infoText, infoIndex) {
-							return (
-								<Text key={infoIndex} style={[styles.info, { color: textColor }]}>
-									{infoText}
-									{infoIndex < informationList.length - 1 ? ", " : ""}
-								</Text>
-							);
-						})}
-					</View>
-
-					<View style={styles.hashtags}>
-						{hashtagsList.map(function (hashtag, hashtagIndex) {
-							return (
-								<Text key={hashtagIndex} style={[styles.hashtag, { color: textColor }]}>
-									#{capitalize(hashtag)}{" "}
-								</Text>
-							);
-						})}
-					</View>
+				<View style={styles.hashtags}>
+					{hashtagsList.map(function (hashtag, hashtagIndex) {
+						return (
+							<Text key={hashtagIndex} style={[styles.hashtag, { color: textColor }]}>
+								#{capitalize(hashtag)}{" "}
+							</Text>
+						);
+					})}
 				</View>
 			</View>
 		</View>
@@ -175,12 +174,46 @@ export default function SwipeContainer(props) {
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1 },
-	card: { flex: 1, borderRadius: 20, overflow: "hidden" },
-	image: { width: "100%", height: "100%" },
-	overlay: { position: "absolute", left: 20, right: 20, bottom: 120 },
-	infos: { flexDirection: "row", flexWrap: "wrap", bottom: -40 },
-	info: { color: "#000", fontWeight: "600", fontSize: 18 },
-	hashtags: { flexDirection: "row", flexWrap: "wrap", marginTop: 4, bottom: -50 },
-	hashtag: { color: "#000", fontSize: 16 },
+	container: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 20,
+		overflow: "hidden",
+	},
+
+	image: {
+		width: "100%",
+		height: "100%",
+	},
+
+	overlay: {
+		position: "absolute",
+		left: screenWidth / 10,
+		right: screenWidth / 10,
+		bottom: screenHeight / 6.5,
+	},
+
+	infos: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		bottom: -screenHeight / 20,
+	},
+
+	info: {
+		color: "#000",
+		fontWeight: "600",
+		fontSize: 18,
+	},
+
+	hashtags: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		marginTop: 4,
+		bottom: -screenHeight / 15,
+	},
+
+	hashtag: {
+		color: "#000",
+		fontSize: 16,
+	},
 });
