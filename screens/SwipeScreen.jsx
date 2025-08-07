@@ -17,7 +17,7 @@ export default function SwipeScreen(props) {
 	const [cardList, setCardList] = useState([]);
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
 
-	const enTest = true;
+	const enTest = false;
 	// const dbUtilisee = "Audrey";
 	const dbUtilisee = "Cyrille";
 	const db = {
@@ -90,20 +90,20 @@ export default function SwipeScreen(props) {
 
 	function handleSwipe(cardIndex, action) {
 		const profile = profileList[cardIndex];
-		if (profile && profile.username) {
-			sendSwipeToServer(profile.username, action);
+		if (profile && profile._id) {
+			sendSwipeToServer(profile._id, action);
 		}
 	}
 
-	function sendSwipeToServer(username, userAction) {
+	function sendSwipeToServer(userId, userAction) {
 		const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
 
-		// console.log("username : " + username);
-		// console.log("userAction : " + userAction);
+		console.log("userId : " + userId);
+		console.log("userAction : " + userAction);
 
 		const payload = {
 			action: userAction.toLowerCase(),
-			username: username,
+			userId: userId,
 		};
 		const fetchOptions = {
 			method: "PUT",
