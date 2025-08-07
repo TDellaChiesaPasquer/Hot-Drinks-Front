@@ -34,13 +34,12 @@ import SettingsScreen from "./screens/SettingsScreen";
 
 import user, { updateConv } from "./reducers/user";
 import map from "./reducers/map";
-import Pusher from 'pusher-js'
+import Pusher from "pusher-js";
 import { useEffect } from "react";
 
-const pusher = new Pusher('ee5eeae5d340ff371be3', {
-    cluster: 'eu'
+const pusher = new Pusher("ee5eeae5d340ff371be3", {
+  cluster: "eu",
 });
-
 
 const store = configureStore({
   reducer: { user, map },
@@ -67,32 +66,40 @@ const SignUpNav = () => {
 };
 
 const receiveNewMessage = async (event, token, dispatch) => {
-  const response = await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + event.conversationId, {
-    headers: {
-      authorization: token
+  const response = await fetch(
+    process.env.EXPO_PUBLIC_IP + "/conversation/" + event.conversationId,
+    {
+      headers: {
+        authorization: token,
+      },
     }
-  });
+  );
   const data = await response.json();
   if (!data.result) {
     return;
   }
   dispatch(updateConv(data.conversation));
-}
+};
 
 const MainTabNav = () => {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user.value);
+  const user = useSelector((state) => state.user.value);
   const userId = user.user._id;
   const token = user.token;
   useEffect(() => {
     const channel = pusher.subscribe(userId);
-    channel.bind('newMessage', (e) => receiveNewMessage(e, token, dispatch));
-    return () => {channel.unbind('newMessage')}
-  }, [userId])
+    channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
+    return () => {
+      channel.unbind("newMessage");
+    };
+  }, [userId]);
   return (
     <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
+          header: ({ route }) => {
+            return <HeaderMain route={route} />;
+          },
           tabBarStyle: styles.tabBar,
           tabBarIcon: ({ color, size }) => {
             let icon;
@@ -136,37 +143,39 @@ const MyProfileNav = () => {
   return (
     <TopTab.Navigator
       screenOptions={({ route }) => ({
-        tabBarStyle: styles.tabBar,
-        header: ({ route }) => {
-          return <HeaderMain route={route} />;
-        },
+        // tabBarStyle: styles.tabBar,
+
         tabBarIcon: ({ color, size }) => {
           let icon;
-
+          console.log("test");
           if (route.name === "MyProfile") {
             // iconName = "user";
-            icon = <Feather name="user" size={24} color="black" />;
+            console.log("test1");
+            icon = <FontAwesome name="heart-o" size={size} color={color} />;
             // icon = <Feather name="user" size={30} color={color} />;
           } else if (route.name === "Preferences") {
             // iconName = "heart";
-            icon = <FontAwesome name="heart-o" size={24} color="black" />;
-          } else if (route.name === "Settings") {
+            icon = <FontAwesome name="heart-o" size={size} color={color} />;
+          } else {
             // iconName = "gear";
-            icon = <MaterialIcons name="settings" size={24} color="black" />;
+            icon = <FontAwesome name="heart-o" size={size} color={color} />;
           }
-
           return icon;
           // <FontAwesome name={iconName} size={size} color={color} />;
         },
 
         tabBarActiveTintColor: "#965A51",
-        tabBarInactiveTintColor: "#BC8D85",
+        tabBarInactiveTintColor: "#f02400",
+        tabBarShowIcon: true,
+        tabBarShowLabel: true,
+        // tabBarStyle: { backgroundColor: "#ffffff00" },
+        // tabBarLabelStyle: { transparent: "black" },
         headerShown: false,
       })}
     >
-      <TopTab.Screen name="MyProfileScreen" component={MyProfileScreen} />
-      <TopTab.Screen name="PreferencesScreen" component={PreferencesScreen} />
-      <TopTab.Screen name="SettingsScreen" component={SettingsScreen} />
+      <TopTab.Screen name="MyProfile" component={MyProfileScreen} />
+      <TopTab.Screen name="Preferences" component={PreferencesScreen} />
+      <TopTab.Screen name="Settings" component={SettingsScreen} />
     </TopTab.Navigator>
   );
 };
