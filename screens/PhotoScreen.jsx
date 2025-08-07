@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   Button,
   View,
@@ -13,12 +13,27 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ImagePickerComponent from "../components/ImagePickerComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { addPhoto, removePhoto } from "../reducers/user";
+import { useFocusEffect } from "@react-navigation/native";
+import { BackHandler } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ImagePickerScreen({ navigation }) {
   const [photoUriList, setPhotoUriList] = useState([]);
   const user = useSelector(state => state.user.value);
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
 
   const addUriToList = (uri) => {
     setPhotoUriList([...photoUriList, uri]);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
 import { addTempInfo } from "../reducers/user";
+import { useFocusEffect } from "@react-navigation/native";
+import { BackHandler } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,6 +24,19 @@ export default function ({ navigation }) {
   const [jeRecherche, setJeRecherche] = useState("");
   const [disabled, setDisabled] = useState(false);
   const dispatch = useDispatch();
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
   const sanitizeInputs = () => {
     setDisabled(true);
     if (jeSuis === "") {
