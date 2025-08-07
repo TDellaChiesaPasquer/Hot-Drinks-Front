@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 		left: screenWidth / 7,
 		right: screenWidth / 20,
 		height: "20%",
-		bottom: "2%",
+		bottom: "-1%",
 		flexDirection: "row",
 		justifyContent: "space-around",
 		alignItems: "center",
