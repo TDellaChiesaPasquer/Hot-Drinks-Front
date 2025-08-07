@@ -44,12 +44,25 @@ export default function ({ navigation }) {
           }
         })
         const data2 = await response2.json();
+        console.log(data2.user)
         setValidateDisabled(false);
         setEmailVisible(false);
         if (!data2.user.birthdate) {
-            navigation.navigate('SignInNav', {path: 'DateScreen'});
-            return;
+          console.log('test1')
+          navigation.navigate('DateScreen');
+          return;
         }
+        if (data2.user.photoList.length === 0) {
+          console.log('test2')
+          navigation.navigate('PhotoScreen');
+          return;
+        }
+        if (!data2.user.latitude) {
+          console.log('test3')
+          navigation.navigate('MapScreen');
+          return;
+        }
+          console.log('test4')
         dispatch(addInfos(data2.user));
         navigation.navigate('MainTabNav');
         return;

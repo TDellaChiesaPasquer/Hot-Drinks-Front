@@ -30,11 +30,9 @@ export const userSlice = createSlice({
     updateConv: (state, action) => {
       const index = state.value.user.conversationList.findIndex(x => String(x._id) === String(action.payload._id));
       if (index === -1) {
-        console.log('test1')
         state.value.user.conversationList.push(action.payload);
         return;
       }
-        console.log('test2')
       state.value.user.conversationList[index] = action.payload;
     }
   },

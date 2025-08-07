@@ -58,10 +58,8 @@ export default function ImagePickerScreen({ navigation }) {
       }
     );
     const data = await response.json();
-    navigation.navigate("MainTabNav");
-    console.log("data=", data);
-    if (photoUriList.length === 0) {
-      console.log("photo=", photoUriList);
+    if (data.result) {
+      navigation.navigate("MapScreen");
       return;
     }
   };
