@@ -3,10 +3,10 @@ import { Image } from "expo-image";
 import dayjs from "dayjs";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { updateConv } from "../reducers/user";
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 export default function ({navigation, route}) {
   const user = useSelector(state => state.user.value);
@@ -112,113 +112,113 @@ export default function ({navigation, route}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5EBE6',
-    alignItems: 'center',
-    position: 'relative'
-  },
-  messageDate: {
-    width: width * 0.9,
-    textAlign: 'center',
-    color: '#965A51',
-    fontSize: 10
-  },
-  messageDiv: {
-    width: width * 0.9,
-    marginVertical: 2
-  },
-  messageContentContainer: {
-    maxWidth: width * 0.6,
-    padding: 10,
-    borderRadius: 20,
-  },
-  messageList: {
-    alignItems: 'center',
-    width: width * 0.9,
-    justifyContent: 'flex-start'
-  },
-  messageContent: {
-    color: '#FFF5F0'
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    objectFit: 'cover',
-  },
-  avatarContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: '100%',
-    backgroundColor: '#965A51',
-    overflow: 'hidden'
-  },
-  conversationHeader: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-    flexDirection: 'row'
-  },
-  username: {
-    color: '#965A51',
-    fontWeight: 'bold',
-    marginLeft: 5
-  },
-  input: {
-    fontWeight: 'bold',
-    color: '#965A51',
-    fontSize: 12,
-    paddingVertical: 16,
-    width: width * 0.6
-  },
-  conversationBottom: {
-    maxHeight: 115,
-    padding: 10,
-    position: 'absolute',
-    bottom: 0
-  },
-  inputContainer: {
-    borderRadius: 24,
-    paddingLeft: 12,
-    boxShadow: '0 2px 3px #896761',
-    width: width * 0.9,
-    backgroundColor: '#FFF5F0',
-    overflow: 'hidden',
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  sendButton: {
-    height: 36,
-    width: width * 0.2,
-    backgroundColor: '#965A51',
+	container: {
+		flex: 1,
+		backgroundColor: "#F5EBE6",
+		alignItems: "center",
+		position: "relative",
+	},
+	messageDate: {
+		width: width * 0.9,
+		textAlign: "center",
+		color: "#965A51",
+		fontSize: 10,
+	},
+	messageDiv: {
+		width: width * 0.9,
+		marginVertical: 2,
+	},
+	messageContentContainer: {
+		maxWidth: width * 0.6,
+		padding: 10,
+		borderRadius: 20,
+	},
+	messageList: {
+		alignItems: "center",
+		width: width * 0.9,
+		justifyContent: "flex-start",
+	},
+	messageContent: {
+		color: "#FFF5F0",
+	},
+	avatar: {
+		width: 60,
+		height: 60,
+		objectFit: "cover",
+	},
+	avatarContainer: {
+		width: 60,
+		height: 60,
+		borderRadius: "100%",
+		backgroundColor: "#965A51",
+		overflow: "hidden",
+	},
+	conversationHeader: {
+		alignItems: "center",
+		justifyContent: "flex-start",
+		width: "100%",
+		flexDirection: "row",
+	},
+	username: {
+		color: "#965A51",
+		fontWeight: "bold",
+		marginLeft: 5,
+	},
+	input: {
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		paddingVertical: 16,
+		width: width * 0.6,
+	},
+	conversationBottom: {
+		maxHeight: 115,
+		padding: 10,
+		position: "absolute",
+		bottom: 0,
+	},
+	inputContainer: {
+		borderRadius: 24,
+		paddingLeft: 12,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.9,
+		backgroundColor: "#FFF5F0",
+		overflow: "hidden",
+		alignItems: "flex-end",
+		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+	sendButton: {
+		height: 36,
+		width: width * 0.2,
+		backgroundColor: "#965A51",
 		borderRadius: 20,
 		boxShadow: "0 2px 3px #896761",
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 5,
-    marginRight: 5
-  },
-  buttonText: {
+		alignItems: "center",
+		justifyContent: "center",
+		marginBottom: 5,
+		marginRight: 5,
+	},
+	buttonText: {
 		fontWeight: "bold",
 		fontSize: 18,
 		color: "#F5EBE6",
 	},
-  conversationBottomPlaceholder: {
-    width: '100%',
-    alignItems: 'center',
-    height: 60
-  },
-  conversationBottomRelative: {
-    position: 'relative',
-    alignItems: 'center',
-    width: width
-  },
-  goBack: {
-    marginHorizontal: 10
-  },
-  vu: {
-    color: '#965A51',
-    fontSize: 10
-  }
-})
+	conversationBottomPlaceholder: {
+		width: "100%",
+		alignItems: "center",
+		height: 60,
+	},
+	conversationBottomRelative: {
+		position: "relative",
+		alignItems: "center",
+		width: width,
+	},
+	goBack: {
+		marginHorizontal: 10,
+	},
+	vu: {
+		color: "#965A51",
+		fontSize: 10,
+	},
+});

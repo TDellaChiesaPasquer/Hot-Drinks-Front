@@ -15,8 +15,6 @@ import { useEffect } from "react";
 import { useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
-
-import { addPlace } from "../reducers/map";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { addInfos } from "../reducers/user";
 import { useFocusEffect } from "@react-navigation/native";
