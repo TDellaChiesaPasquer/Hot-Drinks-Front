@@ -39,14 +39,14 @@ const SignUpNav = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, gestureEnabled: false }}
-    >
+      >
+      <Stack.Screen name="RdvScreen" component={RdvScreen} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="DateScreen" component={DateScreen} />
       <Stack.Screen name="GenderScreen" component={GenderScreen} />
       <Stack.Screen name="RelationScreen" component={RelationScreen} />
       <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
       <Stack.Screen name="MapScreen" component={MapScreen} />
-      <Stack.Screen name="RdvScreen" component={RdvScreen} />
     </Stack.Navigator>
   );
 };
