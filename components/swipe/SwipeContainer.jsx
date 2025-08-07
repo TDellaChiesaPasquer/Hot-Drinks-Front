@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 // import Carousel from "react-native-snap-carousel";
 import Swiper from "react-native-swiper";
 
-import SwipeButton from "./SwipeButton";
 import { capitalize } from "../../Utils/utils.js";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
@@ -82,6 +81,7 @@ function formatProfileData(profileData, placeholderSrc) {
 		hashtagsList: [],
 		images: getPlaceholders(NB_PLACEHOLDERS || 10, placeholderSrc),
 		username: null,
+		isNotPlaceholder: true,
 	};
 
 	if (!profileData) return formattedData;
@@ -133,6 +133,10 @@ export default function SwipeContainer(props) {
 	const imagesList = formattedData.images;
 	const informationList = formattedData.informationList;
 	const hashtagsList = formattedData.hashtagsList;
+	const isNotPlaceholder = formattedData.isNotPlaceholder;
+
+	// Déterminer la couleur du texte en fonction de isPlaceholder
+	const textColor = isNotPlaceholder ? "white" : "black";
 
 	return (
 		<View style={styles.container}>
@@ -147,7 +151,7 @@ export default function SwipeContainer(props) {
 					<View style={styles.infos}>
 						{informationList.map(function (infoText, infoIndex) {
 							return (
-								<Text key={infoIndex} style={styles.info}>
+								<Text key={infoIndex} style={[styles.info, { color: textColor }]}>
 									{infoText}
 									{infoIndex < informationList.length - 1 ? ", " : ""}
 								</Text>
@@ -158,16 +162,10 @@ export default function SwipeContainer(props) {
 					<View style={styles.hashtags}>
 						{hashtagsList.map(function (hashtag, hashtagIndex) {
 							return (
-								<Text key={hashtagIndex} style={styles.hashtag}>
+								<Text key={hashtagIndex} style={[styles.hashtag, { color: textColor }]}>
 									#{capitalize(hashtag)}{" "}
 								</Text>
 							);
-						})}
-					</View>
-
-					<View style={styles.buttons}>
-						{["Dislike", "Superlike", "Like"].map(function (buttonType) {
-							return <SwipeButton key={buttonType} type={buttonType} onChoice={props.onChoice} />;
 						})}
 					</View>
 				</View>
@@ -181,19 +179,8 @@ const styles = StyleSheet.create({
 	card: { flex: 1, borderRadius: 20, overflow: "hidden" },
 	image: { width: "100%", height: "100%" },
 	overlay: { position: "absolute", left: 20, right: 20, bottom: 120 },
-	infos: { flexDirection: "row", flexWrap: "wrap" },
+	infos: { flexDirection: "row", flexWrap: "wrap", bottom: -40 },
 	info: { color: "#000", fontWeight: "600", fontSize: 18 },
-	hashtags: { flexDirection: "row", flexWrap: "wrap", marginTop: 4 },
+	hashtags: { flexDirection: "row", flexWrap: "wrap", marginTop: 4, bottom: -50 },
 	hashtag: { color: "#000", fontSize: 16 },
-	buttons: {
-		position: "absolute",
-		flex: 1,
-		left: 19,
-		right: 0,
-		bottom: -100,
-		flexDirection: "row",
-		justifyContent: "space-around",
-		alignItems: "center",
-		alignContent: "center",
-	},
 });
