@@ -76,23 +76,33 @@ const placeholderData = {
  * @return {Object} Données formatées pour le profil swipe
  */
 function formatProfileData(profileData, placeholderSrc) {
-	// Initialiser avec les données par défaut
+	// Check if we're using placeholder data directly
+	const isDefaultPlaceholder = profileData === placeholderData;
+
 	const formattedData = {
 		informationList: ["Anonyme", "?", "Distance inconnue"],
 		hashtagsList: [],
 		images: getPlaceholders(NB_PLACEHOLDERS || 10, placeholderSrc),
 		username: null,
-		isNotPlaceholder: true,
+		isPlaceholder: isDefaultPlaceholder,
 	};
 
-	if (!profileData) return formattedData;
+	if (!profileData) {
+		formattedData.isPlaceholder = true;
+		return formattedData;
+	}
 
-	// Username - utiliser directement
+	// Real data processing - if we have real data, we're not using placeholders
+	if (profileData._id) {
+		formattedData.isPlaceholder = false;
+	}
+
+	// Username
 	if (profileData.username) {
 		formattedData.informationList[0] = profileData.username;
 	}
 
-	// Age - calculer à partir de birthdate
+	// Age
 	if (profileData.birthdate) {
 		const birthDate = new Date(profileData.birthdate);
 		const today = new Date();
@@ -104,17 +114,17 @@ function formatProfileData(profileData, placeholderSrc) {
 		formattedData.informationList[1] = age.toString();
 	}
 
-	// Distance - afficher directement sauf si contient NaN
+	// Distance
 	if (profileData.distance && !profileData.distance.includes("NaN")) {
 		formattedData.informationList[2] = profileData.distance;
 	}
 
-	// Photos - utiliser la fonction existante pour récupérer les photos
+	// Photos
 	if (profileData.photoList && profileData.photoList.length > 0) {
 		formattedData.images = getAllPhotosFromProfile(profileData, placeholderSrc);
 	}
 
-	// Hashtags - extraire les goûts avec star=true
+	// Hashtags
 	if (profileData.tastesList && profileData.tastesList.length > 0) {
 		formattedData.hashtagsList = profileData.tastesList.filter((taste) => taste.star === true).map((taste) => taste.value);
 	}
@@ -134,10 +144,12 @@ export default function SwipeContainer(props) {
 	const imagesList = formattedData.images;
 	const informationList = formattedData.informationList;
 	const hashtagsList = formattedData.hashtagsList;
-	const isNotPlaceholder = formattedData.isNotPlaceholder;
+	const isPlaceholder = formattedData.isPlaceholder;
 
 	// Déterminer la couleur du texte en fonction de isPlaceholder
-	const textColor = isNotPlaceholder ? "white" : "black";
+	// For placeholder (default) content, use black text
+	// For real profiles (with photos), use white text to be visible against photos
+	const textColor = isPlaceholder ? "black" : "white";
 
 	return (
 		<View style={styles.container}>
@@ -200,7 +212,6 @@ const styles = StyleSheet.create({
 	},
 
 	info: {
-		color: "#000",
 		fontWeight: "600",
 		fontSize: 18,
 	},
@@ -213,7 +224,6 @@ const styles = StyleSheet.create({
 	},
 
 	hashtag: {
-		color: "#000",
 		fontSize: 16,
 	},
 });
