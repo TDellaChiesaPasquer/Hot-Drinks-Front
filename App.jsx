@@ -8,7 +8,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Feather from "@expo/vector-icons/Feather";
 
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 
 import DateScreen from "./screens/DateScreen";
@@ -23,8 +23,15 @@ import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 import MapScreen from "./screens/MapScreen";
 
-import user from "./reducers/user";
+import user, { updateConv } from "./reducers/user";
 import map from "./reducers/map";
+import Pusher from 'pusher-js'
+import { useEffect } from "react";
+
+const pusher = new Pusher('ee5eeae5d340ff371be3', {
+    cluster: 'eu'
+});
+
 
 const store = configureStore({
 	reducer: { user, map },
@@ -48,7 +55,29 @@ const SignUpNav = () => {
   );
 };
 
+const receiveNewMessage = async (event, token, dispatch) => {
+  const response = await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + event.conversationId, {
+    headers: {
+      authorization: token
+    }
+  });
+  const data = await response.json();
+  if (!data.result) {
+    return;
+  }
+  dispatch(updateConv(data.conversation));
+}
+
 const MainTabNav = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user.value);
+  const userId = user.user._id;
+  const token = user.token;
+  useEffect(() => {
+    const channel = pusher.subscribe(userId);
+    channel.bind('newMessage', (e) => receiveNewMessage(e, token, dispatch));
+    return () => {channel.unbind('newMessage')}
+  }, [userId])
   return (
     <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
       <Tab.Navigator

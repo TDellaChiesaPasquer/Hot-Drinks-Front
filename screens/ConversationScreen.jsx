@@ -13,7 +13,8 @@ export default function ({navigation, route}) {
   const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState('');
   const [sendDisabled, setSendDisabled] = useState(false);
-  const [messageList, setMessageList] = useState(route.params.messageList);
+  const conversation =  user.user.conversationList.find(x => String(x._id) === String(route.params._id));
+  const messageList = conversation.messageList;
   const scrollViewRef = useRef();
   const otherUserNumber = route.params.otherUserNumber;
   const otherUser = otherUserNumber === 2 ? route.params.user2 : route.params.user1;
@@ -59,14 +60,14 @@ export default function ({navigation, route}) {
       setSendDisabled(false);
       return;
     }
-    const response2 = await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + String(route.params._id), {
-      headers: {
-        authorization: user.token
-      }
-    });
-    const data2 = await response2.json();
-    setMessageList(data2.conversation.messageList);
-    dispatch(updateConv(data2.conversation));
+    // const response2 = await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + String(route.params._id), {
+    //   headers: {
+    //     authorization: user.token
+    //   }
+    // });
+    // const data2 = await response2.json();
+    // setMessageList(data2.conversation.messageList);
+    // dispatch(updateConv(data2.conversation));
     setSendDisabled(false);
     return;
   }

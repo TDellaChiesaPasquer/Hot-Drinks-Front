@@ -86,7 +86,7 @@ export default function ({ navigation }) {
       </TouchableOpacity>
     );
   });
-  const contactHTML = conversationData.map((data) => {
+  const contactHTML = conversationData.map((data, index) => {
     const otherUserNumber =
       String(data.user1._id) === String(user.user._id) ? 2 : 1;
     const otherUser = user.user
@@ -97,7 +97,7 @@ export default function ({ navigation }) {
     const name = otherUser.username || "";
     return (
       <TouchableOpacity
-        key={otherUser._id}
+        key={otherUser._id + index}
         style={styles.contactContainer}
         onPress={() =>
           navigation.navigate("ConversationScreen", {
