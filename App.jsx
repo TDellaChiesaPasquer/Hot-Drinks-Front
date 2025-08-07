@@ -50,7 +50,6 @@ const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
 const SignUpNav = () => {
-<<<<<<< HEAD
 	return (
 		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
 			<Stack.Screen name="SignUp" component={SignUp} />
@@ -62,21 +61,6 @@ const SignUpNav = () => {
 			<Stack.Screen name="RdvScreen" component={RdvScreen} />
 		</Stack.Navigator>
 	);
-=======
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
-      >
-      <Stack.Screen name="SignUp" component={SignUp} />
-      <Stack.Screen name="DateScreen" component={DateScreen} />
-      <Stack.Screen name="GenderScreen" component={GenderScreen} />
-      <Stack.Screen name="RelationScreen" component={RelationScreen} />
-      <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
-      <Stack.Screen name="MapScreen" component={MapScreen} />
-      <Stack.Screen name="RdvScreen" component={RdvScreen} />
-    </Stack.Navigator>
-  );
->>>>>>> 8ff2aa0c787a1ab51c5414f7ce537cdb0d4986e0
 };
 
 const receiveNewMessage = async (event, token, dispatch) => {
