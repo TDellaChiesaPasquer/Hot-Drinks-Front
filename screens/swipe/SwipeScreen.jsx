@@ -182,11 +182,10 @@ const styles = StyleSheet.create({
 		marginTop: "-5%",
 		justifyContent: "center",
 		alignItems: "center",
-		elevation: 4,
 		borderRadius: 20,
-		shadowColor: "#896761",
 		backgroundColor: "white",
 		backfaceVisibility: "hidden",
+    boxShadow: "0 2px 3px #896761",
 	},
 	card: {
 		borderRadius: 20,
