@@ -17,7 +17,6 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import DateScreen from "./screens/DateScreen";
 import GenderScreen from "./screens/GenderScreen";
 import RelationScreen from "./screens/RelationScreen";
-import SwipeScreen from "./screens/SwipeScreen";
 import SignUp from "./screens/SignUp";
 import LoadingScreen from "./screens/LoadingScreen";
 import MessagerieScreen from "./screens/MessagerieScreen";
@@ -26,6 +25,10 @@ import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 import MapScreen from "./screens/MapScreen";
 import RdvScreen from "./screens/RdvScreen";
+
+// Swipe
+import SwipeScreen from "./screens/swipe/SwipeScreen";
+import SwipeProfileInformationsScreen from "./screens/swipe/SwipeProfileInformationsScreen";
 
 import MyProfileScreen from "./screens/MyProfileScreen";
 import PreferencesScreen from "./screens/PreferencesScreen";
@@ -56,6 +59,7 @@ const store = configureStore({
 const persistor = persistStore(store);
 
 const Stack = createNativeStackNavigator();
+const StackSwipe = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
