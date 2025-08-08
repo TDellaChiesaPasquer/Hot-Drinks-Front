@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback, } from "react";
 import { ScrollView, View, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
@@ -8,6 +8,8 @@ import SwipeContainer from "../components/swipe/SwipeContainer";
 import PagerView from "react-native-pager-view";
 import SwipeButton from "../components/swipe/SwipeButton";
 import SwipeProfileInformations from "../components/swipe/SwipeProfileInformations";
+import { useFocusEffect } from "@react-navigation/native";
+import { BackHandler } from "react-native";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -18,8 +20,21 @@ export default function SwipeScreen(props) {
   const [profileList, setProfileList] = useState([]);
   const [cardList, setCardList] = useState([]);
   const [swiperComponentKey, setSwiperComponentKey] = useState(0);
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
 
-	const enTest = true;
+      return () => subscription.remove();
+    }, [])
+  );
+
+	const enTest = false;
 	// const dbUtilisee = "Audrey";
 	const dbUtilisee = "Cyrille";
 	const db = {
