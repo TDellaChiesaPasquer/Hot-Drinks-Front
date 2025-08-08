@@ -3,6 +3,10 @@ import { ScrollView, View, Text, StyleSheet, Dimensions, TouchableOpacity } from
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 
+// tmp pour le test
+import Swiper from "react-native-swiper";
+import { Image } from "expo-image";
+
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const SURFACE_BG = "#F5EBE6";
@@ -59,6 +63,15 @@ export default function SwipeProfileInformations(props) {
 		itemsJSX.push(<TasteItem key={i} label={item.label} value={item.value} />);
 	}
 
+	// tmp pour le test
+	const imagesList = [
+		{ uri: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1080&h=607&q=80" },
+		{ uri: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=1080&h=607&q=80" },
+		{ uri: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1080&h=607&q=80" },
+		{ uri: "https://images.unsplash.com/photo-1558981283-cc59d621f562?auto=format&fit=crop&w=1080&h=607&q=80" },
+	];
+
+
 	return (
 		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
 			{/* Bouton de retour (flèche gauche) */}
@@ -68,7 +81,13 @@ export default function SwipeProfileInformations(props) {
 				</TouchableOpacity>
 			</View>
 
-			<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.wrapper}>
+			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper}>
+				<Swiper loop={false} showsButtons>
+					{imagesList.map(function (imageSource, imageIndex) {
+						return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
+					})}
+				</Swiper>
+
 				{itemsJSX}
 			</ScrollView>
 		</View>
@@ -137,5 +156,10 @@ const styles = StyleSheet.create({
 		shadowOffset: { width: 0, height: 2 },
 		shadowRadius: 4,
 		elevation: 3,
+	},
+	// tmp pour le test
+	image: {
+		width,
+		height: height * 0.6,
 	},
 });
