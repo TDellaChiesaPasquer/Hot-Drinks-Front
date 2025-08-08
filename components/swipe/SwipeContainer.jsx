@@ -10,7 +10,6 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 
 import SwipeProfileInformationsScreen from "../../screens/swipe/SwipeProfileInformationsScreen";
-import SwipeProfileInformationsTMP from "./SwipeProfileInformationsTMP";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
