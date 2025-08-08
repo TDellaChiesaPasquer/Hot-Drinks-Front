@@ -22,25 +22,6 @@ export default functionDropdownComponent = (props) => {
       onPress={() => handleImportanceClick()}
     />
   );
-  // if (isImportant) {
-  //   stars = (
-  //     <Entypo
-  //       name="star"
-  //       size={24}
-  //       color="yellow"
-  //       onPress={() => handleImportanceClick()}
-  //     />
-  //   );
-  // } else {
-  //   stars = (
-  //     <Entypo
-  //       name="star"
-  //       size={24}
-  //       color="black"
-  //       onPress={() => handleImportanceClick()}
-  //     />
-  //   );
-  // }
 
   return (
     <View style={styles.container}>

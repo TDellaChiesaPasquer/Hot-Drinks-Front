@@ -62,7 +62,7 @@ export default function ImagePickerScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f1ebe6",
+    backgroundColor: "f1ebe6",
     alignItems: "center",
   },
 
