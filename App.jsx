@@ -132,45 +132,35 @@ const MainTabNav = () => {
     }
   }, [userId]);
   return (
-    <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarStyle: styles.tabBar,
-          header: ({ route }) => {
-            return <HeaderMain route={route} />;
-          },
-          tabBarIcon: ({ color, size }) => {
-            let icon;
-            if (route.name === "MessagerieNav") {
-              icon = (
-                <MaterialCommunityIcons
-                  name="message-outline"
-                  size={30}
-                  color={color}
-                />
-              );
-            } else if (route.name === "MyProfileNav") {
-              icon = <Feather name="user" size={30} color={color} />;
-            } else {
-              icon = <Feather name="coffee" size={30} color={color} />;
-            }
-            return icon;
-          },
-          tabBarActiveTintColor: "#965A51",
-          tabBarInactiveTintColor: "#BC8D85",
-          tabBarShowLabel: false,
-          tabBarIconStyle: styles.tabBarIcon,
-        })}
-      >
-        <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
-        <Tab.Screen name="SwipeScreen" component={SwipeScreen} />
-        <Tab.Screen
-          name="MessagerieNav"
-          component={MessagerieNav}
-          options={messagerieNotif && { tabBarBadge: "" }}
-        />
-      </Tab.Navigator>
-    </SafeAreaView>
+		<SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+			<Tab.Navigator
+				screenOptions={({ route }) => ({
+					tabBarStyle: styles.tabBar,
+					header: ({ route }) => {
+						return <HeaderMain route={route} />;
+					},
+					tabBarIcon: ({ color, size }) => {
+						let icon;
+						if (route.name === "MessagerieNav") {
+							icon = <MaterialCommunityIcons name="message-outline" size={30} color={color} />;
+						} else if (route.name === "MyProfileNav") {
+							icon = <Feather name="user" size={30} color={color} />;
+						} else {
+							icon = <Feather name="coffee" size={30} color={color} />;
+						}
+						return icon;
+					},
+					tabBarActiveTintColor: "#965A51",
+					tabBarInactiveTintColor: "#BC8D85",
+					tabBarShowLabel: false,
+					tabBarIconStyle: styles.tabBarIcon,
+				})}
+			>
+				<Tab.Screen name="MyProfileNav" component={MyProfileNav} />
+				<Tab.Screen name="SwipeNav" component={SwipeNav} />
+				<Tab.Screen name="MessagerieNav" component={MessagerieNav} options={messagerieNotif && { tabBarBadge: "" }} />
+			</Tab.Navigator>
+		</SafeAreaView>
   );
 };
 
@@ -182,15 +172,6 @@ const MessagerieNav = () => {
       <Stack.Screen name="RdvScreen" component={RdvScreen} />
     </Stack.Navigator>
   );
-};
-
-const SwipeNav = () => {
-	return (
-		<StackSwipe.Navigator screenOptions={{ headerShown: false }}>
-			<StackSwipe.Screen name="SwipeScreen" component={SwipeScreen} />
-			<StackSwipe.Screen name="SwipeProfileInformationsScreen" component={SwipeProfileInformationsScreen} />
-		</StackSwipe.Navigator>
-	);
 };
 
 const SwipeNav = () => {
