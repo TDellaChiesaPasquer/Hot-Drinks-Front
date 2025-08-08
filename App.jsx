@@ -120,10 +120,7 @@ const MainTabNav = () => {
 				})}
 			>
 				{/* <Tab.Screen name="MyProfileScreen" component={MyProfileNav} /> */}
-				<StackSwipe.Navigator screenOptions={{ headerShown: false }}>
-					<Tab.Screen name="SwipeScreen" component={SwipeScreen} />
-					<Tab.Screen name="SwipeProfileInformationsScreen" component={SwipeProfileInformationsScreen} />
-				</StackSwipe.Navigator>
+				<Tab.Screen name="SwipeNav" component={SwipeNav} />
 				{/* <Tab.Screen name="MessagerieNav" component={MessagerieNav} /> */}
 			</Tab.Navigator>
 		</SafeAreaView>
@@ -136,6 +133,15 @@ const MessagerieNav = () => {
 			<Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
 			<Stack.Screen name="ConversationScreen" component={ConversationScreen} />
 		</Stack.Navigator>
+	);
+};
+
+const SwipeNav = () => {
+	return (
+		<StackSwipe.Navigator screenOptions={{ headerShown: false }}>
+			<StackSwipe.Screen name="SwipeScreen" component={SwipeScreen} />
+			<StackSwipe.Screen name="SwipeProfileInformationsScreen" component={SwipeProfileInformationsScreen} />
+		</StackSwipe.Navigator>
 	);
 };
 

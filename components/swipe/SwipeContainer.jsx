@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, View, Text, StyleSheet, Dimensions } from "react-native";
+import { StatusBar, View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { useSelector } from "react-redux";
 
-// import Carousel from "react-native-snap-carousel";
 import Swiper from "react-native-swiper";
 
 import { capitalize } from "../../Utils/utils.js";
+import { useNavigation } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
+
+import SwipeProfileInformationsScreen from "../../screens/swipe/SwipeProfileInformationsScreen";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
@@ -61,10 +64,10 @@ const placeholderData = {
 		.fill("")
 		.map(() => PLACEHOLDER_SRC),
 	tastesList: [
-		{ value: "violon", star: true },
-		{ value: "randonnée", star: true },
-		{ value: "chat", star: true },
-		{ value: "cinéma", star: false }, // exemple d'un goût non étoilé qui ne sera pas affiché
+		{ category: "Musique", value: "violon", star: true },
+		{ category: "Sport", value: "randonnée", star: true },
+		{ category: "Animaux", value: "chat", star: true },
+		{ category: "Loisir", value: "cinéma", star: false },
 	],
 	idProfile: null,
 };
@@ -133,11 +136,9 @@ function formatProfileData(profileData, placeholderSrc) {
 }
 
 export default function SwipeContainer(props) {
-	// console.log("SwipeContainer - props.profile : ");
-	// console.log(props.profile);
+	const navigation = useNavigation();
+
 	const profileData = props.profile || placeholderData;
-	// console.log("SwipeContainer - profileData : ");
-	// console.log(profileData);
 
 	// Formater les données du profil
 	const formattedData = formatProfileData(profileData, PLACEHOLDER_SRC);
@@ -147,10 +148,15 @@ export default function SwipeContainer(props) {
 	const isPlaceholder = formattedData.isPlaceholder;
 
 	// Déterminer la couleur du texte en fonction de isPlaceholder
-	// For placeholder (default) content, use black text
-	// For real profiles (with photos), use white text to be visible against photos
 	const textColor = isPlaceholder ? "black" : "white";
 
+	// Navigation vers la page d'infos avec passage des goûts
+	function goToProfileInformations() {
+		// console.log("goToProfileInformations");
+		navigation.navigate("SwipeProfileInformationsScreen", {
+			tastesList: Array.isArray(profileData?.tastesList) ? profileData.tastesList : [],
+		});
+	}
 
 	return (
 		<View style={styles.container}>
@@ -181,6 +187,13 @@ export default function SwipeContainer(props) {
 						);
 					})}
 				</View>
+			</View>
+
+			{/* Bouton flèche vers le haut (en bas à droite) */}
+			<View style={styles.fabContainer}>
+				<TouchableOpacity onPress={goToProfileInformations} style={styles.fabButton} activeOpacity={0.8}>
+					<FontAwesome name="arrow-up" size={20} color="#000" />
+				</TouchableOpacity>
 			</View>
 		</View>
 	);
@@ -226,5 +239,26 @@ const styles = StyleSheet.create({
 
 	hashtag: {
 		fontSize: 16,
+	},
+
+	// Nouveau: bouton d’accès aux infos (flèche haut)
+	fabContainer: {
+		position: "absolute",
+		right: 16,
+		bottom: 50,
+		zIndex: 50,
+	},
+	fabButton: {
+		width: 48,
+		height: 48,
+		borderRadius: 24,
+		backgroundColor: "#FFF5F0",
+		justifyContent: "center",
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 4,
+		elevation: 6,
 	},
 });
