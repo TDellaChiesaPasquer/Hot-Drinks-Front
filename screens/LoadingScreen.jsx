@@ -10,7 +10,7 @@ export default function ({navigation}) {
   useEffect(() => {
     (async () => {
       if (!user.token) {
-        navigation.navigate('SignUpNav', {path: 'SignUp'});
+        navigation.navigate('SignUpNav', {screen: 'SignUp'});
         return;
       }
       const response = await fetch(process.env.EXPO_PUBLIC_IP + '/users/infos',{
@@ -20,20 +20,20 @@ export default function ({navigation}) {
       });
       const data = await response.json();
       if (!data.result) {
-        navigation.navigate('SignUpNav', {path: 'SignUp'});
+        navigation.navigate('SignUpNav', {screen: 'SignUp'});
         return;
       }
       const newUser = data.user;
       if (!newUser.birthdate) {
-        navigation.navigate('SignUpNav', {path: 'DateScreen'});
+        navigation.navigate('SignUpNav', {screen: 'DateScreen'});
         return;
       }
       if (newUser.photoList.length === 0) {
-        navigation.navigate('SignUpNav', {path: 'PhotoScreen'});
+        navigation.navigate('SignUpNav', {screen: 'PhotoScreen'});
         return;
       }
       if (!newUser.latitude) {
-        navigation.navigate('SignUpNav', {path: 'MapScreen'});
+        navigation.navigate('SignUpNav', {screen: 'MapScreen'});
         return;
       }
       dispatch(addInfos(newUser));

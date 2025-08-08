@@ -59,7 +59,7 @@ export const userSlice = createSlice({
     },
     disconnect: (state, action) => {
       action.payload.navigate('SignUpNav');
-      state.value = initialState;
+      state.value = initialState.value;
     }
   },
 });
