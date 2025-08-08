@@ -7,31 +7,33 @@ import {
   Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
 export default function ({ navigation }) {
   const user = useSelector((state) => state.user.value);
-  console.log(user);
-  const conversationData = user.user.conversationList.sort();
+  const isFocused = useIsFocused();
+  if (!user.user) {
+    return null;
+  }
+  const conversationData = user.user.conversationList;
   const conversationHTML = conversationData.map((data) => {
     if (data.messageList.length === 0) {
       return null;
     }
     const otherUserNumber =
       String(data.user1._id) === String(user.user._id) ? 2 : 1;
-    const otherUser = user.user
-      ? otherUserNumber === 2
+    const otherUser = otherUserNumber === 2
         ? data.user2
-        : data.user1
-      : data.user1;
+        : data.user1;
     const name = otherUser.username;
     const lastMessage = data.messageList[data.messageList.length - 1];
+    const notif = lastMessage.creator === otherUserNumber && lastMessage.seen === false;
     return (
       <TouchableOpacity
-        key={otherUser._id}
+        key={data._id}
         style={styles.conversationContainer}
         onPress={() =>
           navigation.navigate("ConversationScreen", {
@@ -49,7 +51,9 @@ export default function ({ navigation }) {
           />
         </View>
         <View style={styles.message}>
-          <Text style={styles.username}>{name}</Text>
+          <Text style={styles.username}>{name.length > 25
+              ? name.slice(0, 22) + "..."
+              : name}</Text>
           <Text style={styles.messageInfo}>
             Dernier message, le {dayjs(lastMessage.date).format("DD/MM/YYYY")} à{" "}
             {dayjs(lastMessage.date).format("HH:mm")}
@@ -60,6 +64,7 @@ export default function ({ navigation }) {
               : lastMessage.content}
           </Text>
         </View>
+        {notif && <View style={styles.notif}></View>}
       </TouchableOpacity>
     );
   });
@@ -74,7 +79,7 @@ export default function ({ navigation }) {
     const name = otherUser.username || "";
     return (
       <TouchableOpacity
-        key={otherUser._id + index}
+        key={data._id}
         style={styles.contactContainer}
         onPress={() =>
           navigation.navigate("ConversationScreen", {
@@ -132,6 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingLeft: 10,
     marginVertical: 5,
+    position: 'relative'
   },
   avatar: {
     width: 60,
@@ -153,7 +159,7 @@ const styles = StyleSheet.create({
   messageInfo: {
     color: "#FFF5F0",
     fontWeight: "bold",
-    fontSize: 12,
+    fontSize: 10,
   },
   messageContent: {
     color: "#FFF5F0",
@@ -183,19 +189,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    paddingLeft: width * 0.05,
+    paddingHorizontal: width * 0.05,
     gap: 10,
-    height: 72,
+    height: 82,
   },
   contactScroll: {
     width: "100%",
   },
   scrollHeight: {
     width: width,
-    height: 72,
+    height: 82,
   },
   conversationList: {
     width: width * 0.9,
     alignItems: "center",
   },
+  notif: {
+    position: 'absolute',
+    width: 10,
+    height: 10,
+    borderRadius: 10,
+    backgroundColor: '#FFF5F0',
+    right: 25
+  }
 });

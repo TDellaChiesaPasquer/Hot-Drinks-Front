@@ -13,7 +13,6 @@ import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import { Provider, useDispatch, useSelector } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
 
 import DateScreen from "./screens/DateScreen";
 import GenderScreen from "./screens/GenderScreen";
@@ -32,18 +31,29 @@ import MyProfileScreen from "./screens/MyProfileScreen";
 import PreferencesScreen from "./screens/PreferencesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
-import user, { updateConv } from "./reducers/user";
+import user, { deleteConv, updateConv } from "./reducers/user";
 import map from "./reducers/map";
 import Pusher from "pusher-js";
 import { useEffect } from "react";
+
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const pusher = new Pusher("ee5eeae5d340ff371be3", {
 	cluster: "eu",
 });
 
+const reducers = combineReducers({ user, map });
+const persistConfig = { key: 'faceup', storage: AsyncStorage };
+
 const store = configureStore({
-	reducer: { user, map },
+    reducer: persistReducer(persistConfig, reducers),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
+const persistor = persistStore(store);
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -76,17 +86,40 @@ const receiveNewMessage = async (event, token, dispatch) => {
 	dispatch(updateConv(data.conversation));
 };
 
+const receiveBlock = async (event, dispatch) => {
+  dispatch(deleteConv(event.conversationId));
+}
+
+const receiveMatch = async (event, token, dispatch) => {
+  receiveNewMessage(event, token, dispatch);
+}
+
 const MainTabNav = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user.value);
-	const userId = user.user._id;
-	const token = user.token;
+  let userId;
+  let token;
+  let messagerieNotif;
+  if (user.user) {
+    userId = user.user._id;
+    token = user.token;
+    messagerieNotif = user.user.conversationList.some(conv => {
+      const lastMessage = conv.messageList.findLast(x => String(conv[`user${x.creator}`]._id) !== String(userId));
+      return lastMessage && !lastMessage.seen;
+    });
+  }
 	useEffect(() => {
-		const channel = pusher.subscribe(userId);
-		channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
-		return () => {
-			channel.unbind("newMessage");
-		};
+    if (userId) {
+      const channel = pusher.subscribe(userId);
+      channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
+      channel.bind("block", (e) => receiveBlock(e, dispatch));
+      channel.bind("match", (e) => receiveMatch(e, token, dispatch))
+      return () => {
+        channel.unbind("newMessage");
+        channel.unbind('block');
+        channel.unbind('match');
+      };
+    }
 	}, [userId]);
 	return (
 		<SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
@@ -100,6 +133,8 @@ const MainTabNav = () => {
 						let icon;
 						if (route.name === "MessagerieNav") {
 							icon = <MaterialCommunityIcons name="message-outline" size={30} color={color} />;
+            } else if (route.name === "MyProfileNav") {
+              icon = <Feather name="user" size={30} color={color} />;
 						} else {
 							icon = <Feather name="coffee" size={30} color={color} />;
 						}
@@ -111,9 +146,9 @@ const MainTabNav = () => {
 					tabBarIconStyle: styles.tabBarIcon,
 				})}
 			>
-				<Tab.Screen name="MyProfileScreen" component={MyProfileNav} />
+				<Tab.Screen name="MyProfileNav" component={MyProfileNav} />
 				<Tab.Screen name="SwipeScreen" component={SwipeScreen} />
-				<Tab.Screen name="MessagerieNav" component={MessagerieNav} />
+				<Tab.Screen name="MessagerieNav" component={MessagerieNav} options={messagerieNotif && {tabBarBadge: ''}}/>
 			</Tab.Navigator>
 		</SafeAreaView>
 	);
@@ -167,15 +202,17 @@ const MyProfileNav = () => {
 export default function App() {
 	return (
 		<Provider store={store}>
-			<SafeAreaProvider>
-				<NavigationContainer>
-					<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-						<Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-						<Stack.Screen name="SignUpNav" component={SignUpNav} />
-						<Stack.Screen name="MainTabNav" component={MainTabNav} />
-					</Stack.Navigator>
-				</NavigationContainer>
-			</SafeAreaProvider>
+      <PersistGate persistor={persistor}>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+              <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+              <Stack.Screen name="SignUpNav" component={SignUpNav} />
+              <Stack.Screen name="MainTabNav" component={MainTabNav} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </PersistGate>
 		</Provider>
 	);
 }

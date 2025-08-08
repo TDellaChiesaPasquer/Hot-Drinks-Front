@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, View, Text } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
+import { addInfos } from "../reducers/user";
 
 export default function ({navigation}) {
   const user = useSelector(state => state.user.value);

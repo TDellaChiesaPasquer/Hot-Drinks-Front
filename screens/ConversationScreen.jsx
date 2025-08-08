@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Pressable } from "react-native";
 import { Image } from "expo-image";
 import dayjs from "dayjs";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { updateConv } from "../reducers/user";
+import { readConv } from "../reducers/user";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -13,12 +16,14 @@ export default function ({navigation, route}) {
   const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState('');
   const [sendDisabled, setSendDisabled] = useState(false);
+  const [modalBlockVisible, setModalBlockVisible] = useState(false);
+  const [blockDisabled, setBlockDisabled] = useState(false);
   const conversation =  user.user.conversationList.find(x => String(x._id) === String(route.params._id));
-  const messageList = conversation.messageList;
-  const otherUserNumber = route.params.otherUserNumber;
+  const messageList = conversation?.messageList || [];
+  const otherUserNumber = route.params?.otherUserNumber || 1;
   useEffect(() => {
-    const lastMessage = messageList.length !== 0 ? messageList[messageList.length - 1] : null;
-    if (messageList && lastMessage.creator === otherUserNumber && !lastMessage.seen) {
+  const lastMessage = messageList.length !== 0 ? messageList[messageList.length - 1] : null;
+    if (lastMessage && lastMessage.creator === otherUserNumber && !lastMessage.seen) {
       (async () => {
         await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + conversation._id, {
           method: 'PUT',
@@ -27,8 +32,12 @@ export default function ({navigation, route}) {
           }
         });
       })();
+      dispatch(readConv(conversation._id));
     }
   }, [messageList]);
+  if (!conversation) {
+    navigation.navigate('MessagerieScreen');
+  }
   const scrollViewRef = useRef();
   const otherUser = otherUserNumber === 2 ? route.params.user2 : route.params.user1;
   const currentDate = dayjs();
@@ -73,13 +82,54 @@ export default function ({navigation, route}) {
     const data = await response.json();
     setSendDisabled(false);
   }
+  const modalBlock = (
+    <Modal
+			animationType="slide"
+			transparent={true}
+			visible={modalBlockVisible}
+			onRequestClose={() => {
+				setModalBlockVisible(false);
+			}}
+		>
+			<View style={styles.modalContainer}>
+				<View style={styles.modalBlock}>
+					<Pressable style={styles.crossModalDiv} onPress={() => setModalBlockVisible(false)}>
+						<FontAwesome6 name="xmark" size={24} style={styles.crossModal} />
+					</Pressable>
+					<Text style={styles.modalTitle}>Bloquer l'utilisateur</Text>
+          <Text style={styles.modalText}>Cette action est irreversible.</Text>
+					<TouchableOpacity style={styles.buttonModal} disabled={blockDisabled} onPress={() => blockUser()}>
+						<Text style={styles.buttonText}>Confirmer</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+  )
+  const blockUser = async () => {
+    setBlockDisabled(true);
+    const response = await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/' + route.params._id, {
+      method: 'DELETE',
+      headers: {
+        authorization: user.token
+      }
+    });
+    const data = await response.json();
+    setBlockDisabled(false);
+    setModalBlockVisible(false);
+  }
   return <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={90}>
+    {modalBlock}
     <View style={styles.conversationHeader}>
-      <AntDesign name="left" size={24} color='#965A51' style={styles.goBack} onPress={() => navigation.navigate('MessagerieScreen')}/>
-      <View style={styles.avatarContainer}>
-        <Image style={styles.avatar} source={otherUser.photoList.length === 0 ? '' : otherUser.photoList[0]}/>
+      <View style={styles.headerLeft}>
+        <AntDesign name="left" size={24} color='#965A51' style={styles.goBack} onPress={() => navigation.goBack()} disabled={modalBlockVisible || !conversation}/>
+        <View style={styles.avatarContainer}>
+          <Image style={styles.avatar} source={conversation ? otherUser.photoList.length === 0 ? '' : otherUser.photoList[0] : null}/>
+        </View>
+        <Text style={styles.username}>{conversation ? otherUser.username : null}</Text>
       </View>
-      <Text style={styles.username}>{otherUser.username}</Text>
+      <View style={styles.headerRight}>
+        <MaterialIcons name="block" size={24} color='#965A51' style={styles.block} onPress={() => {setModalBlockVisible(true)}} disabled={modalBlockVisible || !conversation}/>
+      </View>
     </View>
     <ScrollView 
       contentContainerStyle={styles.messageList}
@@ -102,7 +152,7 @@ export default function ({navigation, route}) {
             multiline={true}
             textAlignVertical={'vertical'}
           />
-          <TouchableOpacity style={styles.sendButton} onPress={() => sendMessage()} disabled={sendDisabled}>
+          <TouchableOpacity style={styles.sendButton} onPress={() => sendMessage()} disabled={sendDisabled || modalBlockVisible || !conversation}>
             <Text style={styles.buttonText}>Envoyer</Text>
           </TouchableOpacity>
         </View>
@@ -155,9 +205,10 @@ const styles = StyleSheet.create({
 	},
 	conversationHeader: {
 		alignItems: "center",
-		justifyContent: "flex-start",
+		justifyContent: "space-between",
 		width: "100%",
 		flexDirection: "row",
+    paddingBottom: 10
 	},
 	username: {
 		color: "#965A51",
@@ -221,4 +272,63 @@ const styles = StyleSheet.create({
 		color: "#965A51",
 		fontSize: 10,
 	},
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+	block: {
+		marginHorizontal: 10,
+	},
+  modalContainer: {
+		flex: 1,
+		backgroundColor: "rgba(0,0,0,0.5)",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	modalBlock: {
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+		padding: 10,
+		borderRadius: 20,
+		position: "relative",
+	},
+  modalTitle: {
+		color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 16,
+		margin: 10,
+	},
+	crossModal: {
+		color: "#965A51",
+	},
+	crossModalDiv: {
+		position: "absolute",
+		top: -10,
+		right: -10,
+		width: 26,
+		height: 26,
+		backgroundColor: "white",
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: "100%",
+	},
+  buttonModal: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		backgroundColor: "#965A51",
+		margin: 10,
+	},
+  modalText: {
+    color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 12,
+  }
 });
