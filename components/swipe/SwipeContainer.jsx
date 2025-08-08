@@ -156,6 +156,7 @@ export default function SwipeContainer(props) {
 		// console.log("goToProfileInformations");
 		navigation.navigate("SwipeProfileInformationsScreen", {
 			tastesList: Array.isArray(profileData?.tastesList) ? profileData.tastesList : [],
+			firstImage: imagesList && imagesList.length > 0 ? imagesList[0] : null,
 		});
 	}
 
