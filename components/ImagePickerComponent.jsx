@@ -42,8 +42,7 @@ export default function ImagePickerScreen(props) {
 
   return (
     <TouchableOpacity onPress={pickImage} style={styles.addPhotoButton}>
-      {photo ? (
-        <View>
+      {photo ? (<>
           <Image source={photo} style={styles.addedPhoto} />
           <TouchableOpacity
             onPress={() => handleDelete()}
@@ -51,7 +50,7 @@ export default function ImagePickerScreen(props) {
           >
             <FontAwesome6 name="xmark" size={24} style={styles.deleteCross} />
           </TouchableOpacity>
-        </View>
+        </>
       ) : (
         <Text style={styles.textButton}>+</Text>
       )}
@@ -82,12 +81,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
-    marginTop: 25,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
   textButton: {
     textAlign: "center",
-    paddingTop: 35,
     fontSize: 30,
     fontWeight: "light",
   },
