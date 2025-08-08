@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 
 import SwipeProfileInformationsScreen from "../../screens/swipe/SwipeProfileInformationsScreen";
+import SwipeProfileInformationsTMP from "./SwipeProfileInformationsTMP";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
@@ -161,17 +162,20 @@ export default function SwipeContainer(props) {
 	return (
 		<View style={styles.container}>
 			<Swiper
-				loop={false}
+				style={styles.caroussel}
+				loop={true}
 				showsButtons
-				nextButton={<Text style={{ color: "white", fontSize: 30 }}>›</Text>}
-				prevButton={<Text style={{ color: "white", fontSize: 30 }}>‹</Text>}
+				nextButton={<Text style={styles.arrow}>›</Text>}
+				prevButton={<Text style={styles.arrow}>‹</Text>}
 				activeDotColor="white"
+				scrollEnabled={false}
 			>
 				{imagesList.map(function (imageSource, imageIndex) {
 					return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
 				})}
 			</Swiper>
-
+			// test pour le scroll
+			{/* <SwipeProfileInformationsTMP /> */}
 			<View style={styles.overlay}>
 				<View style={styles.infos}>
 					{informationList.map(function (infoText, infoIndex) {
@@ -194,7 +198,6 @@ export default function SwipeContainer(props) {
 					})}
 				</View>
 			</View>
-
 			{/* Bouton flèche vers le haut (en bas à droite) */}
 			<View style={styles.fabContainer}>
 				<TouchableOpacity onPress={goToProfileInformations} style={styles.fabButton} activeOpacity={0.8}>
@@ -211,6 +214,11 @@ const styles = StyleSheet.create({
 		height: "100%",
 		borderRadius: 20,
 		overflow: "hidden",
+	},
+
+	arrow: {
+		color: "white",
+		fontSize: 100,
 	},
 
 	image: {
