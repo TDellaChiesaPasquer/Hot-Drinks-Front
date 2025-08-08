@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, View, Text, StyleSheet, Dimensions } from "react-native";
+import { StatusBar, View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { useSelector } from "react-redux";
 
-// import Carousel from "react-native-snap-carousel";
 import Swiper from "react-native-swiper";
 
 import { capitalize } from "../../Utils/utils.js";
+import { useNavigation } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
+
+import SwipeProfileInformationsScreen from "../../screens/swipe/SwipeProfileInformationsScreen";
+import SwipeProfileInformationsTMP from "./SwipeProfileInformationsTMP";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
@@ -61,10 +65,10 @@ const placeholderData = {
 		.fill("")
 		.map(() => PLACEHOLDER_SRC),
 	tastesList: [
-		{ value: "violon", star: true },
-		{ value: "randonnée", star: true },
-		{ value: "chat", star: true },
-		{ value: "cinéma", star: false }, // exemple d'un goût non étoilé qui ne sera pas affiché
+		{ category: "Musique", value: "violon", star: true },
+		{ category: "Sport", value: "randonnée", star: true },
+		{ category: "Animaux", value: "chat", star: true },
+		{ category: "Loisir", value: "cinéma", star: false },
 	],
 	idProfile: null,
 };
@@ -76,23 +80,33 @@ const placeholderData = {
  * @return {Object} Données formatées pour le profil swipe
  */
 function formatProfileData(profileData, placeholderSrc) {
-	// Initialiser avec les données par défaut
+	// Check if we're using placeholder data directly
+	const isDefaultPlaceholder = profileData === placeholderData;
+
 	const formattedData = {
 		informationList: ["Anonyme", "?", "Distance inconnue"],
 		hashtagsList: [],
 		images: getPlaceholders(NB_PLACEHOLDERS || 10, placeholderSrc),
 		username: null,
-		isNotPlaceholder: true,
+		isPlaceholder: isDefaultPlaceholder,
 	};
 
-	if (!profileData) return formattedData;
+	if (!profileData) {
+		formattedData.isPlaceholder = true;
+		return formattedData;
+	}
 
-	// Username - utiliser directement
+	// Real data processing - if we have real data, we're not using placeholders
+	if (profileData._id) {
+		formattedData.isPlaceholder = false;
+	}
+
+	// Username
 	if (profileData.username) {
 		formattedData.informationList[0] = profileData.username;
 	}
 
-	// Age - calculer à partir de birthdate
+	// Age
 	if (profileData.birthdate) {
 		const birthDate = new Date(profileData.birthdate);
 		const today = new Date();
@@ -104,17 +118,17 @@ function formatProfileData(profileData, placeholderSrc) {
 		formattedData.informationList[1] = age.toString();
 	}
 
-	// Distance - afficher directement sauf si contient NaN
+	// Distance
 	if (profileData.distance && !profileData.distance.includes("NaN")) {
 		formattedData.informationList[2] = profileData.distance;
 	}
 
-	// Photos - utiliser la fonction existante pour récupérer les photos
+	// Photos
 	if (profileData.photoList && profileData.photoList.length > 0) {
 		formattedData.images = getAllPhotosFromProfile(profileData, placeholderSrc);
 	}
 
-	// Hashtags - extraire les goûts avec star=true
+	// Hashtags
 	if (profileData.tastesList && profileData.tastesList.length > 0) {
 		formattedData.hashtagsList = profileData.tastesList.filter((taste) => taste.star === true).map((taste) => taste.value);
 	}
@@ -123,30 +137,45 @@ function formatProfileData(profileData, placeholderSrc) {
 }
 
 export default function SwipeContainer(props) {
-	// console.log("SwipeContainer - props.profile : ");
-	// console.log(props.profile);
+	const navigation = useNavigation();
+
 	const profileData = props.profile || placeholderData;
-	// console.log("SwipeContainer - profileData : ");
-	// console.log(profileData);
 
 	// Formater les données du profil
 	const formattedData = formatProfileData(profileData, PLACEHOLDER_SRC);
 	const imagesList = formattedData.images;
 	const informationList = formattedData.informationList;
 	const hashtagsList = formattedData.hashtagsList;
-	const isNotPlaceholder = formattedData.isNotPlaceholder;
+	const isPlaceholder = formattedData.isPlaceholder;
 
 	// Déterminer la couleur du texte en fonction de isPlaceholder
-	const textColor = isNotPlaceholder ? "white" : "black";
+	const textColor = isPlaceholder ? "black" : "white";
+
+	// Navigation vers la page d'infos avec passage des goûts
+	function goToProfileInformations() {
+		// console.log("goToProfileInformations");
+		navigation.navigate("SwipeProfileInformationsScreen", {
+			tastesList: Array.isArray(profileData?.tastesList) ? profileData.tastesList : [],
+		});
+	}
 
 	return (
 		<View style={styles.container}>
-			<Swiper loop={false} showsButtons>
+			<Swiper
+				style={styles.caroussel}
+				loop={true}
+				showsButtons
+				nextButton={<Text style={styles.arrow}>›</Text>}
+				prevButton={<Text style={styles.arrow}>‹</Text>}
+				activeDotColor="white"
+				scrollEnabled={false}
+			>
 				{imagesList.map(function (imageSource, imageIndex) {
 					return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
 				})}
 			</Swiper>
-
+			// test pour le scroll
+			{/* <SwipeProfileInformationsTMP /> */}
 			<View style={styles.overlay}>
 				<View style={styles.infos}>
 					{informationList.map(function (infoText, infoIndex) {
@@ -169,6 +198,12 @@ export default function SwipeContainer(props) {
 					})}
 				</View>
 			</View>
+			{/* Bouton flèche vers le haut (en bas à droite) */}
+			<View style={styles.fabContainer}>
+				<TouchableOpacity onPress={goToProfileInformations} style={styles.fabButton} activeOpacity={0.8}>
+					<FontAwesome name="arrow-up" size={20} color="#000" />
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
@@ -179,6 +214,11 @@ const styles = StyleSheet.create({
 		height: "100%",
 		borderRadius: 20,
 		overflow: "hidden",
+	},
+
+	arrow: {
+		color: "white",
+		fontSize: 100,
 	},
 
 	image: {
@@ -200,7 +240,6 @@ const styles = StyleSheet.create({
 	},
 
 	info: {
-		color: "#000",
 		fontWeight: "600",
 		fontSize: 18,
 	},
@@ -213,7 +252,27 @@ const styles = StyleSheet.create({
 	},
 
 	hashtag: {
-		color: "#000",
 		fontSize: 16,
+	},
+
+	// Nouveau: bouton d’accès aux infos (flèche haut)
+	fabContainer: {
+		position: "absolute",
+		right: 16,
+		bottom: 50,
+		zIndex: 50,
+	},
+	fabButton: {
+		width: 48,
+		height: 48,
+		borderRadius: 24,
+		backgroundColor: "#FFF5F0",
+		justifyContent: "center",
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 4,
+		elevation: 6,
 	},
 });

@@ -17,7 +17,6 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import DateScreen from "./screens/DateScreen";
 import GenderScreen from "./screens/GenderScreen";
 import RelationScreen from "./screens/RelationScreen";
-import SwipeScreen from "./screens/SwipeScreen";
 import SignUp from "./screens/SignUp";
 import LoadingScreen from "./screens/LoadingScreen";
 import MessagerieScreen from "./screens/MessagerieScreen";
@@ -26,6 +25,10 @@ import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 import MapScreen from "./screens/MapScreen";
 import RdvScreen from "./screens/RdvScreen";
+
+// Swipe
+import SwipeScreen from "./screens/swipe/SwipeScreen";
+import SwipeProfileInformationsScreen from "./screens/swipe/SwipeProfileInformationsScreen";
 
 import MyProfileScreen from "./screens/MyProfileScreen";
 import PreferencesScreen from "./screens/PreferencesScreen";
@@ -56,6 +59,7 @@ const store = configureStore({
 const persistor = persistStore(store);
 
 const Stack = createNativeStackNavigator();
+const StackSwipe = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
@@ -128,45 +132,35 @@ const MainTabNav = () => {
     }
   }, [userId]);
   return (
-    <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarStyle: styles.tabBar,
-          header: ({ route }) => {
-            return <HeaderMain route={route} />;
-          },
-          tabBarIcon: ({ color, size }) => {
-            let icon;
-            if (route.name === "MessagerieNav") {
-              icon = (
-                <MaterialCommunityIcons
-                  name="message-outline"
-                  size={30}
-                  color={color}
-                />
-              );
-            } else if (route.name === "MyProfileNav") {
-              icon = <Feather name="user" size={30} color={color} />;
-            } else {
-              icon = <Feather name="coffee" size={30} color={color} />;
-            }
-            return icon;
-          },
-          tabBarActiveTintColor: "#965A51",
-          tabBarInactiveTintColor: "#BC8D85",
-          tabBarShowLabel: false,
-          tabBarIconStyle: styles.tabBarIcon,
-        })}
-      >
-        <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
-        <Tab.Screen name="SwipeScreen" component={SwipeScreen} />
-        <Tab.Screen
-          name="MessagerieNav"
-          component={MessagerieNav}
-          options={messagerieNotif && { tabBarBadge: "" }}
-        />
-      </Tab.Navigator>
-    </SafeAreaView>
+		<SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+			<Tab.Navigator
+				screenOptions={({ route }) => ({
+					tabBarStyle: styles.tabBar,
+					header: ({ route }) => {
+						return <HeaderMain route={route} />;
+					},
+					tabBarIcon: ({ color, size }) => {
+						let icon;
+						if (route.name === "MessagerieNav") {
+							icon = <MaterialCommunityIcons name="message-outline" size={30} color={color} />;
+						} else if (route.name === "MyProfileNav") {
+							icon = <Feather name="user" size={30} color={color} />;
+						} else {
+							icon = <Feather name="coffee" size={30} color={color} />;
+						}
+						return icon;
+					},
+					tabBarActiveTintColor: "#965A51",
+					tabBarInactiveTintColor: "#BC8D85",
+					tabBarShowLabel: false,
+					tabBarIconStyle: styles.tabBarIcon,
+				})}
+			>
+				<Tab.Screen name="MyProfileNav" component={MyProfileNav} />
+				<Tab.Screen name="SwipeNav" component={SwipeNav} />
+				<Tab.Screen name="MessagerieNav" component={MessagerieNav} options={messagerieNotif && { tabBarBadge: "" }} />
+			</Tab.Navigator>
+		</SafeAreaView>
   );
 };
 
@@ -178,6 +172,15 @@ const MessagerieNav = () => {
       <Stack.Screen name="RdvScreen" component={RdvScreen} />
     </Stack.Navigator>
   );
+};
+
+const SwipeNav = () => {
+	return (
+		<StackSwipe.Navigator screenOptions={{ headerShown: false }}>
+			<StackSwipe.Screen name="SwipeScreen" component={SwipeScreen} />
+			<StackSwipe.Screen name="SwipeProfileInformationsScreen" component={SwipeProfileInformationsScreen} />
+		</StackSwipe.Navigator>
+	);
 };
 
 const MyProfileNav = () => {

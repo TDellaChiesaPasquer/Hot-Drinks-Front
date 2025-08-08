@@ -1,13 +1,12 @@
-import React, { useRef, useState, useEffect, useCallback, } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { ScrollView, View, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 
 import Swiper from "react-native-deck-swiper";
-import SwipeContainer from "../components/swipe/SwipeContainer";
+import SwipeContainer from "../../components/swipe/SwipeContainer";
 import PagerView from "react-native-pager-view";
-import SwipeButton from "../components/swipe/SwipeButton";
-import SwipeProfileInformations from "../components/swipe/SwipeProfileInformations";
+import SwipeButton from "../../components/swipe/SwipeButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
 
@@ -16,45 +15,29 @@ const screenHeight = Dimensions.get("window").height;
 const maxNumberOfCards = 10;
 
 export default function SwipeScreen(props) {
-  const swiperReference = useRef(null);
-  const [profileList, setProfileList] = useState([]);
-  const [cardList, setCardList] = useState([]);
-  const [swiperComponentKey, setSwiperComponentKey] = useState(0);
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        return true;
-      };
-      const subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
-        onBackPress
-      );
+	const swiperReference = useRef(null);
+	const [profileList, setProfileList] = useState([]);
+	const [cardList, setCardList] = useState([]);
+	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
 
-      return () => subscription.remove();
-    }, [])
-  );
+	useFocusEffect(
+		useCallback(() => {
+			const onBackPress = () => {
+				return true;
+			};
+			const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-	const enTest = false;
-	// const dbUtilisee = "Audrey";
-	const dbUtilisee = "Cyrille";
-	const db = {
-		Audrey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU",
-		Cyrille:
-			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NzExNTA5NjdiOTE1OTgwZTRmOGMiLCJ0b2tlbk51bWJlciI6NiwiaWF0IjoxNzU0NTYwNTc0LCJleHAiOjUzNTQ1NjA1NzR9.HVQMNJzi_m6X0GuTW6DCbkEUVIzf0ZnZ_U0Zb0o1Aws",
-	};
-	const tokenTmp = db[dbUtilisee];
+			return () => subscription.remove();
+		}, [])
+	);
 
-  let userToken = null;
-  if (enTest) {
-    userToken = tokenTmp;
-  } else
-    userToken = useSelector(function (state) {
-      return state.user.value.token;
-    });
+	let userToken = useSelector(function (state) {
+		return state.user.value.token;
+	});
 
-  useEffect(function () {
-    fetchProfilesFromAPI();
-  }, []);
+	useEffect(function () {
+		fetchProfilesFromAPI();
+	}, []);
 
 	function fetchProfilesFromAPI() {
 		// console.log("début fetchProfilesFromAPI");
@@ -90,28 +73,28 @@ export default function SwipeScreen(props) {
 			});
 	}
 
-  function handleUserChoice(choiceAction) {
-    if (!swiperReference.current) return;
-    if (choiceAction === "Like") {
-      swiperReference.current.swipeRight();
-    }
-    if (choiceAction === "Dislike") {
-      swiperReference.current.swipeLeft();
-    }
-    if (choiceAction === "Superlike") {
-      swiperReference.current.swipeTop();
-    }
-  }
+	function handleUserChoice(choiceAction) {
+		if (!swiperReference.current) return;
+		if (choiceAction === "Like") {
+			swiperReference.current.swipeRight();
+		}
+		if (choiceAction === "Dislike") {
+			swiperReference.current.swipeLeft();
+		}
+		if (choiceAction === "Superlike") {
+			swiperReference.current.swipeTop();
+		}
+	}
 
-  function handleSwipe(cardIndex, action) {
-    const profile = profileList[cardIndex];
-    if (profile && profile._id) {
-      sendSwipeToServer(profile._id, action);
-    }
-  }
+	function handleSwipe(cardIndex, action) {
+		const profile = profileList[cardIndex];
+		if (profile && profile._id) {
+			sendSwipeToServer(profile._id, action);
+		}
+	}
 
-  function sendSwipeToServer(userId, userAction) {
-    const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
+	function sendSwipeToServer(userId, userAction) {
+		const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
 
 		// console.log("userId : " + userId);
 		// console.log("userAction : " + userAction);
@@ -142,14 +125,14 @@ export default function SwipeScreen(props) {
 			});
 	}
 
-  function renderCardForIndex(cardIndexInList) {
-    const profile = profileList[cardIndexInList];
-    return (
-      <View style={styles.card}>
-        <SwipeContainer profile={profile} onChoice={handleUserChoice} />
-      </View>
-    );
-  }
+	function renderCardForIndex(cardIndexInList) {
+		const profile = profileList[cardIndexInList];
+		return (
+			<View style={styles.card}>
+				<SwipeContainer profile={profile} onChoice={handleUserChoice} />
+			</View>
+		);
+	}
 
 	return (
 		<View style={styles.container}>
@@ -169,7 +152,6 @@ export default function SwipeScreen(props) {
 					onSwipedRight={(cardIndex) => handleSwipe(cardIndex, "Like")}
 					verticalSwipe={false}
 				/>
-				{/* <SwipeProfileInformations style={styles.swipeProfileInformations} /> */}
 			</View>
 			<View style={styles.buttons}>
 				{["Dislike", "Superlike", "Like"].map(function (buttonType) {
@@ -217,16 +199,17 @@ const styles = StyleSheet.create({
 		left: screenWidth / 7,
 		right: screenWidth / 20,
 		height: "20%",
-		bottom: "2%",
+		bottom: "-1%",
 		flexDirection: "row",
 		justifyContent: "space-around",
 		alignItems: "center",
 		alignContent: "center",
 		elevation: 5,
+		zIndex: 10,
 	},
 	// swipeProfileInformations: {
-	// 	flex: 1,
-	// 	bottom: 0,
-	// 	zIndex: 12,
+	//      flex: 1,
+	//      bottom: 0,
+	//      zIndex: 12,
 	// },
 });
