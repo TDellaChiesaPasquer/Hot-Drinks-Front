@@ -19,6 +19,8 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { readConv } from "../reducers/user";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Feather from '@expo/vector-icons/Feather';
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -208,6 +210,18 @@ export default function ({ navigation, route }) {
           </Text>
         </View>
         <View style={styles.headerRight}>
+          {conversation && (
+            <Feather
+              name="calendar"
+              size={24}
+              color="#965A51"
+              style={styles.block}
+              onPress={() => {
+                navigation.navigate('RdvScreen');
+              }}
+              disabled={modalBlockVisible}
+            />
+          )}
           {conversation && (
             <MaterialIcons
               name="block"
