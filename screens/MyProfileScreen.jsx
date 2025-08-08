@@ -11,8 +11,9 @@ import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import DropDownComponent from "../components/DropDownComponent";
 
-export default function ({ navigation }) {
-  const [answerSelected, setAnswerSelected] = useState([]);
+export default function myProfile({ navigation }) {
+  //   const [answerSelected, setAnswerSelected] = useState([]);
+  const [tastesList, setTastesList] = useState([{}]);
 
   const questions = [
     {
@@ -108,15 +109,6 @@ export default function ({ navigation }) {
     },
   ];
 
-  //   const selectAnswer = (newOption) => {
-  //     console.log("CLICK", newOption);
-  //     setSelectedOption([...selectedOption, newOption]); //tableau de l'état que l'on vient de créer
-  //   };
-
-  //   const removeAnswer = (optionToDelete) => {
-  //     console.log("CLICK", optionToDelete);
-  //     setSelectedOption(selectedOption.filter((e) => e !== optionToDelete));
-  //   };
   const dropDownQuestion = questions.map((data, i) => {
     return (
       <DropDownComponent
@@ -127,35 +119,35 @@ export default function ({ navigation }) {
     );
   });
 
-  //   useEffect(() => {
-  //     const dropDownQuestion = questions.map((data, i) => {
-  //       return (
-  //         <Dropdown
-  //           key={i}
-  //           question= {data.question}
-  //           label={data.label}
-  //           options={data.options}
-  //           //    select={selectAnswer}
-  //           //    remove={removeAnswer}
-  //         />
-  //       );
-  //     });
+  const addTastesToList = (tastes) => {
+    setTastesList([...tastesList, tastes]);
+  };
 
-  //     console.log("User has selected an answer", answerSelected);
-  //   }, [answerSelected]);
-
-  //   const [selectedValues, setSelectedValues] = useState({});
-
-  //   const handleValueChange = (questions.id, value) => {
-  //     setSelectedValues((prev) => ({
-  //       ...prev,
-  //       [questions.id]: value,
-  //     }));
-  //   };
-
-  //   const handleGoToPreferenceButton = () => {
-  //     navigation.navigate("TopTabNavigator");
-  //   };
+  // const handleSave = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       process.env.EXPO_PUBLIC_IP +
+  //         "/users/addTastes/" + tastesList.length,
+  //         {
+  //           method: "POST",
+  //           headers: { headers: authorization: user.token,},
+  //           body: JSON.stringify({
+  //             userId: "ID_UTILISATEUR",
+  //             answers: .....
+  //           }),
+  //         }
+  //     );
+  //     const data = await response.json();
+  //     if (response) {
+  //       Alert.alert("Modifications enregistrées avec succès!");
+  //     } else {
+  //       Alert.alert("Erreur", data.error || "Erreur serveur");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     Alert.alert("Erreur", "Impossible de sauvegarder les modifications");
+  //   }
+  // };
 
   return (
     <View style={styles.mainContainer}>
@@ -199,18 +191,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color: "black",
-    backgroundColor: "green",
+    color: "#965a51c0",
+    backgroundColor: "#F5EBE6",
+    justifyContent: "center",
+    textAlign: "center",
+    fontWeight: "bold",
   },
 
   scrollContainer: {
     flex: 1,
-    backgroundColor: "red",
+    backgroundColor: "#F5EBE6",
+    width: "100%",
   },
 
   scrollView: {
-    backgroundColor: "red",
-    height: "90%",
-    width: "90%",
+    backgroundColor: "#F5EBE6",
+    height: "100%",
+    width: "100%",
   },
 });
