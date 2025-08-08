@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import HeaderBeginning from "../components/HeaderBeginning";
 import MapView from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef, useCallback } from "react";
@@ -20,9 +22,12 @@ export default function RdvScreen({ navigation }) {
   const dispatch = useDispatch();
   const places = useSelector((state) => state.map.value);
 
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [rdvPlace, setRdvPlace] = useState([]);
+  // const [latitude, setLatitude] = useState("");
+  // const [longitude, setLongitude] = useState("");
+  const [rdvPlace, setRdvPlace] = useState("");
+  const [givenPositionRdv, setGivenPositionRdv] = useState(null);
+
+  console.log(givenPositionRdv, "LQQQQQQQQ");
 
   const addRdv = async (coord) => {
     console.log("deded", process.env.EXPO_PUBLIC_TOKEN);
@@ -31,7 +36,7 @@ export default function RdvScreen({ navigation }) {
       `https://us1.locationiq.com/v1/reverse?key=${process.env.EXPO_PUBLIC_TOKEN}&lat=${coord.latitude}&lon=${coord.longitude}&format=json&`
     );
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
     const coordinateRdv = {
       latitude: data.lat,
       longitude: data.lon,
@@ -39,9 +44,12 @@ export default function RdvScreen({ navigation }) {
       city: data.address.city,
       country: data.address.country,
     };
-    dispatch(coordinateRdv);
-    setLatitude("");
-    setLongitude("");
+    console.log("ici");
+    //dispatch(coordinateRdv);
+    setGivenPositionRdv({
+      latitude: parseFloat(data.lat),
+      longitude: parseFloat(data.lon),
+    });
   };
 
   return (
@@ -57,7 +65,24 @@ export default function RdvScreen({ navigation }) {
         style={styles.map}
         onLongPress={(action) => addRdv(action.nativeEvent.coordinate)}
         // disabled={disabled}
-      ></MapView>
+      >
+        {givenPositionRdv && (
+          <Marker
+            coordinate={{
+              latitude: givenPositionRdv.latitude,
+              longitude: givenPositionRdv.longitude,
+            }}
+            pinColor="#78010bff"
+          />
+        )}
+      </MapView>
+      {/* <TouchableOpacity
+        style={styles.button}
+        onPress={() => addRdvByTouch()}
+        // disabled={disabled}
+      >
+        <Text style={styles.boutonText}>VALIDER</Text>
+      </TouchableOpacity> */}
       {/* <View style={{ backgroundColor: "red", flex: 1 }}></View> */}
     </SafeAreaView>
   );
@@ -70,11 +95,11 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-    // marginHorizontal: 20,
-    // marginTop: 5,
-    // alignItems: "center",
-    // justifyContent: "center",
-    // boxShadow: "0 2px 3px #896761",
-    // borderRadius: 15,
+    marginHorizontal: 20,
+    marginTop: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 2px 3px #896761",
+    borderRadius: 15,
   },
 });
