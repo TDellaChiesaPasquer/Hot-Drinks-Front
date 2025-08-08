@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { View, Text } from "react-native";
 
-export default functionDropdownComponent = () => {
-  const data = [
-    { label: "Item 1", value: "1" },
-    { label: "Item 2", value: "2" },
-    { label: "Item 3", value: "3" },
-    { label: "Item 4", value: "4" },
-    { label: "Item 5", value: "5" },
-    { label: "Item 6", value: "6" },
-    { label: "Item 7", value: "7" },
-    { label: "Item 8", value: "8" },
-  ];
+export default functionDropdownComponent = (props) => {
+  // const data = [
+  //   { label: "Item 1", value: "1" },
+  //   { label: "Item 2", value: "2" },
+  //   { label: "Item 3", value: "3" },
+  //   { label: "Item 4", value: "4" },
+  //   { label: "Item 5", value: "5" },
+  //   { label: "Item 6", value: "6" },
+  //   { label: "Item 7", value: "7" },
+  //   { label: "Item 8", value: "8" },
+  // ];
+  // const [selectedOption, setSelectedOption] = useState([]);
   const [value, setValue] = useState(null);
 
   return (
@@ -22,21 +24,16 @@ export default functionDropdownComponent = () => {
       placeholderStyle={styles.placeholderStyle}
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
+      placeholder={props.question}
       iconStyle={styles.iconStyle}
-      data={data}
-      search
+      data={props.options}
       maxHeight={300}
       labelField="label"
       valueField="value"
-      placeholder="Select item"
-      searchPlaceholder="Search..."
       value={value}
       onChange={(item) => {
         setValue(item.value);
       }}
-      renderLeftIcon={() => (
-        <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
-      )}
     />
   );
 };
@@ -60,9 +57,5 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: 20,
     height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
   },
 });
