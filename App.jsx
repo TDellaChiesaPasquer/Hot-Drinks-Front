@@ -18,7 +18,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import DateScreen from "./screens/DateScreen";
 import GenderScreen from "./screens/GenderScreen";
 import RelationScreen from "./screens/RelationScreen";
-import SwipeScreen from "./screens/SwipeScreen";
 import SignUp from "./screens/SignUp";
 import LoadingScreen from "./screens/LoadingScreen";
 import MessagerieScreen from "./screens/MessagerieScreen";
@@ -27,6 +26,10 @@ import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 import MapScreen from "./screens/MapScreen";
 import RdvScreen from "./screens/RdvScreen";
+
+// Swipe
+import SwipeScreen from "./screens/swipe/SwipeScreen";
+import SwipeProfileInformationsScreen from "./screens/swipe/SwipeProfileInformationsScreen";
 
 import MyProfileScreen from "./screens/MyProfileScreen";
 import PreferencesScreen from "./screens/PreferencesScreen";
@@ -46,23 +49,11 @@ const store = configureStore({
 });
 
 const Stack = createNativeStackNavigator();
+const StackSwipe = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
 const SignUpNav = () => {
-<<<<<<< HEAD
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-			<Stack.Screen name="SignUp" component={SignUp} />
-			<Stack.Screen name="DateScreen" component={DateScreen} />
-			<Stack.Screen name="GenderScreen" component={GenderScreen} />
-			<Stack.Screen name="RelationScreen" component={RelationScreen} />
-			<Stack.Screen name="PhotoScreen" component={PhotoScreen} />
-			<Stack.Screen name="MapScreen" component={MapScreen} />
-			<Stack.Screen name="RdvScreen" component={RdvScreen} />
-		</Stack.Navigator>
-	);
-=======
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, gestureEnabled: false }}
@@ -76,7 +67,6 @@ const SignUpNav = () => {
       <Stack.Screen name="RdvScreen" component={RdvScreen} />
     </Stack.Navigator>
   );
->>>>>>> 8ff2aa0c787a1ab51c5414f7ce537cdb0d4986e0
 };
 
 const receiveNewMessage = async (event, token, dispatch) => {
@@ -130,7 +120,10 @@ const MainTabNav = () => {
 				})}
 			>
 				{/* <Tab.Screen name="MyProfileScreen" component={MyProfileNav} /> */}
-				<Tab.Screen name="SwipeScreen" component={SwipeScreen} />
+				<StackSwipe.Navigator screenOptions={{ headerShown: false }}>
+					<Tab.Screen name="SwipeScreen" component={SwipeScreen} />
+					<Tab.Screen name="SwipeProfileInformationsScreen" component={SwipeProfileInformationsScreen} />
+				</StackSwipe.Navigator>
 				{/* <Tab.Screen name="MessagerieNav" component={MessagerieNav} /> */}
 			</Tab.Navigator>
 		</SafeAreaView>

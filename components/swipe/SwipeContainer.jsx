@@ -151,6 +151,7 @@ export default function SwipeContainer(props) {
 	// For real profiles (with photos), use white text to be visible against photos
 	const textColor = isPlaceholder ? "black" : "white";
 
+
 	return (
 		<View style={styles.container}>
 			<Swiper loop={false} showsButtons>
