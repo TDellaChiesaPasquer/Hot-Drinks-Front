@@ -20,13 +20,26 @@ import { readConv } from "../reducers/user";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from '@expo/vector-icons/Feather';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Ionicons } from "@expo/vector-icons";
+import Animated, { useAnimatedKeyboard, useAnimatedStyle, withSpring } from "react-native-reanimated";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 const { width, height } = Dimensions.get("window");
 
 export default function ({ navigation, route }) {
   const user = useSelector((state) => state.user.value);
+  const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
+  const keyboard = useAnimatedKeyboard();
+  console.log(keyboard.state.value)
+  const keyboardStyleBottom = useAnimatedStyle(() => ({
+    height: Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66
+  }));
+  const keyboardStyleScroll = useAnimatedStyle(() => ({
+    height: keyboard.state.value === 1 ? 250 : 0
+  }))
   const [newMessage, setNewMessage] = useState("");
   const [sendDisabled, setSendDisabled] = useState(false);
   const [modalBlockVisible, setModalBlockVisible] = useState(false);
@@ -177,10 +190,8 @@ export default function ({ navigation, route }) {
     setModalBlockVisible(false);
   };
   return (
-    <KeyboardAvoidingView
+    <View
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={90}
     >
       {modalBlock}
       <View style={styles.conversationHeader}>
@@ -211,18 +222,6 @@ export default function ({ navigation, route }) {
         </View>
         <View style={styles.headerRight}>
           {conversation && (
-            <Feather
-              name="calendar"
-              size={24}
-              color="#965A51"
-              style={styles.block}
-              onPress={() => {
-                navigation.navigate('RdvScreen');
-              }}
-              disabled={modalBlockVisible}
-            />
-          )}
-          {conversation && (
             <MaterialIcons
               name="block"
               size={24}
@@ -236,21 +235,23 @@ export default function ({ navigation, route }) {
           )}
         </View>
       </View>
-      {conversation ? (
-        <ScrollView
-          contentContainerStyle={styles.messageList}
-          ref={scrollViewRef}
-          onContentSizeChange={() =>
-            scrollViewRef.current.scrollToEnd({ animated: true })
-          }
-        >
-          {messagesHTML}
-          <View style={styles.conversationBottomPlaceholder}></View>
-        </ScrollView>
-      ) : (
-        <Text style={styles.textBlocked}>Vous avez été bloqué</Text>
-      )}
-      <View style={styles.conversationBottomRelative}>
+      <View style={styles.convKey}>
+        {conversation ? (
+          <ScrollView
+            contentContainerStyle={styles.messageList}
+            ref={scrollViewRef}
+            onContentSizeChange={() =>
+              scrollViewRef.current.scrollToEnd({ animated: true })
+            }
+          >
+            {messagesHTML}
+            <Animated.View style={keyboardStyleScroll}></Animated.View>
+          </ScrollView>
+        ) : (
+          <Text style={styles.textBlocked}>Vous avez été bloqué</Text>
+        )}
+      </View>
+      <Animated.View style={[styles.conversationBottomRelative, keyboardStyleBottom]}>
         {conversation && (
           <View style={styles.conversationBottom}>
             <View style={styles.inputContainer}>
@@ -263,19 +264,29 @@ export default function ({ navigation, route }) {
                 maxLength={200}
                 multiline={true}
                 textAlignVertical={"vertical"}
+                onFocus={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+                onBlur={() => console.log('test2')}
               />
-              <TouchableOpacity
-                style={styles.sendButton}
+              
+            </View>
+            <TouchableOpacity
+                style={styles.bottomButton}
                 onPress={() => sendMessage()}
                 disabled={sendDisabled || modalBlockVisible}
-              >
-                <Text style={styles.buttonText}>Envoyer</Text>
-              </TouchableOpacity>
-            </View>
+            >
+              <Ionicons name="send" size={24} color="#F5EBE6" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bottomButton} disabled={modalBlockVisible} onPress={() => {navigation.navigate('RdvScreen');}}>
+              <Feather
+                name="calendar"
+                size={24}
+                color="#F5EBE6"
+              />
+            </TouchableOpacity>
           </View>
         )}
-      </View>
-    </KeyboardAvoidingView>
+      </Animated.View>
+    </View>
   );
 }
 
@@ -339,34 +350,37 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingVertical: 16,
     width: width * 0.6,
+    flex: 1
   },
   conversationBottom: {
     maxHeight: 115,
-    padding: 10,
     position: "absolute",
-    bottom: 0,
+    top: 0,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    width: width * 0.9,
+    paddingVertical: 10
   },
   inputContainer: {
     borderRadius: 24,
-    paddingLeft: 12,
+    paddingHorizontal: 12,
     boxShadow: "0 2px 3px #896761",
-    width: width * 0.9,
+    width: width * 0.9 - 100,
     backgroundColor: "#FFF5F0",
     overflow: "hidden",
     alignItems: "flex-end",
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  sendButton: {
-    height: 36,
-    width: width * 0.2,
+  bottomButton: {
+    height: 46,
+    width: 46,
     backgroundColor: "#965A51",
-    borderRadius: 20,
+    borderRadius: 40,
     boxShadow: "0 2px 3px #896761",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 5,
-    marginRight: 5,
   },
   buttonText: {
     fontWeight: "bold",
@@ -381,7 +395,9 @@ const styles = StyleSheet.create({
   conversationBottomRelative: {
     position: "relative",
     alignItems: "center",
+    justifyContent: 'flex-start',
     width: width,
+    height: 66,
   },
   goBack: {
     marginHorizontal: 10,
@@ -454,4 +470,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  convKey: {
+    width: width,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexShrink: 1
+  }
 });
