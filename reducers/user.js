@@ -55,7 +55,6 @@ export const userSlice = createSlice({
       }
     },
     deleteConv: (state, action) => {
-      console.log('Une conv est delete')
       state.value.user.conversationList = state.value.user.conversationList.filter(x => String(x._id) !== action.payload);
     },
     disconnect: (state, action) => {

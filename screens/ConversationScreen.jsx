@@ -35,9 +35,6 @@ export default function ({navigation, route}) {
       dispatch(readConv(conversation._id));
     }
   }, [messageList]);
-  if (!conversation) {
-    navigation.navigate('MessagerieScreen');
-  }
   const scrollViewRef = useRef();
   const otherUser = otherUserNumber === 2 ? route.params.user2 : route.params.user1;
   const currentDate = dayjs();
@@ -68,7 +65,7 @@ export default function ({navigation, route}) {
     }
     const newMessageContent = newMessage;
     setNewMessage('');
-    const response = await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/message', {
+    await fetch(process.env.EXPO_PUBLIC_IP + '/conversation/message', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,7 +76,6 @@ export default function ({navigation, route}) {
         conversationId: route.params._id
       })
     });
-    const data = await response.json();
     setSendDisabled(false);
   }
   const modalBlock = (
@@ -121,26 +117,26 @@ export default function ({navigation, route}) {
     {modalBlock}
     <View style={styles.conversationHeader}>
       <View style={styles.headerLeft}>
-        <AntDesign name="left" size={24} color='#965A51' style={styles.goBack} onPress={() => navigation.goBack()} disabled={modalBlockVisible || !conversation}/>
+        <AntDesign name="left" size={24} color='#965A51' style={styles.goBack} onPress={() => navigation.goBack()} disabled={modalBlockVisible}/>
         <View style={styles.avatarContainer}>
           <Image style={styles.avatar} source={conversation ? otherUser.photoList.length === 0 ? '' : otherUser.photoList[0] : null}/>
         </View>
         <Text style={styles.username}>{conversation ? otherUser.username : null}</Text>
       </View>
       <View style={styles.headerRight}>
-        <MaterialIcons name="block" size={24} color='#965A51' style={styles.block} onPress={() => {setModalBlockVisible(true)}} disabled={modalBlockVisible || !conversation}/>
+        {conversation && <MaterialIcons name="block" size={24} color='#965A51' style={styles.block} onPress={() => {setModalBlockVisible(true)}} disabled={modalBlockVisible}/>}
       </View>
     </View>
-    <ScrollView 
+    {conversation ? <ScrollView 
       contentContainerStyle={styles.messageList}
       ref={scrollViewRef}
       onContentSizeChange={() => scrollViewRef.current.scrollToEnd({animated: true})}
     >
       {messagesHTML}
       <View style={styles.conversationBottomPlaceholder}></View>
-    </ScrollView>
+    </ScrollView> : <Text style={styles.textBlocked}>Vous avez été bloqué</Text>}
     <View style={styles.conversationBottomRelative}>
-      <View style={styles.conversationBottom}>
+      {conversation && <View style={styles.conversationBottom}>
         <View style={styles.inputContainer}>
           <TextInput 
             style={styles.input}
@@ -152,11 +148,11 @@ export default function ({navigation, route}) {
             multiline={true}
             textAlignVertical={'vertical'}
           />
-          <TouchableOpacity style={styles.sendButton} onPress={() => sendMessage()} disabled={sendDisabled || modalBlockVisible || !conversation}>
+          <TouchableOpacity style={styles.sendButton} onPress={() => sendMessage()} disabled={sendDisabled || modalBlockVisible}>
             <Text style={styles.buttonText}>Envoyer</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </View>}
     </View>
   </KeyboardAvoidingView>
 }
@@ -330,5 +326,10 @@ const styles = StyleSheet.create({
     color: "#965A51",
 		fontWeight: "bold",
 		fontSize: 12,
+  },
+  textBlocked: {
+    color: '#965A51',
+    fontWeight: 'bold',
+    fontSize: 16
   }
 });
