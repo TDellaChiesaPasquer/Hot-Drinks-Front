@@ -81,6 +81,8 @@ export default function ({navigation, route}) {
       </View>
       <Text style={styles.username}>{otherUser.username}</Text>
     </View>
+	<TouchableOpacity style={styles.sendButton}  color='#965A51' onPress={() => navigation.navigate('RdvScreen')}>	
+	</TouchableOpacity>
     <ScrollView 
       contentContainerStyle={styles.messageList}
       ref={scrollViewRef}
