@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { ScrollView, View, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
@@ -7,6 +7,8 @@ import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../../components/swipe/SwipeContainer";
 import PagerView from "react-native-pager-view";
 import SwipeButton from "../../components/swipe/SwipeButton";
+import { useFocusEffect } from "@react-navigation/native";
+import { BackHandler } from "react-native";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -18,23 +20,20 @@ export default function SwipeScreen(props) {
 	const [cardList, setCardList] = useState([]);
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
 
-	const enTest = true;
-	// const dbUtilisee = "Audrey";
-	const dbUtilisee = "Cyrille";
-	const db = {
-		Audrey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxYzkzNmEyMjFlNDYyZDE4ODcxY2UiLCJpYXQiOjE3NTQ0MDUxMjIsImV4cCI6NTM1NDQwNTEyMn0.EGriV0lC1HLV2RBlNsOM-Qf293a6yQTafNBPIHedOQU",
-		Cyrille:
-			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NzExNTA5NjdiOTE1OTgwZTRmOGMiLCJ0b2tlbk51bWJlciI6NiwiaWF0IjoxNzU0NTYwNTc0LCJleHAiOjUzNTQ1NjA1NzR9.HVQMNJzi_m6X0GuTW6DCbkEUVIzf0ZnZ_U0Zb0o1Aws",
-	};
-	const tokenTmp = db[dbUtilisee];
+	useFocusEffect(
+		useCallback(() => {
+			const onBackPress = () => {
+				return true;
+			};
+			const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-	let userToken = null;
-	if (enTest) {
-		userToken = tokenTmp;
-	} else
-		userToken = useSelector(function (state) {
-			return state.user.value.token;
-		});
+			return () => subscription.remove();
+		}, [])
+	);
+
+	let userToken = useSelector(function (state) {
+		return state.user.value.token;
+	});
 
 	useEffect(function () {
 		fetchProfilesFromAPI();
@@ -206,7 +205,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		alignContent: "center",
 		elevation: 5,
-		zIndex: 10
+		zIndex: 10,
 	},
 	// swipeProfileInformations: {
 	//      flex: 1,

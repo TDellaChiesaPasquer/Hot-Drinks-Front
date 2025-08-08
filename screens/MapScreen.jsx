@@ -25,28 +25,26 @@ export default function App({ navigation }) {
   const [disabled, setDisabled] = useState(false);
   const [permission, setPermission] = useState(false);
   const [error, setError] = useState(false);
-  const dispatch = useDispatch();
   const myLocationRef = useRef(myLocation);
-
   const [givenPosition, setGivenPosition] = useState(null);
+
   const user = useSelector((state) => state.user.value);
-  console.log(user);
   const locations = useSelector((state) => state.map.value.places);
-  console.log(locations);
+  const dispatch = useDispatch();
+
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
         return true;
       };
       const subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
+        "hardwareBackPress",
         onBackPress
       );
 
       return () => subscription.remove();
     }, [])
   );
-  
 
   useEffect(() => {
     (async () => {
@@ -108,8 +106,8 @@ export default function App({ navigation }) {
     }
     const response2 = await fetch(process.env.EXPO_PUBLIC_IP + "/users/infos", {
       headers: {
-        authorization: user.token
-      }
+        authorization: user.token,
+      },
     });
     const data2 = await response2.json();
     dispatch(addInfos(data2.user));
