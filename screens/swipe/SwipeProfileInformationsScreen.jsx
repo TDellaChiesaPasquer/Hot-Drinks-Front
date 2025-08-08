@@ -70,7 +70,7 @@ export default function SwipeProfileInformations(props) {
 	const imageSource = firstImageFromRoute || {
 		uri: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1080&h=607&q=80",
 	};
-	
+
 	return (
 		<View style={{ flex: 1, backgroundColor: "#F5EBE6" }}>
 			{/* Bouton de retour (flèche gauche) */}
@@ -81,7 +81,8 @@ export default function SwipeProfileInformations(props) {
 			</View>
 
 			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper} alwaysBounceVertical={true}>
-				return <Image key={0} source={imageSource} style={styles.image} contentFit="cover" />;{itemsJSX}
+				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" />
+				{itemsJSX}
 			</ScrollView>
 		</View>
 	);
@@ -155,6 +156,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		height: height * 0.6,
 		marginBottom: 20,
-		marginTop: 20
+		marginTop: 20,
 	},
 });

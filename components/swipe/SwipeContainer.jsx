@@ -175,8 +175,7 @@ export default function SwipeContainer(props) {
 					return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
 				})}
 			</Swiper>
-			// test pour le scroll
-			{/* <SwipeProfileInformationsTMP /> */}
+			
 			<View style={styles.overlay}>
 				<View style={styles.infos}>
 					{informationList.map(function (infoText, infoIndex) {
