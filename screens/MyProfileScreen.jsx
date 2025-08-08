@@ -199,18 +199,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color: "black",
-    backgroundColor: "green",
+    color: "#965a51c0",
+    backgroundColor: "#F5EBE6",
+    justifyContent: "center",
+    textAlign: "center",
+    fontWeight: "bold",
   },
 
   scrollContainer: {
     flex: 1,
-    backgroundColor: "red",
+    backgroundColor: "#F5EBE6",
+    width: "100%",
   },
 
   scrollView: {
-    backgroundColor: "red",
-    height: "90%",
-    width: "90%",
+    backgroundColor: "#F5EBE6",
+    height: "100%",
+    width: "100%",
   },
 });

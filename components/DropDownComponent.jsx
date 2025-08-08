@@ -3,47 +3,86 @@ import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { View, Text } from "react-native";
+import Entypo from "@expo/vector-icons/Entypo";
 
 export default functionDropdownComponent = (props) => {
-  // const data = [
-  //   { label: "Item 1", value: "1" },
-  //   { label: "Item 2", value: "2" },
-  //   { label: "Item 3", value: "3" },
-  //   { label: "Item 4", value: "4" },
-  //   { label: "Item 5", value: "5" },
-  //   { label: "Item 6", value: "6" },
-  //   { label: "Item 7", value: "7" },
-  //   { label: "Item 8", value: "8" },
-  // ];
-  // const [selectedOption, setSelectedOption] = useState([]);
   const [value, setValue] = useState(null);
+  const [isImportant, setIsImportant] = useState(false);
+
+  const handleImportanceClick = () => {
+    setIsImportant(!isImportant);
+  };
+
+  let stars = (
+    <Entypo
+      style={styles.stars}
+      name="star"
+      size={20}
+      color={isImportant ? "#f1c40f" : "black"}
+      onPress={() => handleImportanceClick()}
+    />
+  );
+  // if (isImportant) {
+  //   stars = (
+  //     <Entypo
+  //       name="star"
+  //       size={24}
+  //       color="yellow"
+  //       onPress={() => handleImportanceClick()}
+  //     />
+  //   );
+  // } else {
+  //   stars = (
+  //     <Entypo
+  //       name="star"
+  //       size={24}
+  //       color="black"
+  //       onPress={() => handleImportanceClick()}
+  //     />
+  //   );
+  // }
 
   return (
-    <Dropdown
-      style={styles.dropdown}
-      placeholderStyle={styles.placeholderStyle}
-      selectedTextStyle={styles.selectedTextStyle}
-      inputSearchStyle={styles.inputSearchStyle}
-      placeholder={props.question}
-      iconStyle={styles.iconStyle}
-      data={props.options}
-      maxHeight={300}
-      labelField="label"
-      valueField="value"
-      value={value}
-      onChange={(item) => {
-        setValue(item.value);
-      }}
-    />
+    <View style={styles.container}>
+      <Dropdown
+        style={styles.dropdown}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        placeholder={props.question}
+        iconStyle={styles.iconStyle}
+        data={props.options}
+        maxHeight={300}
+        labelField="label"
+        valueField="value"
+        value={value}
+        onChange={(item) => {
+          setValue(item.value);
+        }}
+      />
+      {stars}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    // flexDirection: "row",
+    justifyContent: "center",
+    backgroundColor: "#F5EBE6",
+  },
+
   dropdown: {
-    margin: 16,
-    height: 50,
+    marginRight: 80,
+    marginLeft: 15,
+    marginBottom: 15,
+    marginTop: 15,
+    height: 30,
     borderBottomColor: "gray",
     borderBottomWidth: 0.5,
+    padding: 5,
   },
   icon: {
     marginRight: 5,
@@ -57,5 +96,9 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: 20,
     height: 20,
+  },
+  stars: {
+    justifyContent: "flex-end",
+    marginLeft: 380,
   },
 });

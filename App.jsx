@@ -190,14 +190,14 @@ const MyProfileNav = () => {
 
           if (route.name === "MyProfile") {
             // iconName = "user";
-            icon = <Feather name="user" size={24} color="black" />;
+            icon = <Feather name="user" size={24} color="#965A51" />;
             // icon = <Feather name="user" size={30} color={color} />;
           } else if (route.name === "Preferences") {
             // iconName = "heart";
-            icon = <FontAwesome name="heart-o" size={24} color="black" />;
+            icon = <FontAwesome name="heart-o" size={24} color="#965A51" />;
           } else if (route.name === "Settings") {
             // iconName = "gear";
-            icon = <MaterialIcons name="settings" size={24} color="black" />;
+            icon = <MaterialIcons name="settings" size={24} color="#965A51" />;
           }
 
           return icon;
@@ -209,9 +209,9 @@ const MyProfileNav = () => {
         headerShown: false,
       })}
     >
-      <TopTab.Screen name="MyProfileScreen" component={MyProfileScreen} />
-      <TopTab.Screen name="PreferencesScreen" component={PreferencesScreen} />
-      <TopTab.Screen name="SettingsScreen" component={SettingsScreen} />
+      <TopTab.Screen name="MyProfile" component={MyProfileScreen} />
+      <TopTab.Screen name="Preferences" component={PreferencesScreen} />
+      <TopTab.Screen name="Settings" component={SettingsScreen} />
     </TopTab.Navigator>
   );
 };
