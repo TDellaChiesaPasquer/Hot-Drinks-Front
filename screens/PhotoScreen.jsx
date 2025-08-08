@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPhoto, removePhoto } from "../reducers/user";
 import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
+import HeaderBeginning from "../components/HeaderBeginning";
 
 const { width, height } = Dimensions.get("window");
 
@@ -45,9 +46,13 @@ export default function ImagePickerScreen({ navigation }) {
   };
 
   const addedPhoto = [];
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 3; i++) {
     addedPhoto.push(
-      <ImagePickerComponent key={i} addUriToList={addUriToList} />
+      <View key={i} style={styles.containerLine}>
+        <ImagePickerComponent addUriToList={addUriToList} />
+        <ImagePickerComponent addUriToList={addUriToList} />
+        <ImagePickerComponent addUriToList={addUriToList} />
+      </View>
     );
   }
 
@@ -92,20 +97,19 @@ export default function ImagePickerScreen({ navigation }) {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <HeaderBeginning/>
+        <Text style={styles.inputTitle}>Ajoute au moins une photo</Text>
         <View>
-          <Text style={styles.title}>Ajoute au moins une photo</Text>
-          <View>
-            <View style={styles.containerPhoto}>{addedPhoto}</View>
-          </View>
-          <View style={styles.bottomButtons}>
-            <TouchableOpacity
-              style={styles.validationButton}
-              onPress={() => handleSubmitPhotos()}
-              disabled={disabled}
-            >
-              <Text style={styles.textValidateButton}>Valider</Text>
-            </TouchableOpacity>
-          </View>
+          <View style={styles.containerPhoto}>{addedPhoto}</View>
+        </View>
+        <View style={styles.bottomButtons}>
+          <TouchableOpacity
+            style={styles.validationButton}
+            onPress={() => handleSubmitPhotos()}
+            disabled={disabled}
+          >
+            <Text style={styles.textValidateButton}>Valider</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -120,16 +124,17 @@ const styles = StyleSheet.create({
   },
 
   containerPhoto: {
-    width: width,
-    height: width,
-    // height: "55%",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    padding: 20,
+    width: width * 0.85,
+    height: width * 0.85,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     marginTop: 40,
-    // backgroundColor: "red",
+  },
+  containerLine: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
 
   addPhotoButton: {
@@ -154,11 +159,10 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
-  title: {
-    height: "5%",
-    fontSize: 20,
+  inputTitle: {
+    color: "#965A51",
+    fontWeight: "bold",
     marginTop: 100,
-    textAlign: "center",
   },
   bottomButtons: {
     flex: 1,
@@ -184,11 +188,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 9,
     fontWeight: "bold",
     fontSize: 18,
     color: "#F5EBE6",
-    paddingBottom: 15,
   },
 
   prevButton: {
