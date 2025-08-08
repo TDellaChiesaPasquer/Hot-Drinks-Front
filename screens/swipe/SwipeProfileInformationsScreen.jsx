@@ -49,6 +49,9 @@ export default function SwipeProfileInformations(props) {
 	// Récupération des goûts passés depuis la page de swipe
 	const tastesFromRoute = Array.isArray(route?.params?.tastesList) ? route.params.tastesList : null;
 
+	// Récupération de la première image passée depuis la page de swipe
+	const firstImageFromRoute = route?.params?.firstImage || null;
+
 	// Construction des données à afficher au format "type de goût -> goût"
 	const dataToDisplay = tastesFromRoute
 		? tastesFromRoute.map((t) => ({
@@ -63,14 +66,10 @@ export default function SwipeProfileInformations(props) {
 		itemsJSX.push(<TasteItem key={i} label={item.label} value={item.value} />);
 	}
 
-	// tmp pour le test
-	const imagesList = [
-		{ uri: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1080&h=607&q=80" },
-		{ uri: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=1080&h=607&q=80" },
-		{ uri: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1080&h=607&q=80" },
-		{ uri: "https://images.unsplash.com/photo-1558981283-cc59d621f562?auto=format&fit=crop&w=1080&h=607&q=80" },
-	];
-
+	// Utiliser l'image passée en paramètre
+	const imageSource = firstImageFromRoute || {
+		uri: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1080&h=607&q=80",
+	};
 
 	return (
 		<View style={{ flex: 1, backgroundColor: "#F5EBE6" }}>
@@ -81,19 +80,8 @@ export default function SwipeProfileInformations(props) {
 				</TouchableOpacity>
 			</View>
 
-			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper}>
-				{/* <Swiper
-					loop={false}
-					showsButtons
-					nextButton={<Text style={{ color: "#F5EBE6", fontSize: 30 }}>›</Text>}
-					prevButton={<Text style={{ color: "#F5EBE6", fontSize: 30 }}>‹</Text>}
-					activeDotColor="white"
-				>
-					{imagesList.map(function (imageSource, imageIndex) {
-						return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
-					})}
-				</Swiper> */}
-
+			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper} alwaysBounceVertical={true}>
+				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" />
 				{itemsJSX}
 			</ScrollView>
 		</View>
@@ -165,7 +153,9 @@ const styles = StyleSheet.create({
 	},
 	// tmp pour le test
 	image: {
-		width,
+		justifyContent: "center",
 		height: height * 0.6,
+		marginBottom: 20,
+		marginTop: 20,
 	},
 });
