@@ -160,7 +160,13 @@ export default function SwipeContainer(props) {
 
 	return (
 		<View style={styles.container}>
-			<Swiper loop={false} showsButtons>
+			<Swiper
+				loop={false}
+				showsButtons
+				nextButton={<Text style={{ color: "white", fontSize: 30 }}>›</Text>}
+				prevButton={<Text style={{ color: "white", fontSize: 30 }}>‹</Text>}
+				activeDotColor="white"
+			>
 				{imagesList.map(function (imageSource, imageIndex) {
 					return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
 				})}

@@ -73,7 +73,7 @@ export default function SwipeProfileInformations(props) {
 
 
 	return (
-		<View style={{ flex: 1, backgroundColor: "#FFF" }}>
+		<View style={{ flex: 1, backgroundColor: "#F5EBE6" }}>
 			{/* Bouton de retour (flèche gauche) */}
 			<View style={styles.backButtonWrapper}>
 				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton} activeOpacity={0.8}>
@@ -82,11 +82,17 @@ export default function SwipeProfileInformations(props) {
 			</View>
 
 			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper}>
-				<Swiper loop={false} showsButtons>
+				{/* <Swiper
+					loop={false}
+					showsButtons
+					nextButton={<Text style={{ color: "#F5EBE6", fontSize: 30 }}>›</Text>}
+					prevButton={<Text style={{ color: "#F5EBE6", fontSize: 30 }}>‹</Text>}
+					activeDotColor="white"
+				>
 					{imagesList.map(function (imageSource, imageIndex) {
 						return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
 					})}
-				</Swiper>
+				</Swiper> */}
 
 				{itemsJSX}
 			</ScrollView>
