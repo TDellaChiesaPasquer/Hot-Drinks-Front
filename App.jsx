@@ -54,19 +54,17 @@ const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
 const SignUpNav = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
-      >
-      <Stack.Screen name="SignUp" component={SignUp} />
-      <Stack.Screen name="DateScreen" component={DateScreen} />
-      <Stack.Screen name="GenderScreen" component={GenderScreen} />
-      <Stack.Screen name="RelationScreen" component={RelationScreen} />
-      <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
-      <Stack.Screen name="MapScreen" component={MapScreen} />
-      <Stack.Screen name="RdvScreen" component={RdvScreen} />
-    </Stack.Navigator>
-  );
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+			<Stack.Screen name="SignUp" component={SignUp} />
+			<Stack.Screen name="DateScreen" component={DateScreen} />
+			<Stack.Screen name="GenderScreen" component={GenderScreen} />
+			<Stack.Screen name="RelationScreen" component={RelationScreen} />
+			<Stack.Screen name="PhotoScreen" component={PhotoScreen} />
+			<Stack.Screen name="MapScreen" component={MapScreen} />
+			<Stack.Screen name="RdvScreen" component={RdvScreen} />
+		</Stack.Navigator>
+	);
 };
 
 const receiveNewMessage = async (event, token, dispatch) => {
@@ -85,10 +83,7 @@ const receiveNewMessage = async (event, token, dispatch) => {
 const MainTabNav = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user.value);
-	//   const userId = user.user._id;
-	const userId =
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk0NzExNTA5NjdiOTE1OTgwZTRmOGMiLCJ0b2tlbk51bWJlciI6NiwiaWF0IjoxNzU0NTYwNTc0LCJleHAiOjUzNTQ1NjA1NzR9.HVQMNJzi_m6X0GuTW6DCbkEUVIzf0ZnZ_U0Zb0o1Aws";
-	const token = user.token;
+	const userId = user.user._id;
 	useEffect(() => {
 		const channel = pusher.subscribe(userId);
 		channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
@@ -119,9 +114,9 @@ const MainTabNav = () => {
 					tabBarIconStyle: styles.tabBarIcon,
 				})}
 			>
-				{/* <Tab.Screen name="MyProfileScreen" component={MyProfileNav} /> */}
+				<Tab.Screen name="MyProfileScreen" component={MyProfileNav} />
 				<Tab.Screen name="SwipeNav" component={SwipeNav} />
-				{/* <Tab.Screen name="MessagerieNav" component={MessagerieNav} /> */}
+				<Tab.Screen name="MessagerieNav" component={MessagerieNav} />
 			</Tab.Navigator>
 		</SafeAreaView>
 	);
@@ -166,7 +161,6 @@ const MyProfileNav = () => {
 					}
 
 					return icon;
-					// <FontAwesome name={iconName} size={size} color={color} />;
 				},
 
 				tabBarActiveTintColor: "#965A51",
@@ -187,8 +181,8 @@ export default function App() {
 			<SafeAreaProvider>
 				<NavigationContainer>
 					<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
-						{/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-						<Stack.Screen name="SignUpNav" component={SignUpNav} /> */}
+						<Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+						<Stack.Screen name="SignUpNav" component={SignUpNav} />
 						<Stack.Screen name="MainTabNav" component={MainTabNav} />
 					</Stack.Navigator>
 				</NavigationContainer>

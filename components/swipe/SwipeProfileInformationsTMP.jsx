@@ -1,281 +1,179 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from "react-native";
-import { Image } from "expo-image";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
+
+// tmp pour le test
 import Swiper from "react-native-swiper";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { capitalize } from "../../Utils/utils";
+import { Image } from "expo-image";
 
-const { width, height } = Dimensions.get("window");
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
+const SURFACE_BG = "#F5EBE6";
+const CARD_BG = "#BC8D85";
 
-export default function InfosProfilScreen(props) {
-	const navigation = props.navigation;
-	const route = props.route;
+// Liste fallback si aucun goût n'est passé via la navigation
+const infoList = [
+	{ label: "Goût", value: "Jazz" },
+	{ label: "Goût", value: "Cuisine italienne" },
+	{ label: "Goût", value: "Randonnée" },
+	{ label: "Goût", value: "Lecture" },
+	{ label: "Goût", value: "Photographie" },
+	{ label: "Goût", value: "Films d'action" },
+	{ label: "Goût", value: "Chocolat noir" },
+	{ label: "Goût", value: "Voyages urbains" },
+	{ label: "Goût", value: "Natation" },
+	{ label: "Goût", value: "Thé vert" },
+	{ label: "Goût", value: "Musées" },
+	{ label: "Goût", value: "Séries policières" },
+	{ label: "Goût", value: "Vélo" },
+	{ label: "Goût", value: "Peinture" },
+	{ label: "Goût", value: "Animaux" },
+];
 
-	// Données de test pour l'affichage
-	const profileData = {
-		username: "Emma",
-		birthdate: "1995-06-15",
-		distance: "12 km",
-		relationship: "Expresso",
-		photoList: ["https://picsum.photos/seed/user1/800/600", "https://picsum.photos/seed/user2/800/600", "https://picsum.photos/seed/user3/800/600"],
-		tastesList: [
-			{ category: "interest", value: "photographie", star: true },
-			{ category: "interest", value: "randonnée", star: true },
-			{ category: "interest", value: "cuisine", star: true },
-			{ category: "interest", value: "yoga", star: false },
-			{ category: "interest", value: "lecture", star: true },
-		],
-	};
+function TasteItem(props) {
+	return (
+		<View style={styles.item}>
+			<Text style={styles.label}>{props.label}</Text>
+			<View style={styles.valueBox}>
+				<Text style={styles.value}>{props.value}</Text>
+			</View>
+		</View>
+	);
+}
 
-	const calculateAge = (birthdate) => {
-		const birthDate = new Date(birthdate);
-		const today = new Date();
-		let age = today.getFullYear() - birthDate.getFullYear();
-		const monthDiff = today.getMonth() - birthDate.getMonth();
-		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-			age--;
-		}
-		return age;
-	};
+export default function SwipeProfileInformationsTMP(props) {
+	const navigation = useNavigation();
+	const route = useRoute();
 
-	const handleGoBack = () => {
-		navigation.goBack();
-	};
+	// Récupération des goûts passés depuis la page de swipe
+	const tastesFromRoute = Array.isArray(route?.params?.tastesList) ? route.params.tastesList : null;
 
-	const handleSendMessage = () => {
-		navigation.navigate("ConversationScreen", { userId: "test123" });
-	};
+	// Construction des données à afficher au format "type de goût -> goût"
+	const dataToDisplay = tastesFromRoute
+		? tastesFromRoute.map((t) => ({
+				label: t?.category || "Goût",
+				value: t?.value || "",
+		  }))
+		: infoList;
 
-	const age = calculateAge(profileData.birthdate);
-	const starredTastes = profileData.tastesList.filter((taste) => taste.star === true);
+	const itemsJSX = [];
+	for (var i = 0; i < dataToDisplay.length; i++) {
+		var item = dataToDisplay[i];
+		itemsJSX.push(<TasteItem key={i} label={item.label} value={item.value} />);
+	}
+
+	// tmp pour le test
+	const imagesList = [
+		{ uri: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1080&h=607&q=80" },
+		{ uri: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=1080&h=607&q=80" },
+		{ uri: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1080&h=607&q=80" },
+		{ uri: "https://images.unsplash.com/photo-1558981283-cc59d621f562?auto=format&fit=crop&w=1080&h=607&q=80" },
+	];
+
 
 	return (
-		<SafeAreaProvider>
-			<SafeAreaView style={styles.container}>
-				<View style={styles.header}>
-					<TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-						<AntDesign name="left" size={24} color="#965A51" />
-					</TouchableOpacity>
-					<Text style={styles.headerTitle}>Profil</Text>
-					<View style={styles.headerSpacer}></View>
-				</View>
+		<View style={{ flex: 1, backgroundColor: "#F5EBE6" }}>
+			{/* Bouton de retour (flèche gauche) */}
+			<View style={styles.backButtonWrapper}>
+				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton} activeOpacity={0.8}>
+					<FontAwesome name="arrow-left" size={20} color="#000" />
+				</TouchableOpacity>
+			</View>
 
-				<ScrollView contentContainerStyle={styles.scrollContainer}>
-					<View style={styles.photosContainer}>
-						{profileData.photoList && profileData.photoList.length > 0 ? (
-							<Swiper
-								style={styles.swiperContainer}
-								showsButtons={false}
-								dot={<View style={styles.paginationDot} />}
-								activeDot={<View style={styles.paginationActiveDot} />}
-								paginationStyle={styles.paginationStyle}
-							>
-								{profileData.photoList.map((photoUri, index) => (
-									<View key={index} style={styles.photoContainer}>
-										<Image source={{ uri: photoUri }} style={styles.photo} contentFit="cover" />
-									</View>
-								))}
-							</Swiper>
-						) : (
-							<View style={styles.noPhotoContainer}>
-								<Text style={styles.noPhotoText}>Aucune photo disponible</Text>
-							</View>
-						)}
-					</View>
+			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper}>
+				<Swiper
+					style={styles.caroussel}
+					loop={false}
+					showsButtons
+					nextButton={<Text style={{ color: "#F5EBE6", fontSize: 30 }}>›</Text>}
+					prevButton={<Text style={{ color: "#F5EBE6", fontSize: 30 }}>‹</Text>}
+					activeDotColor="white"
+				>
+					{imagesList.map(function (imageSource, imageIndex) {
+						return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
+					})}
+				</Swiper>
 
-					<View style={styles.infoSection}>
-						<Text style={styles.userName}>{profileData.username || "Utilisateur"}</Text>
-						<Text style={styles.userAge}>{age} ans</Text>
-						<Text style={styles.userDistance}>{profileData.distance || "Distance inconnue"}</Text>
-
-						{profileData.relationship && (
-							<View style={styles.relationshipContainer}>
-								<Text style={styles.relationshipLabel}>Recherche :</Text>
-								<Text style={styles.relationshipValue}>{profileData.relationship}</Text>
-							</View>
-						)}
-					</View>
-
-					{starredTastes.length > 0 && (
-						<View style={styles.tastesSection}>
-							<Text style={styles.tastesTitle}>Centres d'intérêt</Text>
-							<View style={styles.tastesContainer}>
-								{starredTastes.map((taste, index) => (
-									<View key={index} style={styles.tasteItem}>
-										<Text style={styles.tasteText}>#{capitalize(taste.value)}</Text>
-									</View>
-								))}
-							</View>
-						</View>
-					)}
-				</ScrollView>
-
-				<View style={styles.bottomContainer}>
-					<TouchableOpacity style={styles.messageButton} onPress={handleSendMessage}>
-						<Text style={styles.messageButtonText}>Envoyer un message</Text>
-					</TouchableOpacity>
-				</View>
-			</SafeAreaView>
-		</SafeAreaProvider>
+				{itemsJSX}
+			</ScrollView>
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#F5EBE6",
+	wrapper: {
+		width: width, // largeur = largeur de l'écran en pixels
+		minHeight: height * 0.5, // min height pour bien scroller sur mobile
+		paddingLeft: 24, // 24px
+		paddingRight: 24,
+		paddingBottom: 40, // 40px
+		backgroundColor: "#FFF", // Pour debug visuel
 	},
-	header: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		paddingHorizontal: 15,
-		paddingVertical: 10,
-		backgroundColor: "#F5EBE6",
-	},
-	backButton: {
-		padding: 5,
-	},
-	headerTitle: {
-		fontSize: 18,
-		fontWeight: "bold",
-		color: "#965A51",
-	},
-	headerSpacer: {
-		width: 34,
-	},
-	scrollContainer: {
-		paddingBottom: 80,
-	},
-	photosContainer: {
-		height: height * 0.5,
-		marginHorizontal: 20,
-		marginTop: 10,
-		borderRadius: 20,
-		overflow: "hidden",
-		backgroundColor: "#BC8D85",
-	},
-	swiperContainer: {
-		height: "100%",
-	},
-	photoContainer: {
-		flex: 1,
-	},
-	photo: {
+	caroussel: {
 		width: "100%",
 		height: "100%",
+		borderRadius: 20,
+		overflow: "hidden",
+		// alignSelf: "center"
 	},
-	noPhotoContainer: {
-		flex: 1,
+
+	item: {
+		width: "100%",
+		minHeight: 56, // hauteur mini pilule
+		marginBottom: 16, // 16px d’espace entre les éléments
+		borderRadius: 40, // pilule arrondie
+		backgroundColor: CARD_BG,
+		paddingVertical: 10, // 10px haut/bas
+		paddingHorizontal: 24, // 24px gauche/droite
 		justifyContent: "center",
-		alignItems: "center",
 	},
-	noPhotoText: {
-		color: "#FFF5F0",
-		fontSize: 16,
+
+	label: {
 		fontWeight: "bold",
+		fontSize: 13, // 13px
+		color: SURFACE_BG,
+		marginBottom: 4, // 4px
 	},
-	paginationStyle: {
-		bottom: 20,
+
+	valueBox: {
+		width: "100%",
+		borderRadius: 8, // 8px
+		backgroundColor: SURFACE_BG,
+		paddingVertical: 12, // 12px
+		paddingHorizontal: 14, // 14px
+		justifyContent: "center",
 	},
-	paginationDot: {
-		backgroundColor: "rgba(255, 255, 255, 0.5)",
-		width: 8,
-		height: 8,
-		borderRadius: 4,
-		marginLeft: 3,
-		marginRight: 3,
+
+	value: {
+		fontWeight: "600",
+		fontSize: 16, // 16px
+		color: "#000",
 	},
-	paginationActiveDot: {
-		backgroundColor: "#FFF5F0",
-		width: 8,
-		height: 8,
-		borderRadius: 4,
-		marginLeft: 3,
-		marginRight: 3,
-	},
-	infoSection: {
-		paddingHorizontal: 20,
-		paddingVertical: 20,
-	},
-	userName: {
-		fontSize: 24,
-		fontWeight: "bold",
-		color: "#965A51",
-		marginBottom: 5,
-	},
-	userAge: {
-		fontSize: 18,
-		color: "#BC8D85",
-		marginBottom: 5,
-	},
-	userDistance: {
-		fontSize: 16,
-		color: "#BC8D85",
-		marginBottom: 15,
-	},
-	relationshipContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	relationshipLabel: {
-		fontSize: 16,
-		fontWeight: "bold",
-		color: "#965A51",
-		marginRight: 10,
-	},
-	relationshipValue: {
-		fontSize: 16,
-		color: "#BC8D85",
-	},
-	tastesSection: {
-		paddingHorizontal: 20,
-		paddingBottom: 20,
-	},
-	tastesTitle: {
-		fontSize: 18,
-		fontWeight: "bold",
-		color: "#965A51",
-		marginBottom: 15,
-	},
-	tastesContainer: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-	},
-	tasteItem: {
-		backgroundColor: "#BC8D85",
-		paddingHorizontal: 12,
-		paddingVertical: 6,
-		borderRadius: 15,
-		marginRight: 10,
-		marginBottom: 10,
-	},
-	tasteText: {
-		color: "#FFF5F0",
-		fontSize: 14,
-		fontWeight: "bold",
-	},
-	bottomContainer: {
+
+	// Nouveau: bouton retour (flèche gauche)
+	backButtonWrapper: {
 		position: "absolute",
-		bottom: 0,
-		left: 0,
-		right: 0,
-		backgroundColor: "#F5EBE6",
-		paddingHorizontal: 20,
-		paddingVertical: 15,
+		top: 16,
+		left: 16,
+		zIndex: 10,
 	},
-	messageButton: {
-		backgroundColor: "#965A51",
-		height: 45,
-		borderRadius: 25,
+	backButton: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: "#FFF5F0",
 		alignItems: "center",
 		justifyContent: "center",
-		boxShadow: "0 2px 3px #896761",
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 4,
+		elevation: 3,
 	},
-	messageButtonText: {
-		color: "#F5EBE6",
-		fontSize: 16,
-		fontWeight: "bold",
+	// tmp pour le test
+	image: {
+		width: width,
+		height: height * 0.6,
 	},
 });
