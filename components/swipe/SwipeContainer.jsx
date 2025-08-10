@@ -73,65 +73,102 @@ const placeholderData = {
 };
 
 /**
- * Formate les données du profil l'affichage attendu pour le profile de swipe
- * @param {Object} profileData - Vrai données reçues depuis le backend
- * @param {Object} placeholderSrc - Données fake en cas de non-réception (pour le test)
- * @return {Object} Données formatées pour le profil swipe
+ * Formate les données du profil pour l'affichage attendu pour le profile de swipe
+ * 
+ * LOGIQUE DE DÉCISION MOCK DATA vs VRAIES DONNÉES :
+ * - Si profileData est null/undefined → Utilise mock data générique (isPlaceholder = true)
+ * - Si profileData === placeholderData (objet global) → Utilise mock data pré-définies (isPlaceholder = true)
+ * - Si profileData a un _id → Vraies données du serveur (isPlaceholder = false)
+ * - Sinon → Traite comme mock data mais avec les valeurs fournies (isPlaceholder = true par défaut)
+ * 
+ * @param {Object} profileData - Données reçues : vraies données du backend OU mock data OU null/undefined
+ * @param {Object} placeholderSrc - Source d'images de remplacement pour les mock data
+ * @return {Object} Données formatées pour le profil swipe avec indicateur isPlaceholder
  */
 function formatProfileData(profileData, placeholderSrc) {
-	// Check if we're using placeholder data directly
+	// === ÉTAPE 1: DÉCISION MOCK DATA - Vérification si on reçoit l'objet placeholder global ===
+	// CAS 1: profileData === placeholderData (objet global défini) → Mock data pré-définies
 	const isDefaultPlaceholder = profileData === placeholderData;
 
+	// === ÉTAPE 2: Initialisation de la structure de données de retour ===
+	// Toujours initialisé avec des valeurs par défaut (format mock data générique)
+	const informationArray = ["Anonyme", "?", "Distance inconnue"];
 	const formattedData = {
-		informationList: ["Anonyme", "?", "Distance inconnue"],
+		informationList: informationArray,
 		hashtagsList: [],
 		images: getPlaceholders(NB_PLACEHOLDERS || 10, placeholderSrc),
 		username: null,
-		isPlaceholder: isDefaultPlaceholder,
+		isPlaceholder: isDefaultPlaceholder, // true si c'est l'objet placeholder global
 	};
 
+	// === ÉTAPE 3: DÉCISION MOCK DATA - Gestion du cas données nulles/inexistantes ===
+	// CAS 2: profileData est null/undefined → Retour immédiat avec mock data générique
 	if (!profileData) {
-		formattedData.isPlaceholder = true;
+		formattedData.isPlaceholder = true; // Forcer l'indicateur mock data
 		return formattedData;
 	}
 
-	// Real data processing - if we have real data, we're not using placeholders
+	// === ÉTAPE 4: DÉCISION MOCK DATA - Détermination si vraies données du serveur ===
+	// CAS 3: profileData a un _id → Vraies données du serveur
+	// CAS 4: profileData sans _id → Mock data avec contenu personnalisé
+	// Si pas d'_id, isPlaceholder reste à sa valeur initiale (true sauf si données du serveur)
 	if (profileData._id) {
-		formattedData.isPlaceholder = false;
+		formattedData.isPlaceholder = false; // Vraies données confirmées
 	}
 
-	// Username
+	// === ÉTAPE 5: Traitement du nom d'utilisateur ===
+	// Fonctionne pour vraies données ET mock data avec username
 	if (profileData.username) {
-		formattedData.informationList[0] = profileData.username;
+		informationArray[0] = profileData.username;
 	}
 
-	// Age
+	// === ÉTAPE 6: Calcul et formatage de l'âge ===
+	// Fonctionne pour vraies données ET mock data avec birthdate
 	if (profileData.birthdate) {
+		// Création des objets Date pour le calcul
 		const birthDate = new Date(profileData.birthdate);
 		const today = new Date();
+
+		// Calcul de l'âge de base (différence d'années)
 		let age = today.getFullYear() - birthDate.getFullYear();
+
+		// Ajustement si l'anniversaire n'a pas encore eu lieu cette année
 		const monthDiff = today.getMonth() - birthDate.getMonth();
 		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-			age--;
+			age = age - 1;
 		}
-		formattedData.informationList[1] = age.toString();
+
+		// Assignation de l'âge formaté
+		informationArray[1] = age.toString();
 	}
 
-	// Distance
+	// === ÉTAPE 7: Traitement de la distance ===
+	// Fonctionne pour vraies données ET mock data, avec validation anti-NaN
 	if (profileData.distance && !profileData.distance.includes("NaN")) {
-		formattedData.informationList[2] = profileData.distance;
+		informationArray[2] = profileData.distance;
 	}
 
-	// Photos
+	// === ÉTAPE 8: Traitement des photos du profil ===
+	// Remplace les images placeholder si des vraies photos sont disponibles
 	if (profileData.photoList && profileData.photoList.length > 0) {
 		formattedData.images = getAllPhotosFromProfile(profileData, placeholderSrc);
 	}
 
-	// Hashtags
+	// === ÉTAPE 9: Extraction et formatage des hashtags (goûts favoris) ===
+	// Fonctionne pour vraies données ET mock data avec tastesList
 	if (profileData.tastesList && profileData.tastesList.length > 0) {
-		formattedData.hashtagsList = profileData.tastesList.filter((taste) => taste.star === true).map((taste) => taste.value);
+		// Filtrage des goûts marqués comme favoris (star === true)
+		const filteredTastes = [];
+		for (let i = 0; i < profileData.tastesList.length; i++) {
+			if (profileData.tastesList[i].star === true) {
+				filteredTastes.push(profileData.tastesList[i].value);
+			}
+		}
+		formattedData.hashtagsList = filteredTastes;
 	}
 
+	// === ÉTAPE 10: Retour des données formatées ===
+	// formattedData.isPlaceholder indique le type final de données utilisées
 	return formattedData;
 }
 
