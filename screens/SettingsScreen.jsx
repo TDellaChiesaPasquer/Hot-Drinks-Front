@@ -243,7 +243,7 @@ export default function ReglagesScreen() {
 
 			{/* Modale -- Supprimer le compte */}
 			<BaseModal visible={showDeleteModal} onRequestClose={() => setShowDeleteModal(false)} title="Supprimer le compte">
-				<Text style={styles.modalWarn}>Es-tu sûr.e de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes tes données (images, informations, conversations...).</Text>
+				<Text style={styles.modalWarn}>Es-tu sûr.e de vouloir supprimer ton compte ? Cette action est irréversible et supprimera toutes tes données (informations, matchs, conversations...).</Text>
 				<View style={styles.modalRow}>
 					<SecondaryButton label="Annuler" onPress={() => setShowDeleteModal(false)} />
 					<DangerButton label={deleteLoading ? "" : "Supprimer"} onPress={confirmDelete} disabled={deleteLoading}>
