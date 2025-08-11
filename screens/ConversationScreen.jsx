@@ -33,7 +33,6 @@ export default function ({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const keyboard = useAnimatedKeyboard();
-  console.log(keyboard.state.value)
   const keyboardStyleBottom = useAnimatedStyle(() => ({
     height: Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66
   }));
@@ -44,9 +43,9 @@ export default function ({ navigation, route }) {
   const [sendDisabled, setSendDisabled] = useState(false);
   const [modalBlockVisible, setModalBlockVisible] = useState(false);
   const [blockDisabled, setBlockDisabled] = useState(false);
-  const conversation = user.user.conversationList.find(
+  const conversation = user.user ? user.user.conversationList.find(
     (x) => String(x._id) === String(route.params._id)
-  );
+  ) : null;
   const messageList = conversation?.messageList || [];
   const otherUserNumber = route.params?.otherUserNumber || 1;
   useEffect(() => {
@@ -265,7 +264,6 @@ export default function ({ navigation, route }) {
                 multiline={true}
                 textAlignVertical={"vertical"}
                 onFocus={() => scrollViewRef.current.scrollToEnd({ animated: true })}
-                onBlur={() => console.log('test2')}
               />
               
             </View>
@@ -474,6 +472,7 @@ const styles = StyleSheet.create({
     width: width,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    flexShrink: 1
+    flexShrink: 1,
+    height: '100%'
   }
 });

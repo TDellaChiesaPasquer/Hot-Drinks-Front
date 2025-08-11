@@ -72,7 +72,6 @@ export default function ({ navigation }) {
           }
         })
         const data2 = await response2.json();
-        console.log(data2.user)
         setValidateDisabled(false);
         setEmailVisible(false);
         if (!data2.user.birthdate) {
