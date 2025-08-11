@@ -291,7 +291,6 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 	},
 
-	// Nouveau: bouton d’accès aux infos (flèche haut)
 	fabContainer: {
 		position: "absolute",
 		right: 16,
