@@ -133,13 +133,12 @@ export default function SwipeScreen(props) {
 		const profile = profileList[cardIndexInList];
 
 		// Vérifier si l'utilisateur actuel a été superliké par ce profil
-		let isSuperliked =
+		const isSuperliked =
 			profile &&
 			profile.superlikesList &&
 			profile.superlikesList.some(function (superlikerId) {
 				return String(superlikerId) === thisUserId;
 			});
-		isSuperliked = true;
 		return (
 			<View style={[styles.card, isSuperliked && styles.cardSuperliked]}>
 				<SwipeContainer profile={profile} onChoice={handleUserChoice} />
