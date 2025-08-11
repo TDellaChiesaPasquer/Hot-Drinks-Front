@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		backgroundColor: "white",
 		backfaceVisibility: "hidden",
-    boxShadow: "0 2px 3px #896761",
+		boxShadow: "0 2px 3px #896761",
 	},
 	card: {
 		borderRadius: 20,
