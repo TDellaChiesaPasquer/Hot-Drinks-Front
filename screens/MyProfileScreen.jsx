@@ -16,6 +16,7 @@ import { setAnswer, toggleStar, setAllTastes } from "../reducers/user";
 import DropDownComponent from "../components/DropDownComponent";
 import Swiper from "react-native-swiper";
 import { Image } from "expo-image";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 const { width, height } = Dimensions.get("window");
 
@@ -155,46 +156,15 @@ export default function MyProfile({ navigation }) {
           dispatch(
             setAnswer({ id: data.id, label: data.label, value: item.value })
           );
-          //   setTastesList((prev) => {
-          //     const copy = { ...prev };
-          //     const starValue = copy[data.id] ? copy[data.id].star : false;
-
-          //     copy[data.id] = {
-          //       label: item.label,
-          //       value: item.value,
-          //       star: starValue,
-          //     };
-          //     return copy;
-          //   });
         }}
         onToggleStar={(next) => {
           dispatch(toggleStar({ id: data.id, next }));
-          //   setTastesList((prev) => {
-          //     const copy = { ...prev };
-          //     const labelValue = copy[data.id] ? copy[data.id].label : null;
-          //     const valueValue = copy[data.id] ? copy[data.id].value : null;
-
-          //     copy[data.id] = {
-          //       label: labelValue,
-          //       value: valueValue,
-          //       star: next,
-          //     };
-          //     return copy;
-          //   });
         }}
       />
     );
   });
 
   //_____________________________________________________HASHTAGS_____________________________________________
-
-  //   let starredTags = [];
-  //   for (let id in tastesList) {
-  //     const item = tastesList[id];
-  //     if (item && item.value && item.star) {
-  //       starredTags.push({ id: id, value: item.value });
-  //     }
-  //   }
 
   const starredTags = [];
   for (const key in tastesById) {
@@ -203,20 +173,18 @@ export default function MyProfile({ navigation }) {
       starredTags.push(t.value);
     }
   }
-  // .filter((e) => e && e.star && e.value)
-  // .map((e) => e.value);
 
   //___________________________________________________________SAUVEGARDE TASTES________________________________________
   const saveAllTastes = async () => {
     const tastesList = dataTaste;
-    await fetch(process.env.EXPO_PUBLIC_IP + '/users/addAllTastes', {
-      method: 'POST',
+    await fetch(process.env.EXPO_PUBLIC_IP + "/users/addAllTastes", {
+      method: "POST",
       headers: {
         authorization: token,
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ tastesList})
-    })
+      body: JSON.stringify({ tastesList }),
+    });
   };
 
   return (
@@ -233,6 +201,11 @@ export default function MyProfile({ navigation }) {
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 160 }}
         >
+          <View style={styles.iconContainer}>
+            <TouchableOpacity style={styles.modifyIcon}>
+              <FontAwesome5 name="pen" size={15} color="white" />
+            </TouchableOpacity>
+          </View>
           <Swiper
             style={styles.caroussel}
             loop={true}
@@ -261,10 +234,7 @@ export default function MyProfile({ navigation }) {
               </View>
             ))}
           </View>
-          {/* <Image
-        source={require("../assets/images/boat.png")}
-        style={styles.imageTest}
-      /> */}
+
           {dropDownQuestion}
 
           <TouchableOpacity
@@ -290,6 +260,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
     fontWeight: "bold",
+    marginTop: 15,
   },
 
   scrollContainer: {
@@ -298,15 +269,38 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  // imageTest: {
-  //   height: 100,
-  //   width: 100,
-  // },
-
   scrollView: {
     backgroundColor: "#F5EBE6",
     height: "100%",
     width: "100%",
+  },
+
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: "100%",
+    backgroundColor: "#965A51",
+    overflow: "hidden",
+    justifyContent: "flex-end",
+    // backgroundColor: "blue",
+    alignItems: "flex-end",
+    // paddingRight: 10,
+    position: "absolute",
+    zIndex: 1,
+    top: 35,
+    right: 13,
+    // boxShadow: "0 2px 3px #BC8D85",
+  },
+
+  modifyIcon: {
+    justifyContent: "flex-end",
+    // backgroundColor: "blue",
+    alignItems: "flex-end",
+    paddingRight: 20,
+    position: "absolute",
+    zIndex: 999,
+    top: 13,
+    right: -7,
   },
 
   caroussel: {
@@ -353,6 +347,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginHorizontal: 16,
     marginBottom: 12,
+    zIndex: 3,
   },
 
   tag: {
