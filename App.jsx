@@ -193,19 +193,14 @@ const MyProfileNav = () => {
           let icon;
 
           if (route.name === "MyProfile") {
-            // iconName = "user";
             icon = <Feather name="user" size={24} color="#965A51" />;
-            // icon = <Feather name="user" size={30} color={color} />;
           } else if (route.name === "Preferences") {
-            // iconName = "heart";
             icon = <FontAwesome name="heart-o" size={24} color="#965A51" />;
           } else if (route.name === "Settings") {
-            // iconName = "gear";
             icon = <MaterialIcons name="settings" size={24} color="#965A51" />;
           }
 
           return icon;
-          // <FontAwesome name={iconName} size={size} color={color} />;
         },
 
         tabBarActiveTintColor: "#965A51",
