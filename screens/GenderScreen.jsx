@@ -1,14 +1,5 @@
 import { useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
@@ -19,169 +10,105 @@ import { BackHandler } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 export default function ({ navigation }) {
-  const [error, setError] = useState("");
-  const [jeSuis, setJeSuis] = useState("");
-  const [jeRecherche, setJeRecherche] = useState("");
-  const [disabled, setDisabled] = useState(false);
-  const dispatch = useDispatch();
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        return true;
-      };
-      const subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
-        onBackPress
-      );
+	const [error, setError] = useState("");
+	const [jeSuis, setJeSuis] = useState("");
+	const [jeRecherche, setJeRecherche] = useState("");
+	const [disabled, setDisabled] = useState(false);
+	const dispatch = useDispatch();
+	useFocusEffect(
+		useCallback(() => {
+			const onBackPress = () => {
+				return true;
+			};
+			const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-      return () => subscription.remove();
-    }, [])
-  );
-  const sanitizeInputs = () => {
-    setDisabled(true);
-    if (jeSuis === "") {
-      setError("Indiquez votre genre");
-      setDisabled(false);
-      return;
-    }
-    if (jeRecherche === "") {
-      setError("Indiquez votre cible");
-      setDisabled(false);
-      return;
-    }
-    dispatch(addTempInfo({ gender: jeSuis, orientation: jeRecherche }));
-    navigation.navigate("RelationScreen");
-  };
-  return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <HeaderBeginning />
-        <Text style={styles.inputTitle}>Je suis</Text>
-        <View style={styles.multipleContainer}>
-          <TouchableOpacity
-            style={[
-              styles.boutonChoixMultiple,
-              { backgroundColor: jeSuis === "Homme" ? "#BC8D85" : "#FFF5F0" },
-            ]}
-            onPress={() => setJeSuis("Homme")}
-          >
-            <Text
-              style={[
-                styles.boutonChoixMultipleText,
-                { color: jeSuis === "Homme" ? "#F5EBE6" : "#965A51" },
-              ]}
-            >
-              Homme
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.boutonChoixMultiple,
-              { backgroundColor: jeSuis === "Femme" ? "#BC8D85" : "#FFF5F0" },
-            ]}
-            onPress={() => setJeSuis("Femme")}
-          >
-            <Text
-              style={[
-                styles.boutonChoixMultipleText,
-                { color: jeSuis === "Femme" ? "#F5EBE6" : "#965A51" },
-              ]}
-            >
-              Femme
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.boutonChoixMultiple,
-              {
-                backgroundColor:
-                  jeSuis === "Non binaire" ? "#BC8D85" : "#FFF5F0",
-              },
-            ]}
-            onPress={() => setJeSuis("Non binaire")}
-          >
-            <Text
-              style={[
-                styles.boutonChoixMultipleText,
-                { color: jeSuis === "Non binaire" ? "#F5EBE6" : "#965A51" },
-              ]}
-            >
-              Non binaire
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.inputTitle}>Je recherche</Text>
-        <View style={styles.multipleContainer}>
-          <TouchableOpacity
-            style={[
-              styles.boutonChoixMultiple,
-              {
-                backgroundColor:
-                  jeRecherche === "Homme" ? "#BC8D85" : "#FFF5F0",
-              },
-            ]}
-            onPress={() => setJeRecherche("Homme")}
-          >
-            <Text
-              style={[
-                styles.boutonChoixMultipleText,
-                { color: jeRecherche === "Homme" ? "#F5EBE6" : "#965A51" },
-              ]}
-            >
-              Homme
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.boutonChoixMultiple,
-              {
-                backgroundColor:
-                  jeRecherche === "Femme" ? "#BC8D85" : "#FFF5F0",
-              },
-            ]}
-            onPress={() => setJeRecherche("Femme")}
-          >
-            <Text
-              style={[
-                styles.boutonChoixMultipleText,
-                { color: jeRecherche === "Femme" ? "#F5EBE6" : "#965A51" },
-              ]}
-            >
-              Femme
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.boutonChoixMultiple,
-              {
-                backgroundColor: jeRecherche === "Tout" ? "#BC8D85" : "#FFF5F0",
-              },
-            ]}
-            onPress={() => setJeRecherche("Tout")}
-          >
-            <Text
-              style={[
-                styles.boutonChoixMultipleText,
-                { color: jeRecherche === "Tout" ? "#F5EBE6" : "#965A51" },
-              ]}
-            >
-              Tout
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.bottom}>
-          <Text style={styles.error}>{error}</Text>
-          <TouchableOpacity
-            style={styles.bouton}
-            onPress={() => sanitizeInputs()}
-            disabled={disabled}
-          >
-            <Text style={styles.boutonText}>Continuer</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
+			return () => subscription.remove();
+		}, [])
+	);
+	const sanitizeInputs = () => {
+		setDisabled(true);
+		if (jeSuis === "") {
+			setError("Indiquez votre genre");
+			setDisabled(false);
+			return;
+		}
+		if (jeRecherche === "") {
+			setError("Indiquez votre cible");
+			setDisabled(false);
+			return;
+		}
+		dispatch(addTempInfo({ gender: jeSuis, orientation: jeRecherche }));
+		navigation.navigate("RelationScreen");
+	};
+	return (
+		<SafeAreaProvider>
+			<SafeAreaView style={styles.container}>
+				<HeaderBeginning />
+				<Text style={styles.inputTitle}>Je suis</Text>
+				<View style={styles.multipleContainer}>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: jeSuis === "Homme" ? "#BC8D85" : "#FFF5F0" }]} onPress={() => setJeSuis("Homme")}>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeSuis === "Homme" ? "#F5EBE6" : "#965A51" }]}>Homme</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: jeSuis === "Femme" ? "#BC8D85" : "#FFF5F0" }]} onPress={() => setJeSuis("Femme")}>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeSuis === "Femme" ? "#F5EBE6" : "#965A51" }]}>Femme</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[
+							styles.boutonChoixMultiple,
+							{
+								backgroundColor: jeSuis === "Non binaire" ? "#BC8D85" : "#FFF5F0",
+							},
+						]}
+						onPress={() => setJeSuis("Non binaire")}
+					>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeSuis === "Non binaire" ? "#F5EBE6" : "#965A51" }]}>Non binaire</Text>
+					</TouchableOpacity>
+				</View>
+				<Text style={styles.inputTitle}>Je recherche</Text>
+				<View style={styles.multipleContainer}>
+					<TouchableOpacity
+						style={[
+							styles.boutonChoixMultiple,
+							{
+								backgroundColor: jeRecherche === "Homme" ? "#BC8D85" : "#FFF5F0",
+							},
+						]}
+						onPress={() => setJeRecherche("Homme")}
+					>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeRecherche === "Homme" ? "#F5EBE6" : "#965A51" }]}>Homme</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[
+							styles.boutonChoixMultiple,
+							{
+								backgroundColor: jeRecherche === "Femme" ? "#BC8D85" : "#FFF5F0",
+							},
+						]}
+						onPress={() => setJeRecherche("Femme")}
+					>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeRecherche === "Femme" ? "#F5EBE6" : "#965A51" }]}>Femme</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[
+							styles.boutonChoixMultiple,
+							{
+								backgroundColor: jeRecherche === "Tout" ? "#BC8D85" : "#FFF5F0",
+							},
+						]}
+						onPress={() => setJeRecherche("Tout")}
+					>
+						<Text style={[styles.boutonChoixMultipleText, { color: jeRecherche === "Tout" ? "#F5EBE6" : "#965A51" }]}>Tout</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.bottom}>
+					<Text style={styles.error}>{error}</Text>
+					<TouchableOpacity style={styles.bouton} onPress={() => sanitizeInputs()} disabled={disabled}>
+						<Text style={styles.boutonText}>Continuer</Text>
+					</TouchableOpacity>
+				</View>
+			</SafeAreaView>
+		</SafeAreaProvider>
+	);
 }
 
 const styles = StyleSheet.create({
@@ -189,7 +116,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#DFC9B4",
 		alignItems: "center",
-        position: 'relative',
+		position: "relative",
 	},
 	bouton: {
 		alignItems: "center",
@@ -234,7 +161,7 @@ const styles = StyleSheet.create({
 	inputTitle: {
 		color: "#965A51",
 		fontWeight: "bold",
-    marginTop: 30
+		marginTop: 30,
 	},
 	inputSub: {
 		color: "#BC8D85",
@@ -248,7 +175,7 @@ const styles = StyleSheet.create({
 		width: "90%",
 	},
 	error: {
-    textAlign: 'center',
+		textAlign: "center",
 		color: "red",
 	},
 	boutonChoixMultiple: {
@@ -258,7 +185,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		boxShadow: "0 2px 3px #896761",
-        marginVertical: 30
+		marginVertical: 30,
 	},
 	boutonChoixMultipleText: {
 		fontWeight: "bold",
@@ -272,8 +199,8 @@ const styles = StyleSheet.create({
 		width: "90%",
 		alignItems: "center",
 	},
-  bottom: {
-    position: "absolute",
-    top: height * 0.7,
-  },
+	bottom: {
+		position: "absolute",
+		top: height * 0.7,
+	},
 });
