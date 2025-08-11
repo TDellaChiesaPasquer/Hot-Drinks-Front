@@ -118,7 +118,7 @@ export default function ({ navigation }) {
 						type={"email"}
 						value={email}
 						onChangeText={(value) => setEmail(value)}
-						keyboardType="email"
+						keyboardType="email-address"
 					/>
 					<TextInput
 						style={styles.input}
