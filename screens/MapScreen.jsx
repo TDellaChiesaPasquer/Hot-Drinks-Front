@@ -44,34 +44,60 @@ export default function App({ navigation }) {
 		}, [])
 	);
 
-	useEffect(() => {
-		(async () => {
-			console.log("map charged");
+useEffect(() => {
+	checkLocationAndShowMap();
+}, []);
 
-			const { status } = await Location.requestForegroundPermissionsAsync();
+const checkLocationAndShowMap = async () => {
+	console.log("map charged");
 
-			if (status === "granted") {
-				console.log("permission granted");
+	// Étape 1 : Demander la permission d'utiliser la localisation
+	const permission = await Location.requestForegroundPermissionsAsync();
 
-				const location = await Location.getCurrentPositionAsync({});
-				console.log("location retrieved");
+	if (permission.status !== "granted") {
+		console.log("Permission refusée");
+		setPermission(true); // Montrer la carte pour sélection manuelle
+		return;
+	}
 
-				console.log(location);
-				const { latitude, longitude } = location.coords;
-				setMyLocation({
-					latitude,
-					longitude,
-				});
-				myLocationRef.current = {
-					latitude,
-					longitude,
-				};
-				getGeolocalisation();
-			} else {
-				setPermission(true);
-			}
-		})();
-	}, []);
+	console.log("Permission accordée");
+
+	// Étape 2 : Vérifier si la localisation est activée sur le téléphone
+	const locationEnabled = await Location.hasServicesEnabledAsync();
+
+	if (!locationEnabled) {
+		console.log("Localisation désactivée");
+		setError("Veuillez activer la localisation dans les paramètres");
+		setPermission(true); // Montrer la carte pour sélection manuelle
+		return;
+	}
+
+	console.log("Localisation activée");
+
+	// Étape 3 : Essayer d'obtenir la position actuelle
+	try {
+		const location = await Location.getCurrentPositionAsync({
+			accuracy: Location.Accuracy.Balanced,
+		});
+
+		console.log("Position trouvée", location);
+
+		// Sauvegarder la position
+		const userPosition = {
+			latitude: location.coords.latitude,
+			longitude: location.coords.longitude,
+		};
+
+		setMyLocation(userPosition);
+		myLocationRef.current = userPosition;
+		setPermission(true); // Montrer la carte
+		getGeolocalisation(); // Envoyer au serveur
+	} catch (error) {
+		console.log("Erreur pour obtenir la position:", error);
+		setError("Impossible d'obtenir votre position. Choisissez sur la carte.");
+		setPermission(true); // Montrer la carte pour sélection manuelle
+	}
+};
 
 	// ____________________________________FETCH GEOLOC_______________________________
 	const getGeolocalisation = async () => {
