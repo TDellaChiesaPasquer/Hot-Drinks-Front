@@ -114,6 +114,7 @@ export default function ({ navigation }) {
         </ScrollView>
       </View>
       <Text style={styles.title}>Messages</Text>
+      {user.user.conversationList.length === 0 && <Text>Vos conversations et matchs se trouveront ici</Text>}
       <ScrollView contentContainerStyle={styles.conversationList}>
         {conversationHTML}
       </ScrollView>

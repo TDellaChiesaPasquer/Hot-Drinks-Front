@@ -165,8 +165,8 @@ const MainTabNav = () => {
           tabBarIconStyle: styles.tabBarIcon,
         })}
       >
-        <Tab.Screen name="SwipeNav" component={SwipeNav} />
         <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
+        <Tab.Screen name="SwipeNav" component={SwipeNav} />
         <Tab.Screen
           name="MessagerieNav"
           component={MessagerieNav}
@@ -208,11 +208,11 @@ const MyProfileNav = () => {
         tabBarIcon: ({ color, size }) => {
           let icon;
 
-          if (route.name === "MyProfile") {
+          if (route.name === "Mon profil") {
             icon = <Feather name="user" size={24} color={color} />;
-          } else if (route.name === "Preferences") {
+          } else if (route.name === "Préférences") {
             icon = <FontAwesome name="heart-o" size={24} color={color} />;
-          } else if (route.name === "Settings") {
+          } else if (route.name === "Réglages") {
             icon = <MaterialIcons name="settings" size={24} color={color} />;
           }
 
@@ -220,13 +220,16 @@ const MyProfileNav = () => {
         },
 
         tabBarActiveTintColor: "#965A51",
-        tabBarInactiveTintColor: "#BC8D85",
+        tabBarInactiveTintColor: "#CAB4B0",
+        tabBarStyle: {backgroundColor: "#965A51"},
+        tabBarIndicatorStyle: styles.tabBarIndicator,
         headerShown: false,
+        swipeEnabled: false,
       })}
     >
-      <TopTab.Screen name="MyProfile" component={MyProfileScreen} />
-      <TopTab.Screen name="Preferences" component={PreferencesScreen} />
-      <TopTab.Screen name="Settings" component={SettingsScreen} />
+      <TopTab.Screen name="Mon profil" component={MyProfileScreen} />
+      <TopTab.Screen name="Préférences" component={PreferencesScreen} />
+      <TopTab.Screen name="Réglages" component={SettingsScreen} />
     </TopTab.Navigator>
   );
 };

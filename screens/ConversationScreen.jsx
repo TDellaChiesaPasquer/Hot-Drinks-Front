@@ -21,7 +21,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import Animated, {
   useAnimatedKeyboard,
   useAnimatedStyle,
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     height: 66,
   },
   goBack: {
-    marginHorizontal: 10,
+    marginHorizontal: 25,
   },
   vu: {
     color: "#965A51",
@@ -415,6 +415,7 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: "row",
     alignItems: "center",
+    marginVertical: 10,
   },
   headerRight: {
     flexDirection: "row",

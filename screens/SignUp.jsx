@@ -105,7 +105,7 @@ export default function ({ navigation }) {
           return;
         }
         dispatch(addInfos(data2.user));
-        navigation.navigate("MainTabNav");
+        navigation.navigate("MainTabNav", { screen: "SwipeNav" });
         return;
       }
       setValidateDisabled(false);
@@ -135,10 +135,10 @@ export default function ({ navigation }) {
           </Pressable>
           <Text style={styles.modalTitle}>Create account</Text>
           <TextInput
-            type="email"
             style={styles.input}
             placeholder="Email"
             placeholderTextColor={"#965A51"}
+            type={"email"}
             value={email}
             onChangeText={(value) => setEmail(value)}
           />
@@ -150,6 +150,7 @@ export default function ({ navigation }) {
             secureTextEntry={true}
             value={password}
             onChangeText={(value) => setPassword(value)}
+            keyboardType="email-adress"
           />
           <Text style={styles.error}>{error}</Text>
           <TouchableOpacity
