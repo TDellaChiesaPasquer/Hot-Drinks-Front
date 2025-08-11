@@ -8,6 +8,7 @@ const initialState = {
     tempInfos: null,
     tempPhotosList: [],
     tastesById: {},
+    // places: [],
   },
 };
 
@@ -117,6 +118,16 @@ export const userSlice = createSlice({
       state.value.user.superlikeNumber = superlikeNumber + 1;
     }
   },
+
+  // addPlace: (state, action) => {
+  //   state.value.places.push(action.payload);
+  // },
+
+  // removePlace: (state, action) => {
+  //   state.value.places = state.value.places.filter(
+  //     (elem) => elem.coord !== action.payload
+  //   );
+  // },
 });
 
 export const {
@@ -131,5 +142,7 @@ export const {
   setAnswer,
   toggleStar,
   newSuperlike
+  // addPlace,
+  // removePlace,
 } = userSlice.actions;
 export default userSlice.reducer;
