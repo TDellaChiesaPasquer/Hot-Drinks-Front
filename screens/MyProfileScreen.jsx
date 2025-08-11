@@ -14,15 +14,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { Dropdown } from "react-native-element-dropdown";
 import { setAnswer, toggleStar, setAllTastes } from "../reducers/user";
 import DropDownComponent from "../components/DropDownComponent";
+import Swiper from "react-native-swiper";
+import { Image } from "expo-image";
 
 const { width, height } = Dimensions.get("window");
 
 export default function MyProfile({ navigation }) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.user.value.token);
+  const dataPhoto = useSelector((state) => state.user.value);
   const tastesById = useSelector((state) => state.user.value.tastesById) || {};
   const [tastesList, setTastesList] = useState({});
   const [hashtagList, setHashtagList] = useState([]);
+  const [imagesList, setImagesList] = useState([]);
+
+  //___________________________________________________________CAROUSSEL________________________________________________________________
+  const photoList = dataPhoto.user.photoList;
+  console.log(dataPhoto.user.photoList);
+
+  //__________________________________________________________QUESTIONS DATA_________________________________________________________
 
   const questions = [
     {
@@ -274,22 +284,27 @@ export default function MyProfile({ navigation }) {
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 160 }}
         >
-          <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
-          </Text>
+          <Swiper
+            style={styles.caroussel}
+            loop={true}
+            showsButtons
+            nextButton={<Text style={styles.arrow}>›</Text>}
+            prevButton={<Text style={styles.arrow}>‹</Text>}
+            activeDotColor="white"
+            scrollEnabled={false}
+          >
+            {photoList.map(function (url, i) {
+              console.log(url);
+              return (
+                <Image
+                  key={i}
+                  source={url}
+                  style={styles.image}
+                  contentFit="cover"
+                />
+              );
+            })}
+          </Swiper>
           <View style={styles.tagContainer}>
             {starredTags.map((tag, idx) => (
               <View key={idx} style={styles.tag}>
@@ -297,7 +312,10 @@ export default function MyProfile({ navigation }) {
               </View>
             ))}
           </View>
-
+          {/* <Image
+        source={require("../assets/images/boat.png")}
+        style={styles.imageTest}
+      /> */}
           {dropDownQuestion}
 
           <TouchableOpacity
@@ -331,10 +349,31 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
+  // imageTest: {
+  //   height: 100,
+  //   width: 100,
+  // },
+
   scrollView: {
     backgroundColor: "#F5EBE6",
     height: "100%",
     width: "100%",
+  },
+
+  caroussel: {
+    height: 500,
+    backgroundColor: "lightblue",
+    marginVertical: 16,
+  },
+
+  image: {
+    height: "100%",
+    width: "100%",
+  },
+
+  arrow: {
+    color: "white",
+    fontSize: 100,
   },
 
   validationButton: {
