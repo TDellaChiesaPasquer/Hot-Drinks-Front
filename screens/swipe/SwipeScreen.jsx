@@ -150,6 +150,7 @@ export default function SwipeScreen(props) {
 					backgroundColor="transparent"
 					onSwipedLeft={(cardIndex) => handleSwipe(cardIndex, "Dislike")}
 					onSwipedRight={(cardIndex) => handleSwipe(cardIndex, "Like")}
+          onSwipedTop={(cardIndex) => handleSwipe(cardIndex, "SuperLike")}
 					verticalSwipe={false}
 				/>
 			</View>
