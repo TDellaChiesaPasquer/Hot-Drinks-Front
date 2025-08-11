@@ -339,7 +339,7 @@ const colors = {
 	bg: "#F3E6DF",
 	bgSecondary: "#F7F0EC",
 	bgTertiary: "#E9D5CD",
-	title: "#58403bff",
+	title: "#965A51",
 	text: "#6F4A42",
 	placeholder: "#9f8f88",
 	smallBtnBg: "#B4877C",
@@ -379,17 +379,17 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		flex: 1,
-		paddingHorizontal: "5%", // Plus relatif que 16px fixe
+		paddingHorizontal: "5%", // Pdlus relatif que 16px fixe
 		paddingVertical: "3%",
 	},
 
 	// === TYPOGRAPHIE ===
 	title: {
-		fontSize: 28,
-		fontWeight: "800",
-		color: colors.title,
+		color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 18,
+		marginVertical: 10,
 		textAlign: "center",
-		marginBottom: "5%",
 	},
 	modalTitle: {
 		fontSize: 18,
