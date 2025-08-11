@@ -1,4 +1,13 @@
-import { StyleSheet, Modal, TextInput, View, Pressable, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Modal,
+  TextInput,
+  View,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import MapView from "react-native-maps";
 import { Dimensions } from "react-native";
 import { Marker } from "react-native-maps";
@@ -110,89 +119,102 @@ export default function App({ navigation }) {
 		myLocationRef.current = newCity;
 	};
 
-	return (
-		//---------------------------------LOCALISATION INITIALE------------------------------------
-		<SafeAreaView style={styles.container}>
-			<HeaderBeginning />
-			<Text style={styles.textStyle}>AJOUTE TA POSITION</Text>
-			{permission && (
-				<MapView
-					zoomEnabled={true}
-					// scrollEnabled={true}
-					// showsScale={true}
-					initialRegion={{
-						latitude: 48.88,
-						longitude: 2.3,
-						latitudeDelta: 0.0222,
-						longitudeDelta: 0.0222,
-					}}
-					style={styles.map}
-					onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)}
-					disabled={disabled}
-				>
-					{givenPosition && (
-						<Marker
-							coordinate={{
-								latitude: givenPosition.latitude,
-								longitude: givenPosition.longitude,
-							}}
-							pinColor="#78010bff"
-						/>
-					)}
-				</MapView>
-			)}
-			<TouchableOpacity style={styles.button} onPress={() => getGeolocalisation()} disabled={disabled}>
-				<Text style={styles.boutonText}>VALIDER</Text>
-			</TouchableOpacity>
-		</SafeAreaView>
-	);
+  return (
+    //---------------------------------LOCALISATION INITIALE------------------------------------
+    <SafeAreaView style={styles.container}>
+      <HeaderBeginning />
+      <Text style={styles.textStyle}>AJOUTE TA POSITION</Text>
+      {permission && (
+        <MapView
+          zoomEnabled={true}
+          // scrollEnabled={true}
+          // showsScale={true}
+          initialRegion={{
+            latitude: 48.88,
+            longitude: 2.3,
+            latitudeDelta: 0.0222,
+            longitudeDelta: 0.0222,
+          }}
+          style={styles.map}
+          onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)}
+          disabled={disabled}
+        >
+          {givenPosition && (
+            <Marker
+              coordinate={{
+                latitude: givenPosition.latitude,
+                longitude: givenPosition.longitude,
+              }}
+              pinColor="#78010bff"
+            />
+          )}
+        </MapView>
+      )}
+      <TouchableOpacity
+        style={[styles.button, disabled && styles.boutonDisabled]}
+        onPress={() => getGeolocalisation()}
+        disabled={disabled}
+      >
+        <Text style={styles.boutonText}>VALIDER</Text>
+        {disabled && <ActivityIndicator size="small" color="#FFFFFF" style={styles.loader} />}
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#DFC9B4",
-		// margin: 30,
+  container: {
+    flex: 1,
+    backgroundColor: "#DFC9B4",
+    // margin: 30,
+  },
+  textStyle: {
+    height: 35,
+    // width: ,
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#896761",
+    fontWeight: "800",
+    fontSize: 16,
+    textAlign: "center",
+    backgroundColor: "#ffffff39",
+    marginHorizontal: 20,
+    marginTop: 20,
+    // boxShadow: "0 2px 3px #499a76c0",
+    paddingTop: 7,
+  },
+  map: {
+    // width: '75%',
+    height: "70%",
+    marginHorizontal: 20,
+    marginTop: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 2px 3px #896761",
+    borderRadius: 15,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 36,
+    borderRadius: 15,
+    boxShadow: "0 2px 3px #896761",
+    // width: width * 0.7,
+    backgroundColor: "#965a51c0",
+    marginHorizontal: 70,
+    marginTop: 50,
+  },
+  boutonText: {
+    fontWeight: "bold",
+    fontSize: 18,
+    color: "#F5EBE6",
+  },
+  boutonDisabled: {
+		backgroundColor: "#8b6762c0",
+		boxShadow: "0 1px 2px #976f68c0",
 	},
-	textStyle: {
-		height: 35,
-		// width: ,
-		alignItems: "center",
-		justifyContent: "center",
-		color: "#896761",
-		fontWeight: "800",
-		fontSize: 16,
-		textAlign: "center",
-		backgroundColor: "#ffffff39",
-		marginHorizontal: 20,
-		marginTop: 20,
-		// boxShadow: "0 2px 3px #499a76c0",
-		paddingTop: 7,
-	},
-	map: {
-		// width: '75%',
-		height: "70%",
-		marginHorizontal: 20,
-		marginTop: 5,
-		alignItems: "center",
-		justifyContent: "center",
-		boxShadow: "0 2px 3px #896761",
-		borderRadius: 15,
-	},
-	button: {
-		alignItems: "center",
-		justifyContent: "center",
-		height: 36,
-		borderRadius: 15,
-		boxShadow: "0 2px 3px #896761",
-		// width: width * 0.7,
-		backgroundColor: "#965a51c0",
-		marginHorizontal: 70,
-		marginTop: 50,
-	},
-	boutonText: {
-		fontWeight: "bold",
-		fontSize: 18,
-		color: "#F5EBE6",
+  loader: {
+		position: "absolute",
+		left: 10,
 	},
 });
