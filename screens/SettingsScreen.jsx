@@ -41,11 +41,11 @@ export default function ReglagesScreen() {
 	// Garde-fous avant les fetch
 	const guardNetwork = () => {
 		if (!BASE_URL) {
-			Alert.alert("Configuration requise", "EXPO_PUBLIC_IP est manquant. Définissez process.env.EXPO_PUBLIC_IP.");
+			console.log("Configuration requise", "EXPO_PUBLIC_IP est manquant. Définissez process.env.EXPO_PUBLIC_IP.");
 			return false;
 		}
 		if (!token) {
-			Alert.alert("Session requise", "Aucun token trouvé. Veuillez vous reconnecter.");
+			console.log("Session requise", "Aucun token trouvé. Il faut te reconnecter.");
 			return false;
 		}
 		return true;
@@ -55,7 +55,7 @@ export default function ReglagesScreen() {
 	const submitChangeEmail = async () => {
 		if (!guardNetwork()) return;
 		if (!newEmail) {
-			Alert.alert("Email requis", "Veuillez saisir un email.");
+			Alert.alert("Email requis", "Saisir un email.");
 			return;
 		}
 		setEmailLoading(true);
@@ -70,18 +70,18 @@ export default function ReglagesScreen() {
 			});
 			const data = await res.json();
 			if (!res.ok || data?.result === false) {
-				throw new Error(data?.error || "Erreur lors de la modification de l'email");
+				console.log(data?.error || "Erreur lors de la modification de l'email");
 			}
 			setShowEmailModal(false);
 			setNewEmail("");
-			Alert.alert("Succès", "Email modifié. Vous allez être déconnecté.", [
+			Alert.alert("Succès", "Email modifié. Tu va être déconnecté.", [
 				{
 					text: "OK",
 					onPress: () => dispatch(disconnect(navigation)),
 				},
 			]);
 		} catch (e) {
-			Alert.alert("Erreur", String(e.message || e));
+			console.log("Erreur", String(e.message || e));
 		} finally {
 			setEmailLoading(false);
 		}
@@ -110,19 +110,19 @@ export default function ReglagesScreen() {
 			});
 			const data = await res.json();
 			if (!res.ok || data?.result === false) {
-				throw new Error(data?.error || "Erreur lors de la modification du mot de passe");
+				console.log(data?.error || "Erreur lors de la modification du mot de passe");
 			}
 			setShowPasswordModal(false);
 			setCurrentPassword("");
 			setNewPassword("");
-			Alert.alert("Succès", "Mot de passe modifié. Vous allez être déconnecté.", [
+			Alert.alert("Succès", "Mot de passe modifié. Tu vas être déconnecté.", [
 				{
 					text: "OK",
 					onPress: () => dispatch(disconnect(navigation)),
 				},
 			]);
 		} catch (e) {
-			Alert.alert("Erreur", String(e.message || e));
+			console.log("Erreur", String(e.message || e));
 		} finally {
 			setPassLoading(false);
 		}
@@ -139,17 +139,17 @@ export default function ReglagesScreen() {
 			});
 			const data = await res.json();
 			if (!res.ok || data?.result === false) {
-				throw new Error(data?.error || "Erreur lors de la désactivation du compte");
+				console.log(data?.error || "Erreur lors de la désactivation du compte");
 			}
 			setShowDeactivateModal(false);
-			Alert.alert("Compte désactivé", "Votre compte a été désactivé. Vous allez être déconnecté.", [
+			Alert.alert("Compte désactivé", "Ton compte a été désactivé. Tu va être déconnecté.", [
 				{
 					text: "OK",
 					onPress: () => dispatch(disconnect(navigation)),
 				},
 			]);
 		} catch (e) {
-			Alert.alert("Erreur", String(e.message || e));
+			console.log("Erreur", String(e.message || e));
 		} finally {
 			setDeactivateLoading(false);
 		}
@@ -166,17 +166,17 @@ export default function ReglagesScreen() {
 			});
 			const data = await res.json();
 			if (!res.ok || data?.result === false) {
-				throw new Error(data?.error || "Erreur lors de la suppression du compte");
+				console.log(ata?.error || "Erreur lors de la suppression du compte");
 			}
 			setShowDeleteModal(false);
-			Alert.alert("Compte supprimé", "Votre compte a été définitivement supprimé.", [
+			Alert.alert("Compte supprimé", "Ton compte a été définitivement supprimé.", [
 				{
 					text: "OK",
 					onPress: () => dispatch(disconnect(navigation)),
 				},
 			]);
 		} catch (e) {
-			Alert.alert("Erreur", String(e.message || e));
+			console.log("Erreur", String(e.message || e));
 		} finally {
 			setDeleteLoading(false);
 		}
@@ -191,7 +191,7 @@ export default function ReglagesScreen() {
 					<SmallButton label="Changer l'email" onPress={() => setShowEmailModal(true)} />
 					<SmallButton label="Changer le mot de passe" onPress={() => setShowPasswordModal(true)} />
 					<SmallButtonDarkFirst label="Se déconnecter" onPress={() => setShowLogoutModal(true)} />
-					<SmallButtonDark label="Désactiver le compte (cache votre profil)" onPress={() => setShowDeactivateModal(true)} />
+					<SmallButtonDark label="Désactiver le compte" onPress={() => setShowDeactivateModal(true)} />
 					<SmallButtonDanger label="Supprimer le compte" onPress={() => setShowDeleteModal(true)} />
 				</View>
 			</ScrollView>
@@ -232,7 +232,7 @@ export default function ReglagesScreen() {
 
 			{/* Modale -- Désactiver le compte */}
 			<BaseModal visible={showDeactivateModal} onRequestClose={() => setShowDeactivateModal(false)} title="Désactiver le compte">
-				<Text style={styles.modalWarn}>Votre compte sera désactivé et votre profil ne sera plus présenté aux autres utilisateurs. Continuer ?</Text>
+				<Text style={styles.modalWarn}>Ton compte sera désactivé et ton profil ne sera plus présenté aux autres utilisateurs. Continuer ?</Text>
 				<View style={styles.modalRow}>
 					<SecondaryButton label="Annuler" onPress={() => setShowDeactivateModal(false)} />
 					<PrimaryButton label={deactivateLoading ? "" : "Désactiver"} onPress={confirmDeactivate} disabled={deactivateLoading}>
@@ -243,7 +243,7 @@ export default function ReglagesScreen() {
 
 			{/* Modale -- Supprimer le compte */}
 			<BaseModal visible={showDeleteModal} onRequestClose={() => setShowDeleteModal(false)} title="Supprimer le compte">
-				<Text style={styles.modalWarn}>Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera vos données.</Text>
+				<Text style={styles.modalWarn}>Es-tu sûr.e de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes tes données (images, informations, conversations...).</Text>
 				<View style={styles.modalRow}>
 					<SecondaryButton label="Annuler" onPress={() => setShowDeleteModal(false)} />
 					<DangerButton label={deleteLoading ? "" : "Supprimer"} onPress={confirmDelete} disabled={deleteLoading}>
@@ -254,7 +254,7 @@ export default function ReglagesScreen() {
 
 			{/* Modale -- Confirmer la déconnexion */}
 			<BaseModal visible={showLogoutModal} onRequestClose={() => setShowLogoutModal(false)} title="Se déconnecter">
-				<Text style={styles.modalWarn}>Voulez-vous vraiment vous déconnecter ?</Text>
+				<Text style={styles.modalWarn}>Veux-tu vraiment te déconnecter ?</Text>
 				<View style={styles.modalRow}>
 					<SecondaryButton label="Annuler" onPress={() => setShowLogoutModal(false)} />
 					<PrimaryButton label="Se déconnecter" onPress={logout} />
@@ -347,7 +347,7 @@ const colors = {
 	textSecondary: "#6F4A42",
 	white: "#FFFFFF",
 	smallBtn: "#B4877C",
-	smallBtnDark: "#6B4226",
+	smallBtnDark: "#965A51",
 	primary: "#8B5E55",
 	danger: "#D45248",
 	overlay: "rgba(0,0,0,0.35)",
