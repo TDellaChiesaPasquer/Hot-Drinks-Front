@@ -12,42 +12,40 @@ const { width, height } = Dimensions.get("window");
 export default function ({ navigation }) {
 	const [emailVisible, setEmailVisible] = useState(false);
 	const [email, setEmail] = useState("");
-  const [error, setError] = useState('');
+	const [error, setError] = useState("");
 	const [password, setPassword] = useState("");
 	const [validateDisabled, setValidateDisabled] = useState(false);
 	const dispatch = useDispatch();
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        return true;
-      };
-      const subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
-        onBackPress
-      );
+	
+	useFocusEffect(
+		useCallback(() => {
+			const onBackPress = () => {
+				return true;
+			};
+			const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-      return () => subscription.remove();
-    }, [])
-  );
+			return () => subscription.remove();
+		}, [])
+	);
 
 	const tryLogin = async () => {
 		try {
 			setValidateDisabled(true);
 			if (email === "" || !/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim.test(email)) {
-        setError('Remplissez une email valide');
+				setError("Remplissez une email valide");
 				setValidateDisabled(false);
 				return;
 			}
-      if (password.length < 8) {
-        setError('Votre mot de passe doit faire au moins 8 caractères');
+			if (password.length < 8) {
+				setError("Votre mot de passe doit faire au moins 8 caractères");
 				setValidateDisabled(false);
 				return;
-      }
-      if (password.length > 32) {
-        setError('Votre mot de passe doit faire au plus 32 caractères');
+			}
+			if (password.length > 32) {
+				setError("Votre mot de passe doit faire au plus 32 caractères");
 				setValidateDisabled(false);
-				return
-      }
+				return;
+			}
 			const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/signup", {
 				method: "POST",
 				headers: {
@@ -60,36 +58,36 @@ export default function ({ navigation }) {
 			});
 			const data = await response.json();
 			if (!data.result) {
-        setError(String(data.error));
+				setError(String(data.error));
 				setValidateDisabled(false);
 				return;
 			}
 			dispatch(addToken(data.token));
-      if (data.message === 'User is connected') {
-        const response2 = await fetch(process.env.EXPO_PUBLIC_IP + '/users/infos', {
-          headers: {
-            authorization: data.token
-          }
-        })
-        const data2 = await response2.json();
-        setValidateDisabled(false);
-        setEmailVisible(false);
-        if (!data2.user.birthdate) {
-          navigation.navigate('DateScreen');
-          return;
-        }
-        if (data2.user.photoList.length === 0) {
-          navigation.navigate('PhotoScreen');
-          return;
-        }
-        if (!data2.user.latitude) {
-          navigation.navigate('MapScreen');
-          return;
-        }
-        dispatch(addInfos(data2.user));
-        navigation.navigate('MainTabNav');
-        return;
-      }
+			if (data.message === "User is connected") {
+				const response2 = await fetch(process.env.EXPO_PUBLIC_IP + "/users/infos", {
+					headers: {
+						authorization: data.token,
+					},
+				});
+				const data2 = await response2.json();
+				setValidateDisabled(false);
+				setEmailVisible(false);
+				if (!data2.user.birthdate) {
+					navigation.navigate("DateScreen");
+					return;
+				}
+				if (data2.user.photoList.length === 0) {
+					navigation.navigate("PhotoScreen");
+					return;
+				}
+				if (!data2.user.latitude) {
+					navigation.navigate("MapScreen");
+					return;
+				}
+				dispatch(addInfos(data2.user));
+				navigation.navigate("MainTabNav");
+				return;
+			}
 			setValidateDisabled(false);
 			setEmailVisible(false);
 			navigation.navigate("DateScreen");
@@ -113,7 +111,15 @@ export default function ({ navigation }) {
 						<FontAwesome6 name="xmark" size={24} style={styles.crossModal} />
 					</Pressable>
 					<Text style={styles.modalTitle}>Create account</Text>
-					<TextInput style={styles.input} placeholder="Email" placeholderTextColor={"#965A51"} type={"email"} value={email} onChangeText={(value) => setEmail(value)} />
+					<TextInput
+						style={styles.input}
+						placeholder="Email"
+						placeholderTextColor={"#965A51"}
+						type={"email"}
+						value={email}
+						onChangeText={(value) => setEmail(value)}
+						keyboardType="email"
+					/>
 					<TextInput
 						style={styles.input}
 						placeholder="Password"
@@ -123,7 +129,7 @@ export default function ({ navigation }) {
 						value={password}
 						onChangeText={(value) => setPassword(value)}
 					/>
-          <Text style={styles.error}>{error}</Text>
+					<Text style={styles.error}>{error}</Text>
 					<TouchableOpacity style={styles.bouton} disabled={validateDisabled} onPress={() => tryLogin()}>
 						<Text style={styles.boutonText}>Connect</Text>
 					</TouchableOpacity>
@@ -148,7 +154,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#DFC9B4",
 		alignItems: "center",
-    justifyContent: 'center'
+		justifyContent: "center",
 	},
 	bouton: {
 		alignItems: "center",
@@ -220,8 +226,8 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		borderRadius: "100%",
 	},
-  error: {
-    color: "red",
-    textAlign: "center",
-  },
+	error: {
+		color: "red",
+		textAlign: "center",
+	},
 });
