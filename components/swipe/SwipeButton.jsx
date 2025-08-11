@@ -8,6 +8,8 @@ import CrossIcon from "../../assets/swipeButtons/cross.svg";
 
 // Icones d'expo (inutiles si on utilise le SVG)
 import { FontAwesome } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import dayjs from "dayjs";
 
 // Variable globale : choix entre SVG ou icônes Expo
 const isFromSVG = false;
@@ -17,6 +19,13 @@ const iconSize = 34;
 
 export default function SwipeButton(props) {
 	const [buttonType] = useState(props.type);
+  const user = useSelector(state => state.user.value.user);
+  const lastSuperlike = user && user.lastSuperlike || new Date();
+  const today = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0);
+  let superlikeNumber = user.superlikeNumber;
+  if (today.valueOf() - lastSuperlike.valueOf() > 0 || !superlikeNumber) {
+    superlikeNumber = 0;
+  }
 
 	// Choix du composant graphique principal
 	function getMainComponent(type) {
@@ -59,11 +68,11 @@ export default function SwipeButton(props) {
 			props.onChoice(buttonType);
 		}
 	}
-
+  const disabled = buttonType === 'Superlike' && superlikeNumber >= 3;
 	// Affichage final
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity onPress={handlePress} style={[styles.button, props.style]}>
+			<TouchableOpacity onPress={handlePress} style={[styles.button, props.style, disabled && styles.buttonDisabled]} disabled={disabled}>
 				{getMainComponent(buttonType)}
 			</TouchableOpacity>
 		</View>
@@ -91,4 +100,7 @@ const styles = StyleSheet.create({
 	buttonLike: { backgroundColor: "#FF4D80" },
 	buttonDislike: { backgroundColor: "#8A2BE2" },
 	buttonSuperLike: { backgroundColor: "#FFA500" },
+  buttonDisabled: {
+    backgroundColor: 'lightgray'
+  }
 });

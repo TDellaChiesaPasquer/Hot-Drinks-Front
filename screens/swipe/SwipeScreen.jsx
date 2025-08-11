@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { ScrollView, View, StyleSheet, Dimensions, Text } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Swiper from "react-native-deck-swiper";
 import SwipeContainer from "../../components/swipe/SwipeContainer";
@@ -9,6 +9,7 @@ import PagerView from "react-native-pager-view";
 import SwipeButton from "../../components/swipe/SwipeButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
+import { newSuperlike } from "../../reducers/user";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -19,6 +20,7 @@ export default function SwipeScreen(props) {
 	const [profileList, setProfileList] = useState([]);
 	const [cardList, setCardList] = useState([]);
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
+  const dispatch = useDispatch();
 
 	useFocusEffect(
 		useCallback(() => {
@@ -38,6 +40,7 @@ export default function SwipeScreen(props) {
 	useEffect(function () {
 		fetchProfilesFromAPI();
 	}, []);
+
 
 	function fetchProfilesFromAPI() {
 		// console.log("début fetchProfilesFromAPI");
@@ -82,6 +85,7 @@ export default function SwipeScreen(props) {
 			swiperReference.current.swipeLeft();
 		}
 		if (choiceAction === "Superlike") {
+      dispatch(newSuperlike());
 			swiperReference.current.swipeTop();
 		}
 	}
