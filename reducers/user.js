@@ -89,12 +89,14 @@ export const userSlice = createSlice({
     },
 
     setAnswer: (state, action) => {
+      state.value.user.tastesList;
+
       const { id, label, value } = action.payload;
       if (!state.value.tastesById) {
         state.value.tastesById = {};
       }
       const prev = state.value.tastesById[id] || {};
-      state.value.tastesById[id] = { ...prev, label, value };
+      state.value.tastesById[id] = { label, value };
     },
 
     toggleStar: (state, action) => {

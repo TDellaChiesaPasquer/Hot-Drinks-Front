@@ -6,9 +6,8 @@ import Entypo from "@expo/vector-icons/Entypo";
 
 export default functionDropdownComponent = (props) => {
   const [value, setValue] = useState(null);
-  const [isImportant, setIsImportant] = useState(props.star ?? false);
+  const [isImportant, setIsImportant] = useState(props.star && false);
   const [isOpen, setIsOpen] = useState(false);
-
   useEffect(() => {
     if (props.value !== undefined && props.value !== null) {
       setValue(props.value);
