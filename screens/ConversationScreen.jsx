@@ -26,6 +26,8 @@ import Animated, { useAnimatedKeyboard, useAnimatedStyle, withSpring } from "rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
+
+
 const { width, height } = Dimensions.get("window");
 
 export default function ({ navigation, route }) {
@@ -351,17 +353,22 @@ const styles = StyleSheet.create({
     flex: 1
   },
   conversationBottom: {
-    maxHeight: 115,
+    height: 66,
     position: "absolute",
     top: 0,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     width: width * 0.9,
-    paddingVertical: 10
+    paddingVertical: 10,
+    gap: 4
   },
   inputContainer: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
     borderRadius: 24,
+    maxHeight: 100,
     paddingHorizontal: 12,
     boxShadow: "0 2px 3px #896761",
     width: width * 0.9 - 100,
