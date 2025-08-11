@@ -6,6 +6,7 @@ import { FontAwesome } from "@expo/vector-icons";
 // tmp pour le test
 import Swiper from "react-native-swiper";
 import { Image } from "expo-image";
+import { capitalize } from "../../Utils/utils.js";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -63,7 +64,7 @@ export default function SwipeProfileInformations(props) {
 	const itemsJSX = [];
 	for (var i = 0; i < dataToDisplay.length; i++) {
 		var item = dataToDisplay[i];
-		itemsJSX.push(<TasteItem key={i} label={item.label} value={item.value} />);
+		itemsJSX.push(<TasteItem key={i} label={capitalize(item.label)} value={capitalize(item.value)} />);
 	}
 
 	// Utiliser l'image passée en paramètre

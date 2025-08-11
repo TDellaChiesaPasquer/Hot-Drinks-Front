@@ -8,6 +8,7 @@ import {
   Modal,
   TextInput,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -125,11 +126,12 @@ export default function ({ navigation }) {
         <View style={styles.bottom}>
           <Text style={styles.error}>{error}</Text>
           <TouchableOpacity
-            style={styles.bouton}
+            style={[styles.bouton, disabled && styles.boutonDisabled]}
             onPress={() => sanitizeInputs()}
             disabled={disabled}
           >
             <Text style={styles.boutonText}>Continuer</Text>
+            {disabled && <ActivityIndicator size="small" color="#FFFFFF" style={styles.loader} />}
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -209,4 +211,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: height * 0.7,
   },
+  boutonDisabled: {
+		backgroundColor: "#8b6762c0",
+		boxShadow: "0 1px 2px #976f68c0",
+	},
+  loader: {
+		position: "absolute",
+		left: 10,
+	},
 });

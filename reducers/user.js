@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import dayjs from "dayjs";
 
 const initialState = {
   value: {
@@ -106,6 +107,16 @@ export const userSlice = createSlice({
       );
       state.value.user.tastesList[index] = {...state.value.user.tastesList[index], star: action.payload.star};
     },
+    newSuperlike: (state, action) => {
+      const lastSuperlike = state.value.user.lastSuperlike || new Date();
+      const today = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0);
+      let superlikeNumber = state.value.user.superlikeNumber;
+      if (today.valueOf() - lastSuperlike.valueOf() > 0 || !superlikeNumber) {
+        superlikeNumber = 0;
+      }
+      state.value.user.lastSuperlike = new Date();
+      state.value.user.superlikeNumber = superlikeNumber + 1;
+    }
   },
 
   // addPlace: (state, action) => {
@@ -130,6 +141,7 @@ export const {
   setAllTastes,
   setAnswer,
   toggleStar,
+  newSuperlike
   // addPlace,
   // removePlace,
 } = userSlice.actions;

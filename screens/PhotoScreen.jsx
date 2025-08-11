@@ -6,6 +6,7 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
@@ -104,11 +105,12 @@ export default function ImagePickerScreen({ navigation }) {
         </View>
         <View style={styles.bottomButtons}>
           <TouchableOpacity
-            style={styles.validationButton}
+            style={[styles.validationButton, disabled && styles.boutonDisabled]}
             onPress={() => handleSubmitPhotos()}
             disabled={disabled}
           >
             <Text style={styles.textValidateButton}>Valider</Text>
+            {disabled && <ActivityIndicator size="small" color="#FFFFFF" style={styles.loader} />}
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -214,4 +216,12 @@ const styles = StyleSheet.create({
     color: "#F5EBE6",
     paddingBottom: 15,
   },
+  boutonDisabled: {
+		backgroundColor: "#8b6762c0",
+		boxShadow: "0 1px 2px #976f68c0",
+	},
+  loader: {
+		position: "absolute",
+		left: 10,
+	},
 });
