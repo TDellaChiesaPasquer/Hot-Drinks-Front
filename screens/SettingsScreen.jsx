@@ -1,18 +1,3 @@
-// import { TouchableOpacity, View, Text } from "react-native";
-// import { useDispatch } from "react-redux";
-// import { disconnect } from "../reducers/user";
-
-// export default function SettingsScreen({ navigation }) {
-//   const dispatch = useDispatch();
-//   return <View>
-//     <TouchableOpacity onPress={() => dispatch(disconnect(navigation))}>
-//       <Text>Deconnection</Text>
-//     </TouchableOpacity>
-//   </View>
-// }
-
-// v2
-
 import React, { useMemo, useState } from "react";
 import { SafeAreaView, ScrollView, View, Text, TextInput, StyleSheet, Pressable, Modal, ActivityIndicator, Platform, Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -92,7 +77,7 @@ export default function ReglagesScreen() {
 			Alert.alert("Succès", "Email modifié. Vous allez être déconnecté.", [
 				{
 					text: "OK",
-					onPress: () => dispatch(disconnect(navigation)), // Déconnexion automatique
+					onPress: () => dispatch(disconnect(navigation)),
 				},
 			]);
 		} catch (e) {
@@ -160,7 +145,7 @@ export default function ReglagesScreen() {
 			Alert.alert("Compte désactivé", "Votre compte a été désactivé. Vous allez être déconnecté.", [
 				{
 					text: "OK",
-					onPress: () => dispatch(disconnect(navigation)), // Déconnexion automatique
+					onPress: () => dispatch(disconnect(navigation)),
 				},
 			]);
 		} catch (e) {
@@ -187,7 +172,7 @@ export default function ReglagesScreen() {
 			Alert.alert("Compte supprimé", "Votre compte a été définitivement supprimé.", [
 				{
 					text: "OK",
-					onPress: () => dispatch(disconnect(navigation)), // Déconnexion automatique
+					onPress: () => dispatch(disconnect(navigation)),
 				},
 			]);
 		} catch (e) {
@@ -205,16 +190,10 @@ export default function ReglagesScreen() {
 				<View style={styles.actions}>
 					<SmallButton label="Changer l'email" onPress={() => setShowEmailModal(true)} />
 					<SmallButton label="Changer le mot de passe" onPress={() => setShowPasswordModal(true)} />
-					<SmallButton label="Se déconnecter" onPress={() => setShowLogoutModal(true)} />
-					<SmallButton label="Désactiver le compte" onPress={() => setShowDeactivateModal(true)} />
+					<SmallButtonDarkFirst label="Se déconnecter" onPress={() => setShowLogoutModal(true)} />
+					<SmallButtonDark label="Désactiver le compte (cache votre profil)" onPress={() => setShowDeactivateModal(true)} />
+					<SmallButtonDanger label="Supprimer le compte" onPress={() => setShowDeleteModal(true)} />
 				</View>
-
-				<View style={{ height: 24 }} />
-				<Pressable onPress={() => setShowDeleteModal(true)} style={({ pressed }) => [styles.deleteButton, pressed && { transform: [{ translateY: 1 }] }]}>
-					<Text style={styles.deleteButtonText}>Supprimer le compte</Text>
-				</Pressable>
-
-				<View style={{ height: 40 }} />
 			</ScrollView>
 
 			{/* Modale -- Changer l'email */}
@@ -253,7 +232,7 @@ export default function ReglagesScreen() {
 
 			{/* Modale -- Désactiver le compte */}
 			<BaseModal visible={showDeactivateModal} onRequestClose={() => setShowDeactivateModal(false)} title="Désactiver le compte">
-				<Text style={styles.modalWarn}>Votre compte sera désactivé. Continuer ?</Text>
+				<Text style={styles.modalWarn}>Votre compte sera désactivé et votre profil ne sera plus présenté aux autres utilisateurs. Continuer ?</Text>
 				<View style={styles.modalRow}>
 					<SecondaryButton label="Annuler" onPress={() => setShowDeactivateModal(false)} />
 					<PrimaryButton label={deactivateLoading ? "" : "Désactiver"} onPress={confirmDeactivate} disabled={deactivateLoading}>
@@ -303,7 +282,31 @@ function BaseModal({ visible, onRequestClose, title, children }) {
 
 function SmallButton({ label, onPress }) {
 	return (
-		<Pressable onPress={onPress} style={({ pressed }) => [styles.smallBtn, pressed && styles.smallBtnPressed]}>
+		<Pressable onPress={onPress} style={({ pressed }) => [styles.smallBtn, pressed && { transform: [{ translateY: 1 }] }]}>
+			<Text style={styles.smallBtnText}>{label}</Text>
+		</Pressable>
+	);
+}
+
+function SmallButtonDarkFirst({ label, onPress }) {
+	return (
+		<Pressable onPress={onPress} style={({ pressed }) => [styles.smallBtnDarkFirst, pressed && { transform: [{ translateY: 1 }] }]}>
+			<Text style={styles.smallBtnText}>{label}</Text>
+		</Pressable>
+	);
+}
+
+function SmallButtonDark({ label, onPress }) {
+	return (
+		<Pressable onPress={onPress} style={({ pressed }) => [styles.smallBtnDark, pressed && { transform: [{ translateY: 1 }] }]}>
+			<Text style={styles.smallBtnText}>{label}</Text>
+		</Pressable>
+	);
+}
+
+function SmallButtonDanger({ label, onPress }) {
+	return (
+		<Pressable onPress={onPress} style={({ pressed }) => [styles.smallBtnDanger, pressed && { transform: [{ translateY: 1 }] }]}>
 			<Text style={styles.smallBtnText}>{label}</Text>
 		</Pressable>
 	);
@@ -340,187 +343,154 @@ const colors = {
 	bgSecondary: "#F7F0EC",
 	bgTertiary: "#E9D5CD",
 	title: "#965A51",
-	text: "#6F4A42",
-	placeholder: "#9f8f88",
-	smallBtnBg: "#B4877C",
-	smallBtnText: "#FFFFFF",
+	text: "#2F3437",
+	textSecondary: "#6F4A42",
+	white: "#FFFFFF",
+	smallBtn: "#B4877C",
+	smallBtnDark: "#6B4226",
 	primary: "#8B5E55",
-	primaryText: "#FFFFFF",
 	danger: "#D45248",
-	dangerShadow: "#B43F37",
+	overlay: "rgba(0,0,0,0.35)",
 };
 
-const commonStyles = {
-	// Styles de base réutilisables
-	buttonBase: {
-		borderRadius: 10,
-		alignItems: "center",
-		justifyContent: "center",
-		paddingVertical: 12,
-	},
-	textBase: {
-		fontSize: 14,
-		fontWeight: "700",
-	},
-	shadowBase: {
-		shadowColor: "#000",
-		shadowOpacity: 0.15,
-		shadowRadius: 4,
-		shadowOffset: { width: 0, height: 2 },
-		elevation: 3,
-	},
+const buttonBase = {
+	borderRadius: 12,
+	paddingVertical: 12,
+	paddingHorizontal: 16,
+	alignItems: "center",
+	justifyContent: "center",
+	boxShadow: "0 2px 3px #896761",
 };
 
 const styles = StyleSheet.create({
-	// === LAYOUT PRINCIPAL ===
+	// === LAYOUT ===
 	safe: {
 		flex: 1,
 		backgroundColor: colors.bg,
 	},
 	content: {
-		flex: 1,
-		paddingHorizontal: "5%", // Pdlus relatif que 16px fixe
-		paddingVertical: "3%",
+		paddingHorizontal: 16,
+		paddingVertical: 24,
+	},
+	actions: {
+		gap: 15,
+		marginTop: 8,
 	},
 
-	// === TYPOGRAPHIE ===
+	// === TYPOGRAPHY ===
 	title: {
-		color: "#965A51",
+		color: colors.title,
 		fontWeight: "bold",
-		fontSize: 18,
-		marginVertical: 10,
+		fontSize: 25,
 		textAlign: "center",
+		marginTop: 5,
+		marginBottom: 16,
+	},
+	smallBtnText: {
+		color: colors.white,
+		fontSize: 14,
+		fontWeight: "700",
+	},
+
+	// === BUTTONS ===
+	smallBtn: {
+		...buttonBase,
+		backgroundColor: colors.smallBtn,
+		paddingVertical: 10,
+		paddingHorizontal: 14,
+	},
+	smallBtnDarkFirst: {
+		...buttonBase,
+		backgroundColor: colors.smallBtnDark,
+		paddingVertical: 10,
+		paddingHorizontal: 14,
+		marginTop: 25,
+	},
+	smallBtnDark: {
+		...buttonBase,
+		backgroundColor: colors.smallBtnDark,
+		paddingVertical: 10,
+		paddingHorizontal: 14,
+	},
+	smallBtnDanger: {
+		...buttonBase,
+		backgroundColor: colors.danger,
+		paddingVertical: 10,
+		paddingHorizontal: 14,
+	},
+
+	// === MODALS ===
+	modalBackdrop: {
+		flex: 1,
+		backgroundColor: colors.overlay,
+		alignItems: "center",
+		justifyContent: "center",
+		padding: 20,
+	},
+	modalCard: {
+		width: "100%",
+		borderRadius: 16,
+		backgroundColor: colors.bg,
+		padding: 16,
 	},
 	modalTitle: {
 		fontSize: 18,
 		fontWeight: "800",
-		color: colors.title,
+		color: colors.text,
 		textAlign: "center",
-		marginBottom: "2%",
 	},
 	modalText: {
-		...commonStyles.textBase,
-		color: colors.title,
-		marginBottom: "1.5%",
+		fontSize: 14,
+		color: colors.text,
+		marginBottom: 6,
 	},
 	modalWarn: {
-		...commonStyles.textBase,
-		color: colors.title,
+		fontSize: 14,
+		color: colors.text,
 		lineHeight: 20,
 		textAlign: "center",
 	},
-
-	// === CONTENEURS ===
-	actions: {
-		flex: 1,
-		justifyContent: "flex-start",
-		gap: "2%", // Plus relatif
-		marginTop: "2%",
-	},
-	modalBackdrop: {
-		flex: 1,
-		backgroundColor: "rgba(0,0,0,0.35)",
-		alignItems: "center",
-		justifyContent: "center",
-		paddingHorizontal: "5%",
-	},
-	modalCard: {
-		width: "100%",
-		maxWidth: 400, // Limite sur grands écrans
-		borderRadius: 16,
-		backgroundColor: colors.bg,
-		padding: "4%",
+	modalInput: {
+		backgroundColor: colors.bgSecondary,
+		borderRadius: 10,
+		paddingHorizontal: 12,
+		paddingVertical: Platform.select({ ios: 12, android: 10 }),
+		color: colors.textSecondary,
+		fontSize: 14,
+		fontWeight: "600",
 	},
 	modalRow: {
+		marginTop: 14,
 		flexDirection: "row",
-		marginTop: "4%",
-		gap: "3%",
+		gap: 12,
 	},
 
-	// === BOUTONS ===
-	smallBtn: {
-		...commonStyles.buttonBase,
-		backgroundColor: colors.smallBtnBg,
-		borderRadius: 12,
-		paddingVertical: "2.5%",
-		paddingHorizontal: "3.5%",
-		marginVertical: "1%",
-	},
-	smallBtnText: {
-		...commonStyles.textBase,
-		color: colors.smallBtnText,
-	},
-
-	deleteButton: {
-		...commonStyles.buttonBase,
-		...commonStyles.shadowBase,
-		alignSelf: "center",
-		backgroundColor: colors.danger,
-		borderRadius: 14,
-		paddingVertical: "3.5%",
-		paddingHorizontal: "6%",
-		marginVertical: "6%",
-		minWidth: "80%", // Plus flexible que width fixe
-		maxWidth: "90%",
-	},
-	deleteButtonText: {
-		color: colors.primaryText,
-		fontSize: 16,
-		fontWeight: "700",
-		letterSpacing: 0.2,
-	},
-
-	// === BOUTONS MODALES ===
+	// === MODAL BUTTONS ===
 	primaryBtn: {
-		...commonStyles.buttonBase,
+		...buttonBase,
 		flex: 1,
 		backgroundColor: colors.primary,
 	},
 	primaryBtnText: {
-		...commonStyles.textBase,
-		color: colors.primaryText,
+		color: colors.white,
+		fontWeight: "700",
 	},
-
 	secondaryBtn: {
-		...commonStyles.buttonBase,
+		...buttonBase,
 		flex: 1,
 		backgroundColor: colors.bgTertiary,
 	},
 	secondaryBtnText: {
-		...commonStyles.textBase,
 		color: colors.primary,
+		fontWeight: "700",
 	},
-
 	dangerBtn: {
-		...commonStyles.buttonBase,
+		...buttonBase,
 		flex: 1,
 		backgroundColor: colors.danger,
 	},
 	dangerBtnText: {
-		...commonStyles.textBase,
-		color: colors.primaryText,
-	},
-
-	// === INPUTS ===
-	modalInput: {
-		backgroundColor: colors.bgSecondary,
-		borderRadius: 10,
-		paddingHorizontal: "3%",
-		paddingVertical: "3%", // Unifié iOS/Android
-		color: colors.text,
-		fontSize: 14,
-		fontWeight: "600",
-		marginBottom: "2%",
-	},
-
-	// === ÉTATS INTERACTIFS ===
-	pressed: {
-		transform: [{ translateY: 1 }],
-	},
-	disabled: {
-		opacity: 0.6,
-	},
-	loading: {
-		opacity: 0.9,
+		color: colors.white,
+		fontWeight: "700",
 	},
 });
