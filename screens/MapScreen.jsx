@@ -29,7 +29,7 @@ export default function App({ navigation }) {
   const [givenPosition, setGivenPosition] = useState(null);
 
   const user = useSelector((state) => state.user.value);
-  const locations = useSelector((state) => state.user.value.places);
+
   const dispatch = useDispatch();
 
   useFocusEffect(
@@ -111,7 +111,8 @@ export default function App({ navigation }) {
     });
     const data2 = await response2.json();
     dispatch(addInfos(data2.user));
-    setDisabled(false), navigation.navigate("MainTabNav");
+    setDisabled(false),
+      navigation.navigate("MainTabNav", { screen: "SwipeNav" });
   };
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
   const addCityByTouch = async (touch_coordinates) => {
