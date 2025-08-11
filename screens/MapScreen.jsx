@@ -20,8 +20,9 @@ export default function App({ navigation }) {
 	const myLocationRef = useRef(myLocation);
 	const [givenPosition, setGivenPosition] = useState(null);
 
-	const user = useSelector((state) => state.user.value);
-	const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+  const locations = useSelector((state) => state.user.value.places);
+  const dispatch = useDispatch();
 
 	useFocusEffect(
 		useCallback(() => {
