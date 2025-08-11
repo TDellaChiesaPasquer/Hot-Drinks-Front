@@ -206,9 +206,4 @@ const styles = StyleSheet.create({
 		elevation: 5,
 		zIndex: 10,
 	},
-	// swipeProfileInformations: {
-	//      flex: 1,
-	//      bottom: 0,
-	//      zIndex: 12,
-	// },
 });

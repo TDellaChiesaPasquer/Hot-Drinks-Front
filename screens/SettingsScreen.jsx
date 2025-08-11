@@ -337,7 +337,11 @@ function DangerButton({ label, onPress, disabled, children }) {
 
 const colors = {
 	bg: "#F3E6DF",
-	title: "#2F3437",
+	bgSecondary: "#F7F0EC",
+	bgTertiary: "#E9D5CD",
+	title: "#58403bff",
+	text: "#6F4A42",
+	placeholder: "#9f8f88",
 	smallBtnBg: "#B4877C",
 	smallBtnText: "#FFFFFF",
 	primary: "#8B5E55",
@@ -346,139 +350,177 @@ const colors = {
 	dangerShadow: "#B43F37",
 };
 
+const commonStyles = {
+	// Styles de base réutilisables
+	buttonBase: {
+		borderRadius: 10,
+		alignItems: "center",
+		justifyContent: "center",
+		paddingVertical: 12,
+	},
+	textBase: {
+		fontSize: 14,
+		fontWeight: "700",
+	},
+	shadowBase: {
+		shadowColor: "#000",
+		shadowOpacity: 0.15,
+		shadowRadius: 4,
+		shadowOffset: { width: 0, height: 2 },
+		elevation: 3,
+	},
+};
+
 const styles = StyleSheet.create({
+	// === LAYOUT PRINCIPAL ===
 	safe: {
 		flex: 1,
 		backgroundColor: colors.bg,
 	},
 	content: {
-		paddingHorizontal: 16,
-		paddingTop: 24,
-		paddingBottom: 16,
+		flex: 1,
+		paddingHorizontal: "5%", // Plus relatif que 16px fixe
+		paddingVertical: "3%",
 	},
+
+	// === TYPOGRAPHIE ===
 	title: {
 		fontSize: 28,
 		fontWeight: "800",
 		color: colors.title,
 		textAlign: "center",
-		marginBottom: 18,
-	},
-	actions: {
-		marginTop: 8,
-		gap: 8,
-	},
-	smallBtn: {
-		backgroundColor: colors.smallBtnBg,
-		borderRadius: 12,
-		paddingVertical: 10,
-		paddingHorizontal: 14,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	smallBtnPressed: {
-		transform: [{ translateY: 1 }],
-	},
-	smallBtnText: {
-		color: colors.smallBtnText,
-		fontSize: 14,
-		fontWeight: "700",
-	},
-	deleteButton: {
-		alignSelf: "center",
-		backgroundColor: colors.danger,
-		borderRadius: 14,
-		paddingVertical: 14,
-		paddingHorizontal: 24,
-		width: "85%",
-		alignItems: "center",
-		...Platform.select({
-			ios: { shadowColor: colors.dangerShadow, shadowOpacity: 0.3, shadowRadius: 6, shadowOffset: { width: 0, height: 4 } },
-			android: { elevation: 3 },
-		}),
-	},
-	deleteButtonText: {
-		color: "#FFFFFF",
-		fontSize: 16,
-		fontWeight: "700",
-		letterSpacing: 0.2,
-	},
-	// Modales
-	modalBackdrop: {
-		flex: 1,
-		backgroundColor: "rgba(0,0,0,0.35)",
-		alignItems: "center",
-		justifyContent: "center",
-		padding: 20,
-	},
-	modalCard: {
-		width: "100%",
-		borderRadius: 16,
-		backgroundColor: colors.bg,
-		padding: 16,
+		marginBottom: "5%",
 	},
 	modalTitle: {
 		fontSize: 18,
 		fontWeight: "800",
 		color: colors.title,
 		textAlign: "center",
+		marginBottom: "2%",
 	},
 	modalText: {
-		fontSize: 14,
+		...commonStyles.textBase,
 		color: colors.title,
-		marginBottom: 6,
+		marginBottom: "1.5%",
 	},
 	modalWarn: {
-		fontSize: 14,
+		...commonStyles.textBase,
 		color: colors.title,
 		lineHeight: 20,
 		textAlign: "center",
 	},
-	modalInput: {
-		backgroundColor: "#F7F0EC",
-		borderRadius: 10,
-		paddingHorizontal: 12,
-		paddingVertical: Platform.select({ ios: 12, android: 10 }),
-		color: "#6F4A42",
-		fontSize: 14,
-		fontWeight: "600",
+
+	// === CONTENEURS ===
+	actions: {
+		flex: 1,
+		justifyContent: "flex-start",
+		gap: "2%", // Plus relatif
+		marginTop: "2%",
+	},
+	modalBackdrop: {
+		flex: 1,
+		backgroundColor: "rgba(0,0,0,0.35)",
+		alignItems: "center",
+		justifyContent: "center",
+		paddingHorizontal: "5%",
+	},
+	modalCard: {
+		width: "100%",
+		maxWidth: 400, // Limite sur grands écrans
+		borderRadius: 16,
+		backgroundColor: colors.bg,
+		padding: "4%",
 	},
 	modalRow: {
-		marginTop: 14,
 		flexDirection: "row",
-		justifyContent: "space-between",
-		gap: 12,
+		marginTop: "4%",
+		gap: "3%",
 	},
+
+	// === BOUTONS ===
+	smallBtn: {
+		...commonStyles.buttonBase,
+		backgroundColor: colors.smallBtnBg,
+		borderRadius: 12,
+		paddingVertical: "2.5%",
+		paddingHorizontal: "3.5%",
+		marginVertical: "1%",
+	},
+	smallBtnText: {
+		...commonStyles.textBase,
+		color: colors.smallBtnText,
+	},
+
+	deleteButton: {
+		...commonStyles.buttonBase,
+		...commonStyles.shadowBase,
+		alignSelf: "center",
+		backgroundColor: colors.danger,
+		borderRadius: 14,
+		paddingVertical: "3.5%",
+		paddingHorizontal: "6%",
+		marginVertical: "6%",
+		minWidth: "80%", // Plus flexible que width fixe
+		maxWidth: "90%",
+	},
+	deleteButtonText: {
+		color: colors.primaryText,
+		fontSize: 16,
+		fontWeight: "700",
+		letterSpacing: 0.2,
+	},
+
+	// === BOUTONS MODALES ===
 	primaryBtn: {
+		...commonStyles.buttonBase,
 		flex: 1,
 		backgroundColor: colors.primary,
-		paddingVertical: 12,
-		borderRadius: 10,
-		alignItems: "center",
 	},
 	primaryBtnText: {
+		...commonStyles.textBase,
 		color: colors.primaryText,
-		fontWeight: "700",
 	},
+
 	secondaryBtn: {
+		...commonStyles.buttonBase,
 		flex: 1,
-		backgroundColor: "#E9D5CD",
-		paddingVertical: 12,
-		borderRadius: 10,
-		alignItems: "center",
+		backgroundColor: colors.bgTertiary,
 	},
 	secondaryBtnText: {
+		...commonStyles.textBase,
 		color: colors.primary,
-		fontWeight: "700",
 	},
+
 	dangerBtn: {
+		...commonStyles.buttonBase,
 		flex: 1,
 		backgroundColor: colors.danger,
-		paddingVertical: 12,
-		borderRadius: 10,
-		alignItems: "center",
 	},
 	dangerBtnText: {
-		color: "#fff",
-		fontWeight: "700",
+		...commonStyles.textBase,
+		color: colors.primaryText,
+	},
+
+	// === INPUTS ===
+	modalInput: {
+		backgroundColor: colors.bgSecondary,
+		borderRadius: 10,
+		paddingHorizontal: "3%",
+		paddingVertical: "3%", // Unifié iOS/Android
+		color: colors.text,
+		fontSize: 14,
+		fontWeight: "600",
+		marginBottom: "2%",
+	},
+
+	// === ÉTATS INTERACTIFS ===
+	pressed: {
+		transform: [{ translateY: 1 }],
+	},
+	disabled: {
+		opacity: 0.6,
+	},
+	loading: {
+		opacity: 0.9,
 	},
 });
