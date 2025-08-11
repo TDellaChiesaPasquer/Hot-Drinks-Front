@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { ScrollView, View, StyleSheet, Dimensions } from "react-native";
+import { ScrollView, View, StyleSheet, Dimensions, Text } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		backgroundColor: "white",
 		backfaceVisibility: "hidden",
-    boxShadow: "0 2px 3px #896761",
+		boxShadow: "0 2px 3px #896761",
 	},
 	card: {
 		borderRadius: 20,
@@ -206,9 +206,4 @@ const styles = StyleSheet.create({
 		elevation: 5,
 		zIndex: 10,
 	},
-	// swipeProfileInformations: {
-	//      flex: 1,
-	//      bottom: 0,
-	//      zIndex: 12,
-	// },
 });

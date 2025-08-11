@@ -209,7 +209,7 @@ const MyProfileNav = () => {
       })}
     >
       <TopTab.Screen name="MyProfile" component={MyProfileScreen} />
-      <TopTab.Screen name="Preferences" component={PreferencesScreen} />
+      <TopTab.Screen name="Preferences" component={PreferencesScreen} options={{swipeEnabled: false}}/>
       <TopTab.Screen name="Settings" component={SettingsScreen} />
     </TopTab.Navigator>
   );
