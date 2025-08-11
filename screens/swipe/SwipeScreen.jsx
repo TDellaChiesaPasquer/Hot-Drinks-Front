@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { ScrollView, View, StyleSheet, Dimensions, Text } from "react-native";
+import { ScrollView, View, StyleSheet, Dimensions, Text, Button } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,7 +18,6 @@ const maxNumberOfCards = 10;
 export default function SwipeScreen(props) {
 	const swiperReference = useRef(null);
 	const [profileList, setProfileList] = useState([]);
-	const [cardList, setCardList] = useState([]);
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
   const dispatch = useDispatch();
 
@@ -47,7 +46,7 @@ export default function SwipeScreen(props) {
 
 
 	function fetchProfilesFromAPI() {
-		// console.log("début fetchProfilesFromAPI");
+    console.log('test')
 		fetch(process.env.EXPO_PUBLIC_IP + "/profils/profil", {
 			headers: {
 				"Content-Type": "application/json",
@@ -55,20 +54,11 @@ export default function SwipeScreen(props) {
 			},
 		})
 			.then(function (response) {
-				// if (response) console.log("response : ");
-				// if (response) console.log(response);
 				return response.json();
 			})
 			.then(function (jsonResponse) {
 				const fetchedProfiles = jsonResponse.profilList || [];
-				// console.log("fetchedProfiles : ");
-				// console.log(fetchedProfiles);
 				setProfileList(fetchedProfiles);
-				setCardList(
-					fetchedProfiles.map(function (_, index) {
-						return index;
-					})
-				);
 				setSwiperComponentKey(function (previousKey) {
 					return previousKey + 1;
 				});
@@ -76,7 +66,6 @@ export default function SwipeScreen(props) {
 			.catch(function (error) {
 				console.error("fetch /profils/profil:", error);
 				setProfileList([]);
-				setCardList([]);
 			});
 	}
 
@@ -100,7 +89,6 @@ export default function SwipeScreen(props) {
 			sendSwipeToServer(profile._id, action);
 		}
 	}
-
 	function sendSwipeToServer(userId, userAction) {
 		const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
 
@@ -133,8 +121,7 @@ export default function SwipeScreen(props) {
 			});
 	}
 
-	function renderCardForIndex(cardIndexInList) {
-		const profile = profileList[cardIndexInList];
+	function renderCardForIndex(profile, index) {
 
 		// Vérifier si l'utilisateur actuel a été superliké par ce profil
 		const isSuperliked =
@@ -149,27 +136,24 @@ export default function SwipeScreen(props) {
 			</View>
 		);
 	}
-
 	return (
 		<View style={styles.container}>
-			<View style={styles.cardCcontainer}>
+			{profileList.length !== 0 ? <View style={styles.cardCcontainer}>
 				<Swiper
 					cardStyle={styles.innerCard}
 					key={swiperComponentKey}
 					ref={swiperReference}
-					cards={cardList}
-					renderCard={renderCardForIndex}
-					stackSize={5}
-					showSecondCard={true}
-					infinite={false}
-					onSwipedAll={fetchProfilesFromAPI}
+					cards={profileList}
+					renderCard={(card, index) => renderCardForIndex(card, index)}
+          keyExtractor={(card) => card}
+					onSwipedAll={() => setTimeout(fetchProfilesFromAPI, 500)}
 					backgroundColor="transparent"
 					onSwipedLeft={(cardIndex) => handleSwipe(cardIndex, "Dislike")}
 					onSwipedRight={(cardIndex) => handleSwipe(cardIndex, "Like")}
 					onSwipedTop={(cardIndex) => handleSwipe(cardIndex, "SuperLike")}
 					verticalSwipe={false}
 				/>
-			</View>
+			</View> : <Text>Aucun profil restant</Text>}
 			<View style={styles.buttons}>
 				{["Dislike", "Superlike", "Like"].map(function (buttonType) {
 					return <SwipeButton key={buttonType} type={buttonType} onChoice={handleUserChoice} />;
