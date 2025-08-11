@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
 		shadowColor: "#896761",
 		backgroundColor: "white",
 		backfaceVisibility: "hidden",
+		boxShadow: "0 2px 3px #896761",
 	},
 	card: {
 		borderRadius: 20,
