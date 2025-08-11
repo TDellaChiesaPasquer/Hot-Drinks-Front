@@ -23,7 +23,7 @@ export default function MyProfile({ navigation }) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.user.value.token);
   const dataPhoto = useSelector((state) => state.user.value);
-  const dataTaste = dataPhoto.user.tastesList;
+  const dataTaste = (dataPhoto.user && dataPhoto.user.tastesList) || [];
   const tastesById = {};
   for (const tastElement of dataTaste) {
     tastesById[tastElement.category] = {
@@ -34,8 +34,7 @@ export default function MyProfile({ navigation }) {
   }
 
   //___________________________________________________________CAROUSSEL________________________________________________________________
-  const photoList = dataPhoto.user.photoList;
-  console.log(dataPhoto.user.photoList);
+  const photoList = (dataPhoto.user && dataPhoto.user.photoList) || [];
 
   //__________________________________________________________QUESTIONS DATA_________________________________________________________
 
@@ -209,68 +208,15 @@ export default function MyProfile({ navigation }) {
 
   //___________________________________________________________SAUVEGARDE TASTES________________________________________
   const saveAllTastes = async () => {
-    try {
-      const tastesToSave = [];
-      for (let id in tastesById) {
-        const taste = tastesById[id];
-        // const v = tastesList[category];
-        if (taste && taste.value) {
-          tastesToSave.push({
-            category: id,
-            label: taste.label,
-            value: taste.value,
-            star: Boolean(taste.star),
-          });
-        }
-      }
-      console.log("tastesToSave=", tastesToSave);
-      console.log("tastesToSave.lenght=", tastesToSave.length);
-      if (tastesToSave.length === 0) return;
-
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_IP}/users/addAllTastes/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: token,
-          },
-          body: JSON.stringify({
-            tastesList: tastesToSave,
-          }),
-        }
-      );
-      const data = await response.json();
-      if (data.result && data.tastesList) {
-        const obj = {};
-
-        for (let i = 0; i < data.tastesList.length; i++) {
-          const elem = data.tasteList[i] || {};
-          const category = elem.category || null;
-
-          if (!category) continue;
-
-          obj[category] = {
-            label: elem.label || null,
-            value: elem.value || null,
-            star: elem.star ? true : false,
-          };
-        }
-        // for (let elem of data.tastesList) {
-        //   obj[elem.category] = {
-        //     label: elem.label,
-        //     value: elem.value,
-        //     star: Boolean(elem.star),
-        //   };
-        // }
-        dispatch(setAllTastes(obj));
-        console.log("Réponses enregistrées avec succès!");
-      } else {
-        console.log("Erreur lors de l'enregistrement: ", data.error);
-      }
-    } catch (error) {
-      console.error("Erreur lors de l'enregistrement:", error);
-    }
+    const tastesList = dataTaste;
+    await fetch(process.env.EXPO_PUBLIC_IP + '/users/addAllTastes', {
+      method: 'POST',
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ tastesList})
+    })
   };
 
   return (

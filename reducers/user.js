@@ -89,20 +89,21 @@ export const userSlice = createSlice({
     },
 
     setAnswer: (state, action) => {
-      state.value.user.tastesList;
-
-      const { id, label, value } = action.payload;
-      if (!state.value.tastesById) {
-        state.value.tastesById = {};
+      const index = state.value.user.tastesList.findIndex(
+        (x) => x.category === action.payload.category
+      );
+      if (index === -1) {
+        state.value.user.tastesList.push({...action.payload, star: false});
+        return;
       }
-      const prev = state.value.tastesById[id] || {};
-      state.value.tastesById[id] = { label, value };
+      state.value.user.tastesList[index] = {star: state.value.user.tastesList[index].star, ...action.payload};
     },
 
     toggleStar: (state, action) => {
-      const { id, next } = action.payload;
-      const prev = state.value.tastesById[id];
-      state.value.tastesById[id] = { ...prev, star: next };
+      const index = state.value.user.tastesList.findIndex(
+        (x) => x.category === action.payload.category
+      );
+      state.value.user.tastesList[index] = {...state.value.user.tastesList[index], star: action.payload.star};
     },
   },
 });
