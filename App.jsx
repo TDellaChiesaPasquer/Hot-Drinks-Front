@@ -184,6 +184,7 @@ const MessagerieNav = () => {
   );
 };
 
+
 const MyProfileNav = () => {
   return (
     <TopTab.Navigator
@@ -193,18 +194,19 @@ const MyProfileNav = () => {
           let icon;
 
           if (route.name === "MyProfile") {
-            icon = <Feather name="user" size={24} color="#965A51" />;
+            icon = <Feather name="user" size={24} color={color}/>;
           } else if (route.name === "Preferences") {
-            icon = <FontAwesome name="heart-o" size={24} color="#965A51" />;
+            icon = <FontAwesome name="heart-o" size={24} color={color} />;
           } else if (route.name === "Settings") {
-            icon = <MaterialIcons name="settings" size={24} color="#965A51" />;
+            icon = <MaterialIcons name="settings" size={24} color={color} />;
           }
 
           return icon;
         },
-
+        tabBarIndicatorStyle: styles.tabBarIndicator,
         tabBarActiveTintColor: "#965A51",
-        tabBarInactiveTintColor: "#BC8D85",
+        tabBarInactiveTintColor: "#CAB4B0",
+        tabBarStyle: {backgroundColor: '#965A51'},
         headerShown: false,
       })}
     >
@@ -264,4 +266,12 @@ const styles = StyleSheet.create({
   tabBarIcon: {
     fontSize: 30,
   },
+  tabBarIndicator: {
+    backgroundColor: '#CAB4B0',
+    height: '90%',
+    marginBottom: '5%',
+    borderRadius: 5,
+    width: '30%',
+    marginLeft: '1.66%'
+  }
 });

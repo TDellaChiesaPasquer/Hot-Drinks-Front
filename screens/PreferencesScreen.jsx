@@ -51,7 +51,7 @@ export default function PreferencesScreen({ navigation }) {
           <Text style={styles.questionText}>{ageRangeString}</Text>
         </View>
         <MultiSlider
-          values={[20, 30]}
+          values={defaultAgeRange}
           onValuesChange={(e) => setAgeRange(e)}
           optionsArray={ageValues}
           sliderLength={width * 0.9 * 0.8}
@@ -69,7 +69,7 @@ export default function PreferencesScreen({ navigation }) {
           <Text style={styles.questionText}>{distanceString}</Text>
         </View>
         <MultiSlider
-          values={[20]}
+          values={defaultDistance}
           optionsArray={distanceValues}
           onValuesChange={(e) => setDistance(e)}
           sliderLength={width * 0.9 * 0.8}
