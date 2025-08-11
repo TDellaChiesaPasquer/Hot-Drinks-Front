@@ -23,10 +23,15 @@ export default function MyProfile({ navigation }) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.user.value.token);
   const dataPhoto = useSelector((state) => state.user.value);
-  const tastesById = useSelector((state) => state.user.value.tastesById) || {};
-  const [tastesList, setTastesList] = useState({});
-  const [hashtagList, setHashtagList] = useState([]);
-  const [imagesList, setImagesList] = useState([]);
+  const dataTaste = dataPhoto.user.tastesList;
+  const tastesById = {};
+  for (const tastElement of dataTaste) {
+    tastesById[tastElement.category] = {
+      label: tastElement.label,
+      value: tastElement.value,
+      star: tastElement.star,
+    };
+  }
 
   //___________________________________________________________CAROUSSEL________________________________________________________________
   const photoList = dataPhoto.user.photoList;
@@ -130,7 +135,6 @@ export default function MyProfile({ navigation }) {
   //__________________________________________________________DROP DOWN QUESTIONS____________________________________________________
   const dropDownQuestion = questions.map((data, i) => {
     const currentFromStore = tastesById[data.id];
-
     let current = { label: null, value: null, star: false };
     if (currentFromStore) {
       current = {
@@ -219,7 +223,6 @@ export default function MyProfile({ navigation }) {
           });
         }
       }
-      console.log("state tastesList=", tastesList);
       console.log("tastesToSave=", tastesToSave);
       console.log("tastesToSave.lenght=", tastesToSave.length);
       if (tastesToSave.length === 0) return;
@@ -361,7 +364,7 @@ const styles = StyleSheet.create({
   },
 
   caroussel: {
-    height: 500,
+    height: height * 0.6,
     backgroundColor: "lightblue",
     marginVertical: 16,
   },
@@ -409,12 +412,16 @@ const styles = StyleSheet.create({
   tag: {
     flexDirection: "row",
     alignItems: "center",
-    alignSelf: "flex-start",
-    backgroundColor: "rgba(150, 90, 81, 0.4)",
+    // alignSelf: "flex-start",
+    justifyContent: "space-evenly",
+    // backgroundColor: "rgba(150, 90, 81, 0.4)",
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 16,
     marginRight: 8,
     marginBottom: 2,
+    // position: "absolute",
+    alignContent: "space-between ",
+    gap: "5",
   },
 
   tagText: {
