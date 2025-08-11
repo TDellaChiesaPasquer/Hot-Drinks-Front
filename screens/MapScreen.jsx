@@ -30,7 +30,6 @@ export default function App({ navigation }) {
   const [givenPosition, setGivenPosition] = useState(null);
 
   const user = useSelector((state) => state.user.value);
-
   const dispatch = useDispatch();
 
   useFocusEffect(
