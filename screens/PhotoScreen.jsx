@@ -74,7 +74,8 @@ export default function ImagePickerScreen({ navigation }) {
         type: "image/jpeg",
       });
     }
-    console.log("test");
+    console.log("testa");
+    
     const response = await fetch(
       process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length,
       {
@@ -85,6 +86,7 @@ export default function ImagePickerScreen({ navigation }) {
         body: formData,
       }
     );
+    console.log('testb')
     const data = await response.json();
     console.log(data);
     if (data.result) {

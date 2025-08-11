@@ -165,8 +165,8 @@ const MainTabNav = () => {
           tabBarIconStyle: styles.tabBarIcon,
         })}
       >
-        <Tab.Screen name="SwipeNav" component={SwipeNav} />
         <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
+        <Tab.Screen name="SwipeNav" component={SwipeNav} />
         <Tab.Screen
           name="MessagerieNav"
           component={MessagerieNav}
