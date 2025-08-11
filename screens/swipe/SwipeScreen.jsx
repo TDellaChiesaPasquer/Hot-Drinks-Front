@@ -35,6 +35,10 @@ export default function SwipeScreen(props) {
 		return state.user.value.token;
 	});
 
+	let thisUserId = useSelector(function (state) {
+		return String(state.user.value.user._id);
+	});
+
 	useEffect(function () {
 		fetchProfilesFromAPI();
 	}, []);
@@ -127,8 +131,16 @@ export default function SwipeScreen(props) {
 
 	function renderCardForIndex(cardIndexInList) {
 		const profile = profileList[cardIndexInList];
+
+		// Vérifier si l'utilisateur actuel a été superliké par ce profil
+		const isSuperliked =
+			profile &&
+			profile.superlikesList &&
+			profile.superlikesList.some(function (superlikerId) {
+				return String(superlikerId) === thisUserId;
+			});
 		return (
-			<View style={styles.card}>
+			<View style={[styles.card, isSuperliked && styles.cardSuperliked]}>
 				<SwipeContainer profile={profile} onChoice={handleUserChoice} />
 			</View>
 		);
@@ -150,6 +162,7 @@ export default function SwipeScreen(props) {
 					backgroundColor="transparent"
 					onSwipedLeft={(cardIndex) => handleSwipe(cardIndex, "Dislike")}
 					onSwipedRight={(cardIndex) => handleSwipe(cardIndex, "Like")}
+					onSwipedTop={(cardIndex) => handleSwipe(cardIndex, "SuperLike")}
 					verticalSwipe={false}
 				/>
 			</View>
@@ -161,6 +174,29 @@ export default function SwipeScreen(props) {
 		</View>
 	);
 }
+
+// Définir la couleur de brillance au début du fichier (avant la fonction StyleSheet.create)
+const SUPERLIKE_GLOW_COLOR = "#75c7feff";
+
+// Fonction helper pour convertir hex en rgba
+const hexToRgba = (hexColor, alphaValue) => {
+	// Extraction de la composante rouge : caractères 1-2 de la chaîne hex (ex: "75" dans "#75c7fe" = 117)
+	const redColor = parseInt(hexColor.slice(1, 3), 16);
+
+	// Extraction de la composante verte : caractères 3-4 de la chaîne hex (ex: "c7" dans "#75c7fe" = 199)
+	const greenColor = parseInt(hexColor.slice(3, 5), 16);
+
+	// Extraction de la composante bleue : caractères 5-6 de la chaîne hex (ex: "fe" dans "#75c7fe" = 254)
+	const blueColor = parseInt(hexColor.slice(5, 7), 16);
+
+	// Conversion des valeurs hexadécimales (base 16) en valeurs décimales (base 10)
+	// parseInt(string, 16) convertit une chaîne hexadécimale en nombre décimal
+	// Résultat pour "#75c7fe" : rouge=117, vert=199, bleu=254 (couleur bleu clair/cyan)
+
+	// Construction de la chaîne rgba avec les composantes RGB (0-255) et alpha (0-1)
+	// Ex: hexToRgba("#75c7fe", 0.8) → "rgba(117, 199, 254, 0.8)"
+	return `rgba(${redColor}, ${greenColor}, ${blueColor}, ${alphaValue})`;
+};
 
 const styles = StyleSheet.create({
 	container: {
@@ -192,6 +228,17 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		width: "100%",
 		height: "100%",
+	},
+	cardSuperliked: {
+		shadowColor: SUPERLIKE_GLOW_COLOR,
+		shadowOffset: { width: 0, height: 0 },
+		shadowOpacity: 0.9,
+		shadowRadius: 15,
+		elevation: 20,
+		borderWidth: 1,
+		borderColor: hexToRgba(SUPERLIKE_GLOW_COLOR, 0.6),
+		// Effet de triple ombre pour plus de brillance
+		boxShadow: `0 0 15px ${hexToRgba(SUPERLIKE_GLOW_COLOR, 0.8)}, 0 0 25px ${hexToRgba(SUPERLIKE_GLOW_COLOR, 0.4)}, 0 0 35px ${hexToRgba(SUPERLIKE_GLOW_COLOR, 0.2)}`,
 	},
 	buttons: {
 		position: "absolute",
