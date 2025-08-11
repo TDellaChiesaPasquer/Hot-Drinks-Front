@@ -38,6 +38,36 @@ export default function ReglagesScreen() {
 		dispatch(disconnect(navigation));
 	};
 
+	// Fonction de validation d'email (à ajouter avant les autres fonctions)
+	const validateEmail = (email) => {
+		// Regex pour valider le format email
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+		// Vérifications multiples
+		if (!email) {
+			return { isValid: false, error: "Email requis" };
+		}
+
+		if (email.length < 5) {
+			return { isValid: false, error: "Email trop court (minimum 5 caractères)" };
+		}
+
+		if (email.length > 254) {
+			return { isValid: false, error: "Email trop long (maximum 254 caractères)" };
+		}
+
+		if (!emailRegex.test(email)) {
+			return { isValid: false, error: "Format d'email invalide" };
+		}
+
+		// Vérification des caractères interdits
+		if (email.includes(" ")) {
+			return { isValid: false, error: "L'email ne peut pas contenir d'espaces" };
+		}
+
+		return { isValid: true, error: null };
+	};
+
 	// Garde-fous avant les fetch
 	const guardNetwork = () => {
 		if (!BASE_URL) {
@@ -54,8 +84,10 @@ export default function ReglagesScreen() {
 	// ACTION: Changer l'email + déconnexion
 	const submitChangeEmail = async () => {
 		if (!guardNetwork()) return;
-		if (!newEmail) {
-			Alert.alert("Email requis", "Saisir un email.");
+		// Validation de l'email
+		const emailValidation = validateEmail(newEmail);
+		if (!emailValidation.isValid) {
+			Alert.alert("Email invalide", emailValidation.error);
 			return;
 		}
 		setEmailLoading(true);
@@ -66,7 +98,7 @@ export default function ReglagesScreen() {
 					"Content-Type": "application/json",
 					Authorization: token,
 				},
-				body: JSON.stringify({ email: newEmail }),
+				body: JSON.stringify({ email: newEmail.toLowerCase().trim() }),
 			});
 			const data = await res.json();
 			if (!res.ok || data?.result === false) {
@@ -243,7 +275,9 @@ export default function ReglagesScreen() {
 
 			{/* Modale -- Supprimer le compte */}
 			<BaseModal visible={showDeleteModal} onRequestClose={() => setShowDeleteModal(false)} title="Supprimer le compte">
-				<Text style={styles.modalWarn}>Es-tu sûr.e de vouloir supprimer ton compte ? Cette action est irréversible et supprimera toutes tes données (informations, matchs, conversations...).</Text>
+				<Text style={styles.modalWarn}>
+					Es-tu sûr.e de vouloir supprimer ton compte ? Cette action est irréversible et supprimera toutes tes données (informations, matchs, conversations...).
+				</Text>
 				<View style={styles.modalRow}>
 					<SecondaryButton label="Annuler" onPress={() => setShowDeleteModal(false)} />
 					<DangerButton label={deleteLoading ? "" : "Supprimer"} onPress={confirmDelete} disabled={deleteLoading}>
