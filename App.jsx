@@ -24,6 +24,8 @@ import ConversationScreen from "./screens/ConversationScreen";
 import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 import MapScreen from "./screens/MapScreen";
+import AddRdvScreen from "./screens/AddRdvScreen";
+// import ListRdvScreen from "./screens/ListRdvScreen";
 import RdvScreen from "./screens/RdvScreen";
 
 // Swipe
@@ -35,7 +37,6 @@ import PreferencesScreen from "./screens/PreferencesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
 import user, { deleteConv, updateConv } from "./reducers/user";
-import map from "./reducers/map";
 import Pusher from "pusher-js";
 import { useEffect } from "react";
 
@@ -48,7 +49,7 @@ const pusher = new Pusher("ee5eeae5d340ff371be3", {
   cluster: "eu",
 });
 
-const reducers = combineReducers({ user, map });
+const reducers = combineReducers({ user });
 const persistConfig = { key: "faceup", storage: AsyncStorage };
 
 const store = configureStore({
@@ -151,8 +152,10 @@ const MainTabNav = () => {
               );
             } else if (route.name === "MyProfileNav") {
               icon = <Feather name="user" size={30} color={color} />;
-            } else {
+            } else if (route.name === "SwipeScreen") {
               icon = <Feather name="coffee" size={30} color={color} />;
+            } else {
+              icon = <Feather name="calendar" size={28} color={color} />;
             }
             return icon;
           },
@@ -169,6 +172,7 @@ const MainTabNav = () => {
           component={MessagerieNav}
           options={messagerieNotif && { tabBarBadge: "" }}
         />
+        <Tab.Screen name="RdvNav" component={RdvNav} />
       </Tab.Navigator>
     </SafeAreaView>
   );
@@ -179,7 +183,7 @@ const MessagerieNav = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
       <Stack.Screen name="ConversationScreen" component={ConversationScreen} />
-      <Stack.Screen name="RdvScreen" component={RdvScreen} />
+      <Stack.Screen name="AddRdvScreen" component={AddRdvScreen} />
     </Stack.Navigator>
   );
 };
@@ -212,6 +216,15 @@ const MyProfileNav = () => {
       <TopTab.Screen name="Preferences" component={PreferencesScreen} />
       <TopTab.Screen name="Settings" component={SettingsScreen} />
     </TopTab.Navigator>
+  );
+};
+
+const RdvNav = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ListRdvScreen" component={RdvScreen} />
+      <Stack.Screen name="RdvScreen" component={ConversationScreen} />
+    </Stack.Navigator>
   );
 };
 

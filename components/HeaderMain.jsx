@@ -1,24 +1,32 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native"
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Feather from '@expo/vector-icons/Feather';
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Feather from "@expo/vector-icons/Feather";
 
-
-
-export default function ({route}) {
+export default function ({ route }) {
   let icon;
-  if (route.name === 'MessagerieNav') {
-    icon = <MaterialCommunityIcons name="message-outline" size={30} color="#BC8D85"/>
+  if (route.name === "MessagerieNav") {
+    icon = (
+      <MaterialCommunityIcons
+        name="message-outline"
+        size={30}
+        color="#BC8D85"
+      />
+    );
   } else if (route.name === "MyProfileNav") {
     icon = <Feather name="user" size={30} color="#BC8D85" />;
+  } else if (route.name === "SwipeScreen") {
+    icon = <Feather name="coffee" size={30} color="#BC8D85" />;
   } else {
-    icon = <Feather name="coffee" size={30} color="#BC8D85" />
+    icon = <Feather name="calendar" size={28} color="#BC8D85" />;
   }
-  return <View style={styles.header}>
-    {icon}
-    <Text style={styles.text}>Hot Drinks</Text>
-    <View style={styles.icon}></View>
-  </View>
+  return (
+    <View style={styles.header}>
+      {icon}
+      <Text style={styles.text}>Hot Drinks</Text>
+      <View style={styles.icon}></View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -26,11 +34,11 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "space-between",
-    width: '100%',
-    backgroundColor: '#F5EBE6',
-    flexDirection: 'row',
+    width: "100%",
+    backgroundColor: "#F5EBE6",
+    flexDirection: "row",
     paddingHorizontal: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   text: {
     fontSize: 30,
@@ -39,6 +47,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: 30,
-    height: 30
-  }
+    height: 30,
+  },
 });

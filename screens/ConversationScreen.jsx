@@ -19,12 +19,15 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { readConv } from "../reducers/user";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Feather from '@expo/vector-icons/Feather';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Ionicons } from "@expo/vector-icons";
-import Animated, { useAnimatedKeyboard, useAnimatedStyle, withSpring } from "react-native-reanimated";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import Animated, {
+  useAnimatedKeyboard,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,18 +37,20 @@ export default function ({ navigation, route }) {
   const dispatch = useDispatch();
   const keyboard = useAnimatedKeyboard();
   const keyboardStyleBottom = useAnimatedStyle(() => ({
-    height: Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66
+    height: Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66,
   }));
   const keyboardStyleScroll = useAnimatedStyle(() => ({
-    height: keyboard.state.value === 1 ? 250 : 0
-  }))
+    height: keyboard.state.value === 1 ? 250 : 0,
+  }));
   const [newMessage, setNewMessage] = useState("");
   const [sendDisabled, setSendDisabled] = useState(false);
   const [modalBlockVisible, setModalBlockVisible] = useState(false);
   const [blockDisabled, setBlockDisabled] = useState(false);
-  const conversation = user.user ? user.user.conversationList.find(
-    (x) => String(x._id) === String(route.params._id)
-  ) : null;
+  const conversation = user.user
+    ? user.user.conversationList.find(
+        (x) => String(x._id) === String(route.params._id)
+      )
+    : null;
   const messageList = conversation?.messageList || [];
   const otherUserNumber = route.params?.otherUserNumber || 1;
   useEffect(() => {
@@ -189,9 +194,7 @@ export default function ({ navigation, route }) {
     setModalBlockVisible(false);
   };
   return (
-    <View
-      style={styles.container}
-    >
+    <View style={styles.container}>
       {modalBlock}
       <View style={styles.conversationHeader}>
         <View style={styles.headerLeft}>
@@ -250,7 +253,9 @@ export default function ({ navigation, route }) {
           <Text style={styles.textBlocked}>Vous avez été bloqué</Text>
         )}
       </View>
-      <Animated.View style={[styles.conversationBottomRelative, keyboardStyleBottom]}>
+      <Animated.View
+        style={[styles.conversationBottomRelative, keyboardStyleBottom]}
+      >
         {conversation && (
           <View style={styles.conversationBottom}>
             <View style={styles.inputContainer}>
@@ -263,23 +268,26 @@ export default function ({ navigation, route }) {
                 maxLength={200}
                 multiline={true}
                 textAlignVertical={"vertical"}
-                onFocus={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+                onFocus={() =>
+                  scrollViewRef.current.scrollToEnd({ animated: true })
+                }
               />
-              
             </View>
             <TouchableOpacity
-                style={styles.bottomButton}
-                onPress={() => sendMessage()}
-                disabled={sendDisabled || modalBlockVisible}
+              style={styles.bottomButton}
+              onPress={() => sendMessage()}
+              disabled={sendDisabled || modalBlockVisible}
             >
               <Ionicons name="send" size={24} color="#F5EBE6" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomButton} disabled={modalBlockVisible} onPress={() => {navigation.navigate('RdvScreen');}}>
-              <Feather
-                name="calendar"
-                size={24}
-                color="#F5EBE6"
-              />
+            <TouchableOpacity
+              style={styles.bottomButton}
+              disabled={modalBlockVisible}
+              onPress={() => {
+                navigation.navigate("AddRdvScreen");
+              }}
+            >
+              <Feather name="calendar" size={24} color="#F5EBE6" />
             </TouchableOpacity>
           </View>
         )}
@@ -348,17 +356,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingVertical: 16,
     width: width * 0.6,
-    flex: 1
+    flex: 1,
   },
   conversationBottom: {
     maxHeight: 115,
     position: "absolute",
     top: 0,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
     width: width * 0.9,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   inputContainer: {
     borderRadius: 24,
@@ -393,7 +401,7 @@ const styles = StyleSheet.create({
   conversationBottomRelative: {
     position: "relative",
     alignItems: "center",
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
     width: width,
     height: 66,
   },
@@ -470,9 +478,9 @@ const styles = StyleSheet.create({
   },
   convKey: {
     width: width,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: "center",
+    justifyContent: "flex-end",
     flexShrink: 1,
-    height: '100%'
-  }
+    height: "100%",
+  },
 });
