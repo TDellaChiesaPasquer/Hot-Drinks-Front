@@ -38,7 +38,7 @@ export default function SwipeScreen(props) {
 	});
 
 	let thisUserId = useSelector(function (state) {
-		return String(state.user.value.user._id);
+		return String(state.user.value.user && state.user.value.user._id);
 	});
 
 	useEffect(function () {

@@ -60,7 +60,7 @@ export default functionDropdownComponent = (props) => {
             onBlur={() => setIsOpen(false)}
             onChange={(item) => {
               setValue(item.value);
-              dispatch(setAnswer({category: props.questionId, label: props.question, value: value}));
+              dispatch(setAnswer({category: props.questionId, label: props.question, value: item.value}));
               setIsOpen(false);
             }}
             renderRightIcon={() => (

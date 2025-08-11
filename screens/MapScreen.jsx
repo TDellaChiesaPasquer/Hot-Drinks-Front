@@ -6,6 +6,7 @@ import {
   Pressable,
   Text,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import MapView from "react-native-maps";
 import { Dimensions } from "react-native";
@@ -156,11 +157,12 @@ export default function App({ navigation }) {
         </MapView>
       )}
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, disabled && styles.boutonDisabled]}
         onPress={() => getGeolocalisation()}
         disabled={disabled}
       >
         <Text style={styles.boutonText}>VALIDER</Text>
+        {disabled && <ActivityIndicator size="small" color="#FFFFFF" style={styles.loader} />}
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -213,4 +215,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#F5EBE6",
   },
+  boutonDisabled: {
+		backgroundColor: "#8b6762c0",
+		boxShadow: "0 1px 2px #976f68c0",
+	},
+  loader: {
+		position: "absolute",
+		left: 10,
+	},
 });

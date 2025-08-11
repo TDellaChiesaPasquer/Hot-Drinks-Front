@@ -243,7 +243,6 @@ export default function MyProfile({ navigation }) {
             scrollEnabled={false}
           >
             {photoList.map(function (url, i) {
-              console.log(url);
               return (
                 <Image
                   key={i}

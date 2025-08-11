@@ -22,7 +22,7 @@ export default function SwipeButton(props) {
   const user = useSelector(state => state.user.value.user);
   const lastSuperlike = user && user.lastSuperlike || new Date();
   const today = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0);
-  let superlikeNumber = user.superlikeNumber;
+  let superlikeNumber = user && user.superlikeNumber;
   if (today.valueOf() - lastSuperlike.valueOf() > 0 || !superlikeNumber) {
     superlikeNumber = 0;
   }
