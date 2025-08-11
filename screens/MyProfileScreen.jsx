@@ -346,8 +346,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
     marginHorizontal: 16,
-    marginBottom: 12,
-    zIndex: 3,
+    marginBottom: 6,
+    position: "absolute",
+    zIndex: 999,
+    top: -25,
+    right: -7,
   },
 
   tag: {
@@ -363,10 +366,18 @@ const styles = StyleSheet.create({
     // position: "absolute",
     alignContent: "space-between ",
     gap: "5",
+    position: "absolute",
+    zIndex: 999,
+    top: -25,
+    right: -7,
   },
 
   tagText: {
     color: "white",
     fontWeight: "bold",
+    position: "absolute",
+    zIndex: 999,
+    top: -25,
+    right: -7,
   },
 });
