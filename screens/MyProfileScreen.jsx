@@ -14,15 +14,30 @@ import { useSelector, useDispatch } from "react-redux";
 import { Dropdown } from "react-native-element-dropdown";
 import { setAnswer, toggleStar, setAllTastes } from "../reducers/user";
 import DropDownComponent from "../components/DropDownComponent";
+import Swiper from "react-native-swiper";
+import { Image } from "expo-image";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 const { width, height } = Dimensions.get("window");
 
 export default function MyProfile({ navigation }) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.user.value.token);
-  const tastesById = useSelector((state) => state.user.value.tastesById) || {};
-  const [tastesList, setTastesList] = useState({});
-  const [hashtagList, setHashtagList] = useState([]);
+  const dataPhoto = useSelector((state) => state.user.value);
+  const dataTaste = (dataPhoto.user && dataPhoto.user.tastesList) || [];
+  const tastesById = {};
+  for (const tastElement of dataTaste) {
+    tastesById[tastElement.category] = {
+      label: tastElement.label,
+      value: tastElement.value,
+      star: tastElement.star,
+    };
+  }
+
+  //___________________________________________________________CAROUSSEL________________________________________________________________
+  const photoList = (dataPhoto.user && dataPhoto.user.photoList) || [];
+
+  //__________________________________________________________QUESTIONS DATA_________________________________________________________
 
   const questions = [
     {
@@ -120,7 +135,6 @@ export default function MyProfile({ navigation }) {
   //__________________________________________________________DROP DOWN QUESTIONS____________________________________________________
   const dropDownQuestion = questions.map((data, i) => {
     const currentFromStore = tastesById[data.id];
-
     let current = { label: null, value: null, star: false };
     if (currentFromStore) {
       current = {
@@ -142,46 +156,15 @@ export default function MyProfile({ navigation }) {
           dispatch(
             setAnswer({ id: data.id, label: data.label, value: item.value })
           );
-          //   setTastesList((prev) => {
-          //     const copy = { ...prev };
-          //     const starValue = copy[data.id] ? copy[data.id].star : false;
-
-          //     copy[data.id] = {
-          //       label: item.label,
-          //       value: item.value,
-          //       star: starValue,
-          //     };
-          //     return copy;
-          //   });
         }}
         onToggleStar={(next) => {
           dispatch(toggleStar({ id: data.id, next }));
-          //   setTastesList((prev) => {
-          //     const copy = { ...prev };
-          //     const labelValue = copy[data.id] ? copy[data.id].label : null;
-          //     const valueValue = copy[data.id] ? copy[data.id].value : null;
-
-          //     copy[data.id] = {
-          //       label: labelValue,
-          //       value: valueValue,
-          //       star: next,
-          //     };
-          //     return copy;
-          //   });
         }}
       />
     );
   });
 
   //_____________________________________________________HASHTAGS_____________________________________________
-
-  //   let starredTags = [];
-  //   for (let id in tastesList) {
-  //     const item = tastesList[id];
-  //     if (item && item.value && item.star) {
-  //       starredTags.push({ id: id, value: item.value });
-  //     }
-  //   }
 
   const starredTags = [];
   for (const key in tastesById) {
@@ -190,74 +173,18 @@ export default function MyProfile({ navigation }) {
       starredTags.push(t.value);
     }
   }
-  // .filter((e) => e && e.star && e.value)
-  // .map((e) => e.value);
 
   //___________________________________________________________SAUVEGARDE TASTES________________________________________
   const saveAllTastes = async () => {
-    try {
-      const tastesToSave = [];
-      for (let id in tastesById) {
-        const taste = tastesById[id];
-        // const v = tastesList[category];
-        if (taste && taste.value) {
-          tastesToSave.push({
-            category: id,
-            label: taste.label,
-            value: taste.value,
-            star: Boolean(taste.star),
-          });
-        }
-      }
-      console.log("state tastesList=", tastesList);
-      console.log("tastesToSave=", tastesToSave);
-      console.log("tastesToSave.lenght=", tastesToSave.length);
-      if (tastesToSave.length === 0) return;
-
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_IP}/users/addAllTastes/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: token,
-          },
-          body: JSON.stringify({
-            tastesList: tastesToSave,
-          }),
-        }
-      );
-      const data = await response.json();
-      if (data.result && data.tastesList) {
-        const obj = {};
-
-        for (let i = 0; i < data.tastesList.length; i++) {
-          const elem = data.tasteList[i] || {};
-          const category = elem.category || null;
-
-          if (!category) continue;
-
-          obj[category] = {
-            label: elem.label || null,
-            value: elem.value || null,
-            star: elem.star ? true : false,
-          };
-        }
-        // for (let elem of data.tastesList) {
-        //   obj[elem.category] = {
-        //     label: elem.label,
-        //     value: elem.value,
-        //     star: Boolean(elem.star),
-        //   };
-        // }
-        dispatch(setAllTastes(obj));
-        console.log("Réponses enregistrées avec succès!");
-      } else {
-        console.log("Erreur lors de l'enregistrement: ", data.error);
-      }
-    } catch (error) {
-      console.error("Erreur lors de l'enregistrement:", error);
-    }
+    const tastesList = dataTaste;
+    await fetch(process.env.EXPO_PUBLIC_IP + "/users/addAllTastes", {
+      method: "POST",
+      headers: {
+        authorization: token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tastesList }),
+    });
   };
 
   return (
@@ -274,22 +201,32 @@ export default function MyProfile({ navigation }) {
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 160 }}
         >
-          <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
-          </Text>
+          <View style={styles.iconContainer}>
+            <TouchableOpacity style={styles.modifyIcon}>
+              <FontAwesome5 name="pen" size={15} color="white" />
+            </TouchableOpacity>
+          </View>
+          <Swiper
+            style={styles.caroussel}
+            loop={true}
+            showsButtons
+            nextButton={<Text style={styles.arrow}>›</Text>}
+            prevButton={<Text style={styles.arrow}>‹</Text>}
+            activeDotColor="white"
+            scrollEnabled={false}
+          >
+            {photoList.map(function (url, i) {
+              console.log(url);
+              return (
+                <Image
+                  key={i}
+                  source={url}
+                  style={styles.image}
+                  contentFit="cover"
+                />
+              );
+            })}
+          </Swiper>
           <View style={styles.tagContainer}>
             {starredTags.map((tag, idx) => (
               <View key={idx} style={styles.tag}>
@@ -323,6 +260,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
     fontWeight: "bold",
+    marginTop: 15,
   },
 
   scrollContainer: {
@@ -335,6 +273,50 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5EBE6",
     height: "100%",
     width: "100%",
+  },
+
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: "100%",
+    backgroundColor: "#965A51",
+    overflow: "hidden",
+    justifyContent: "flex-end",
+    // backgroundColor: "blue",
+    alignItems: "flex-end",
+    // paddingRight: 10,
+    position: "absolute",
+    zIndex: 1,
+    top: 35,
+    right: 13,
+    // boxShadow: "0 2px 3px #BC8D85",
+  },
+
+  modifyIcon: {
+    justifyContent: "flex-end",
+    // backgroundColor: "blue",
+    alignItems: "flex-end",
+    paddingRight: 20,
+    position: "absolute",
+    zIndex: 999,
+    top: 13,
+    right: -7,
+  },
+
+  caroussel: {
+    height: height * 0.6,
+    backgroundColor: "lightblue",
+    marginVertical: 16,
+  },
+
+  image: {
+    height: "100%",
+    width: "100%",
+  },
+
+  arrow: {
+    color: "white",
+    fontSize: 100,
   },
 
   validationButton: {
@@ -365,17 +347,22 @@ const styles = StyleSheet.create({
     gap: 8,
     marginHorizontal: 16,
     marginBottom: 12,
+    zIndex: 3,
   },
 
   tag: {
     flexDirection: "row",
     alignItems: "center",
-    alignSelf: "flex-start",
-    backgroundColor: "rgba(150, 90, 81, 0.4)",
+    // alignSelf: "flex-start",
+    justifyContent: "space-evenly",
+    // backgroundColor: "rgba(150, 90, 81, 0.4)",
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 16,
     marginRight: 8,
     marginBottom: 2,
+    // position: "absolute",
+    alignContent: "space-between ",
+    gap: "5",
   },
 
   tagText: {

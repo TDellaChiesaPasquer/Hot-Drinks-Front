@@ -47,7 +47,7 @@ export default function SwipeButton(props) {
 			return <FontAwesome name="times" size={iconSize} color="#8A2BE2" />;
 		}
 		if (type === "Superlike") {
-			return <FontAwesome name="star" size={iconSize} color="#FFA500" />;
+			return <FontAwesome name="star" size={iconSize} color="#75c7feff" />;
 		}
 		return null;
 	}

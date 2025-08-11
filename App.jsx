@@ -166,7 +166,7 @@ const MainTabNav = () => {
         })}
       >
         <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
-        <Tab.Screen name="SwipeScreen" component={SwipeScreen} />
+        <Tab.Screen name="SwipeNav" component={SwipeNav} />
         <Tab.Screen
           name="MessagerieNav"
           component={MessagerieNav}
@@ -175,6 +175,18 @@ const MainTabNav = () => {
         <Tab.Screen name="RdvNav" component={RdvNav} />
       </Tab.Navigator>
     </SafeAreaView>
+  );
+};
+
+const SwipeNav = () => {
+  return (
+    <StackSwipe.Navigator screenOptions={{ headerShown: false }}>
+      <StackSwipe.Screen name="SwipeScreen" component={SwipeScreen} />
+      <StackSwipe.Screen
+        name="SwipeProfileInformationsScreen"
+        component={SwipeProfileInformationsScreen}
+      />
+    </StackSwipe.Navigator>
   );
 };
 
@@ -197,11 +209,11 @@ const MyProfileNav = () => {
           let icon;
 
           if (route.name === "MyProfile") {
-            icon = <Feather name="user" size={24} color="#965A51" />;
+            icon = <Feather name="user" size={24} color={color} />;
           } else if (route.name === "Preferences") {
-            icon = <FontAwesome name="heart-o" size={24} color="#965A51" />;
+            icon = <FontAwesome name="heart-o" size={24} color={color} />;
           } else if (route.name === "Settings") {
-            icon = <MaterialIcons name="settings" size={24} color="#965A51" />;
+            icon = <MaterialIcons name="settings" size={24} color={color} />;
           }
 
           return icon;
@@ -276,5 +288,13 @@ const styles = StyleSheet.create({
   },
   tabBarIcon: {
     fontSize: 30,
+  },
+  tabBarIndicator: {
+    backgroundColor: "#CAB4B0",
+    height: "90%",
+    marginBottom: "5%",
+    borderRadius: 5,
+    width: "30%",
+    marginLeft: "1.66%",
   },
 });

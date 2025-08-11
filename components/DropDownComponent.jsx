@@ -3,12 +3,14 @@ import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
+import { useDispatch } from "react-redux";
+import { setAnswer, toggleStar } from "../reducers/user";
 
 export default functionDropdownComponent = (props) => {
   const [value, setValue] = useState(null);
-  const [isImportant, setIsImportant] = useState(props.star ?? false);
+  const [isImportant, setIsImportant] = useState(props.star && false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (props.value !== undefined && props.value !== null) {
       setValue(props.value);
@@ -28,7 +30,7 @@ export default functionDropdownComponent = (props) => {
   const handleImportanceClick = () => {
     const next = !isImportant;
     setIsImportant(next);
-    if (props.onToggleStar) props.onToggleStar(next);
+    dispatch(toggleStar({category: props.questionId, star: next}));
   };
   //_____________________________________ affiche la question au dessus du dropdown quand reponse selectionnée
   const renderLabel = () => {
@@ -58,7 +60,7 @@ export default functionDropdownComponent = (props) => {
             onBlur={() => setIsOpen(false)}
             onChange={(item) => {
               setValue(item.value);
-              if (props.onChange) props.onChange(item);
+              dispatch(setAnswer({category: props.questionId, label: props.question, value: value}));
               setIsOpen(false);
             }}
             renderRightIcon={() => (
@@ -77,8 +79,9 @@ export default functionDropdownComponent = (props) => {
           />
         </View>
         <TouchableOpacity
-          onPress={handleImportanceClick}
+          onPress={() => handleImportanceClick()}
           style={styles.starColoumn}
+          disabled={!value}
         >
           <Entypo
             // style={styles.stars}
