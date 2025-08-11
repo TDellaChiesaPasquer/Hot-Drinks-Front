@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { ScrollView, View, StyleSheet, Dimensions } from "react-native";
+import { ScrollView, View, StyleSheet, Dimensions, Text } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 
