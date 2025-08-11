@@ -13,27 +13,35 @@ import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
 
 export default function App({ navigation }) {
-	const [myLocation, setMyLocation] = useState({});
-	const [disabled, setDisabled] = useState(false);
-	const [permission, setPermission] = useState(false);
-	const [error, setError] = useState(false);
-	const myLocationRef = useRef(myLocation);
-	const [givenPosition, setGivenPosition] = useState(null);
+  const [myLocation, setMyLocation] = useState({});
+  const [disabled, setDisabled] = useState(false);
+  const [permission, setPermission] = useState(false);
+  const [error, setError] = useState(false);
+  const myLocationRef = useRef(myLocation);
+  const [givenPosition, setGivenPosition] = useState(null);
 
+<<<<<<< HEAD
 	const user = useSelector((state) => state.user.value);
 	const locations = useSelector((state) => state.user.value.places);
 	const dispatch = useDispatch();
+=======
+  const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
+>>>>>>> bfe70ee9b88f54224022041ce7d21df8eccf47dc
 
-	useFocusEffect(
-		useCallback(() => {
-			const onBackPress = () => {
-				return true;
-			};
-			const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
 
-			return () => subscription.remove();
-		}, [])
-	);
+      return () => subscription.remove();
+    }, [])
+  );
 
 	useEffect(() => {
 		(async () => {
