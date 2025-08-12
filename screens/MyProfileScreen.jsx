@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   TouchableOpacity,
-  Button,
+  Modal,
 } from "react-native";
 
 import React, { useEffect, useState } from "react";
@@ -28,6 +28,7 @@ export default function MyProfile({ navigation }) {
   const token = useSelector((state) => state.user.value.token);
   const dataPhoto = useSelector((state) => state.user.value);
   const dataTaste = (dataPhoto.user && dataPhoto.user.tastesList) || [];
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const tastesById = {};
   for (const tastElement of dataTaste) {
     tastesById[tastElement.category] = {
@@ -181,6 +182,28 @@ export default function MyProfile({ navigation }) {
     }
   }
   console.log(starredTags);
+
+  //___________________________________________________________MODAL________________________________________
+  const modalModificationCheck = (
+    <Modal
+      style={styles.modal}
+      visible={isModalVisible}
+      animationType="fade"
+      transparent={true}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Modifications enregistrées!</Text>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  const handleModal = (bool) => {
+    console.log(bool);
+    setIsModalVisible(() => bool);
+  };
+
   //___________________________________________________________SAUVEGARDE TASTES________________________________________
   const saveAllTastes = async () => {
     const tastesList = dataTaste;
@@ -192,11 +215,13 @@ export default function MyProfile({ navigation }) {
       },
       body: JSON.stringify({ tastesList }),
     });
-    alert("Les modifications ont bien été enregistrées.");
+    handleModal(true);
+    setTimeout(handleModal, 1500, false);
   };
 
   return (
     <View style={styles.mainContainer}>
+      {modalModificationCheck}
       <View>
         <TouchableOpacity onPress={() => navigation.navigate("MyProfileNav")} />
         <TouchableOpacity onPress={() => navigation.navigate("MainTabNav")} />
@@ -290,6 +315,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5EBE6",
     height: "100%",
     width: "100%",
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center",
+      fontWeight: "900",
+    },
   },
 
   iconContainer: {

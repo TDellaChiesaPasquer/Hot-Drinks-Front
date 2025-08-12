@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   Button,
   View,
@@ -21,7 +21,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 const { width, height } = Dimensions.get("window");
 
 export default function ImagePickerScreen({ navigation, route }) {
-  // console.log(route.params.photos);
   const [photoUriList, setPhotoUriList] = useState([]);
   const [disabled, setDisabled] = useState(false);
 
@@ -42,7 +41,6 @@ export default function ImagePickerScreen({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-      //condition
       if (!route.params || route.params.photoList === undefined) {
         return;
       } else {
