@@ -82,13 +82,22 @@ export default function ({ navigation, route }) {
   const lastOwnSeenMessageIndex = messageList.findLastIndex(
     (x) => x.creator !== otherUserNumber && x.seen === true
   );
-  const currentRdv = user.user && user.user.rdvList.find(x => (String(x.creator) === String(user.user._id) || String(x.receiver) === String(user.user._id)) && (new Date(x.date)).valueOf() - (new Date()).valueOf() > 0);
+  const currentRdv =
+    user.user &&
+    user.user.rdvList.find(
+      (x) =>
+        (String(x.creator) === String(user.user._id) ||
+          String(x.receiver) === String(user.user._id)) &&
+        new Date(x.date).valueOf() - new Date().valueOf() > 0
+    );
   let currentRdvHTML;
   if (currentRdv) {
-    if (currentRdv.status === 'demande') {
-      currentRdvHTML = <View>
-        <Text>Test</Text>
-      </View>
+    if (currentRdv.status === "demande") {
+      currentRdvHTML = (
+        <View>
+          <Text>Test</Text>
+        </View>
+      );
     }
   }
   const messagesHTML = messageList.map((message, index) => {
@@ -293,7 +302,9 @@ export default function ({ navigation, route }) {
               style={styles.bottomButton}
               disabled={modalBlockVisible}
               onPress={() => {
-                navigation.navigate("AddRdvScreen");
+                navigation.navigate("AddRdvScreen", {
+                  conversationId: route.params._id,
+                });
               }}
             >
               <Feather name="calendar" size={24} color="#F5EBE6" />

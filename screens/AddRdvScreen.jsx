@@ -1,34 +1,52 @@
-import {
-  StyleSheet,
-  Modal,
-  TextInput,
-  View,
-  Pressable,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useRef, useCallback } from "react";
-import { addPlace } from "../reducers/user";
-import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import dayjs from "dayjs";
 
-export default function AddRdvScreen({}) {
-  const dispatch = useDispatch();
-  const places = useSelector((state) => state.user.value.places);
+export default function AddRdvScreen({ navigation, route }) {
   const token = useSelector((state) => state.user.value.token);
-  // const [latitude, setLatitude] = useState("");
-  // const [longitude, setLongitude] = useState("");
-  const [rdvPlace, setRdvPlace] = useState("");
   const [choicePositionRdv, setChoicePositionRdv] = useState(null);
+  const [date, setDate] = useState(new Date());
+  const [visible, setVisible] = useState(false);
+  const [mode, setMode] = useState("");
 
-  console.log(choicePositionRdv, "LQQQQQQQQ");
+  const showPicker = () => {
+    setVisible(true);
+  };
 
-  const addRdv = async (coord) => {
+  const showDate = () => {
+    setMode("date");
+    showPicker();
+  };
+
+  const showTime = () => {
+    setMode("time");
+    showPicker();
+  };
+
+  const dateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setVisible(false);
+    setDate(currentDate);
+  };
+
+  const getMarker = async (coordinates) => {
+    setChoicePositionRdv(coordinates);
+    const newRdv = {
+      longitude: coordinates.longitude,
+      latitude: coordinates.latitude,
+    };
+  };
+
+  const addRdv = async () => {
     console.log("hello");
-
+    if (!Marker && !date) {
+      return;
+    }
+    console.log(route.params.conversationId);
     const response = await fetch(process.env.EXPO_PUBLIC_IP + "/rdv/ask", {
       method: "PUT",
       headers: {
@@ -36,19 +54,17 @@ export default function AddRdvScreen({}) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        longitude: coord.longitude,
-        latitude: coord.latitude,
+        longitude: choicePositionRdv.longitude,
+        latitude: choicePositionRdv.latitude,
+        conversationId: route.params.conversationId,
+        date: dayjs(date).format("YYYY-MM-DDTHH:mm"),
       }),
     });
     console.log("ici");
     const data = await response.json();
-    console.log(data, "ou es tu");
-    setChoicePositionRdv({
-      latitude: data.location.latitude,
-      longitude: data.location.longitude,
-    });
+    console.log(data);
+    navigation.goBack();
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <MapView
@@ -60,27 +76,38 @@ export default function AddRdvScreen({}) {
           longitudeDelta: 0.0222,
         }}
         style={styles.map}
-        onLongPress={(action) => addRdv(action.nativeEvent.coordinate)}
+        onLongPress={(action) => getMarker(action.nativeEvent.coordinate)}
         // disabled={disabled}
       >
         {choicePositionRdv && (
-          <Marker
-            coordinate={{
-              latitude: choicePositionRdv.latitude,
-              longitude: choicePositionRdv.longitude,
-            }}
-            pinColor="#78010bff"
-          />
+          <Marker coordinate={choicePositionRdv} pinColor="#78010bff" />
         )}
       </MapView>
+      {/* <MobileDateTimePicker /> */}
+      <View style={styles.container}>
+        <Text style={styles.text} onPress={showDate}>
+          {`${("0" + date.getDate()).slice(-2)}/${("0" + date.getMonth()).slice(
+            -2
+          )}/${date.getFullYear()}`}
+        </Text>
+        <Text style={styles.text} onPress={showTime}>
+          {`${("0" + date.getHours()).slice(-2)}:${(
+            "0" + date.getMinutes()
+          ).slice(-2)}`}
+        </Text>
+        {visible && (
+          <DateTimePicker value={date} mode={mode} onChange={dateChange} />
+        )}
+      </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => addRdvByTouch()}
+        onPress={() => {
+          addRdv();
+        }}
         // disabled={disabled}
       >
         <Text style={styles.boutonText}>VALIDER</Text>
       </TouchableOpacity>
-      <View style={{ backgroundColor: "red", flex: 1 }}></View>
     </SafeAreaView>
   );
 }
@@ -91,8 +118,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   map: {
-    height: "100%",
-    width: "100%",
+    height: "75%",
+    width: "90%",
     marginHorizontal: 20,
     marginTop: 5,
     alignItems: "center",

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="420" viewBox="0 0 360 420" role="img" aria-labelledby="title desc">
+  <title id="title">Chocolat chaud — Pour la vie</title>
+  <desc id="desc">Carte arrondie couleur cacao, mug de chocolat chaud avec coeurs et vapeur.</desc>
+  <defs>
+    <linearGradient id="bgChoco" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#B65A5A"/>
+      <stop offset="1" stop-color="#7E3737"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.45"/>
+      <stop offset="0.35" stop-color="#FFFFFF" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <filter id="iconShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+    <style>
+      .stroke { stroke:#2A0E0A; stroke-width:4.5; stroke-linecap:round; stroke-linejoin:round; }
+      .title { font: 700 26px/1.1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; fill:#FFF; }
+      .subtitle { font: 400 18px/1.3 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; fill:#FBEAEA; opacity:.95; }
+    </style>
+    <path id="heart" d="M8 3c1.9-3.6 7-3.6 9 0 1.7 3.1-.3 6.1-2.4 7.9-1.7 1.5-3.6 2.7-4.1 3.1-.5-.4-2.4-1.6-4.1-3.1C0.3 9.1-1.7 6.1 0 3 2-0.6 6.1-0.6 8 3z" />
+  </defs>
+
+  <!-- Card -->
+  <rect x="24" y="20" width="312" height="380" rx="28" fill="url(#bgChoco)" filter="url(#cardShadow)"/>
+  <rect x="24" y="20" width="312" height="380" rx="28" fill="url(#shine)" opacity=".25"/>
+  <rect x="24" y="20" width="312" height="380" rx="28" fill="none" stroke="#D9A4A4" stroke-opacity=".45" stroke-width="2"/>
+
+  <!-- Icon -->
+  <g transform="translate(80,70)" filter="url(#iconShadow)">
+    <!-- Saucer -->
+    <ellipse cx="100" cy="168" rx="78" ry="16" fill="#5E3A3A" opacity=".35"/>
+    <!-- Mug body -->
+    <rect x="40" y="60" width="120" height="100" rx="20" fill="#F3C6C6" class="stroke"/>
+    <!-- Liquid -->
+    <path d="M50 86h100c8 0 8 0 8-8v-2H42v2c0 8 0 8 8 8z" fill="#7A3F36" class="stroke" stroke="none"/>
+    <!-- Rim -->
+    <rect x="36" y="50" width="128" height="24" rx="12" fill="#FFD9D9" class="stroke"/>
+    <!-- Handle -->
+    <path d="M160 88c18-2 34 10 32 28-2 21-20 28-36 20" fill="none" class="stroke"/>
+    <!-- Steam -->
+    <path d="M92 40c-8-14 8-20 0-34" fill="none" class="stroke"/>
+    <path d="M116 40c-8-14 8-20 0-34" fill="none" class="stroke"/>
+    <!-- Hearts -->
+    <use href="#heart" fill="#FF7F9F" transform="translate(18,34) scale(.9) rotate(-10)"/>
+    <use href="#heart" fill="#FFB3C5" transform="translate(150,24) scale(.7) rotate(12)"/>
+  </g>
+
+  <!-- Text -->
+  <text x="180" y="308" text-anchor="middle" class="title">Chocolat chaud</text>
+  <text x="180" y="338" text-anchor="middle" class="subtitle">Pour la vie</text>
+</svg>

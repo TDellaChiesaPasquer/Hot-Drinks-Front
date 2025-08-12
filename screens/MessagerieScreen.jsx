@@ -25,12 +25,11 @@ export default function ({ navigation }) {
     }
     const otherUserNumber =
       String(data.user1._id) === String(user.user._id) ? 2 : 1;
-    const otherUser = otherUserNumber === 2
-        ? data.user2
-        : data.user1;
+    const otherUser = otherUserNumber === 2 ? data.user2 : data.user1;
     const name = otherUser.username;
     const lastMessage = data.messageList[data.messageList.length - 1];
-    const notif = lastMessage.creator === otherUserNumber && lastMessage.seen === false;
+    const notif =
+      lastMessage.creator === otherUserNumber && lastMessage.seen === false;
     return (
       <TouchableOpacity
         key={data._id}
@@ -51,9 +50,9 @@ export default function ({ navigation }) {
           />
         </View>
         <View style={styles.message}>
-          <Text style={styles.username}>{name.length > 25
-              ? name.slice(0, 22) + "..."
-              : name}</Text>
+          <Text style={styles.username}>
+            {name.length > 25 ? name.slice(0, 22) + "..." : name}
+          </Text>
           <Text style={styles.messageInfo}>
             Dernier message, le {dayjs(lastMessage.date).format("DD/MM/YYYY")} à{" "}
             {dayjs(lastMessage.date).format("HH:mm")}
@@ -114,7 +113,9 @@ export default function ({ navigation }) {
         </ScrollView>
       </View>
       <Text style={styles.title}>Messages</Text>
-      {user.user.conversationList.length === 0 && <Text>Vos conversations et matchs se trouveront ici</Text>}
+      {user.user.conversationList.length === 0 && (
+        <Text>Vos conversations et matchs se trouveront ici</Text>
+      )}
       <ScrollView contentContainerStyle={styles.conversationList}>
         {conversationHTML}
       </ScrollView>
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingLeft: 10,
     marginVertical: 5,
-    position: 'relative'
+    position: "relative",
   },
   avatar: {
     width: 60,
@@ -207,11 +208,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   notif: {
-    position: 'absolute',
+    position: "absolute",
     width: 10,
     height: 10,
     borderRadius: 10,
-    backgroundColor: '#FFF5F0',
-    right: 25
-  }
+    backgroundColor: "#FFF5F0",
+    right: 25,
+  },
 });

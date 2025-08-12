@@ -8,7 +8,7 @@ const initialState = {
     tempInfos: null,
     tempPhotosList: [],
     tastesById: {},
-    // places: [],
+    places: [],
   },
 };
 
@@ -128,17 +128,29 @@ export const userSlice = createSlice({
       state.value.user.lastSuperlike = new Date();
       state.value.user.superlikeNumber = superlikeNumber + 1;
     },
+
+    addPlace: (state, action) => {
+      state.value.places.push(action.payload);
+    },
+
+    removePlace: (state, action) => {
+      state.value.places = state.value.places.filter(
+        (elem) => elem.coord !== action.payload
+      );
+    },
+
+    updateRdv: (state, action) => {
+      const index = state.value.user.rdvList.findIndex(
+        (x) => String(x._id) === String(action.payload._id)
+      );
+      console.log(index);
+      if (index === -1) {
+        state.value.user.rdvList.push(action.payload);
+      } else {
+        state.value.user.rdvList[index] = action.payload;
+      }
+    },
   },
-
-  // addPlace: (state, action) => {
-  //   state.value.places.push(action.payload);
-  // },
-
-  // removePlace: (state, action) => {
-  //   state.value.places = state.value.places.filter(
-  //     (elem) => elem.coord !== action.payload
-  //   );
-  // },
 });
 
 export const {
@@ -155,5 +167,6 @@ export const {
   newSuperlike,
   // addPlace,
   // removePlace,
+  updateRdv,
 } = userSlice.actions;
 export default userSlice.reducer;
