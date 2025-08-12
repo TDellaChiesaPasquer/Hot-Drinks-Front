@@ -55,20 +55,39 @@ export default function App({ navigation }) {
       if (status === "granted") {
         console.log("permission granted");
 
-        const location = await Location.getCurrentPositionAsync({});
-        console.log("location retrieved");
+        // AJOUT : Vérifier si la géolocalisation est activée
+        const locationEnabled = await Location.hasServicesEnabledAsync();
 
-        console.log(location);
-        const { latitude, longitude } = location.coords;
-        setMyLocation({
-          latitude,
-          longitude,
-        });
-        myLocationRef.current = {
-          latitude,
-          longitude,
-        };
-        getGeolocalisation();
+        if (!locationEnabled) {
+          console.log("Géolocalisation désactivée");
+          setError("Veuillez activer la localisation dans les paramètres");
+          setPermission(true); // Afficher la carte pour sélection manuelle
+          return;
+        }
+
+        // AJOUT : Try/catch pour gérer les erreurs de localisation
+        try {
+          const location = await Location.getCurrentPositionAsync({});
+          console.log("location retrieved");
+
+          console.log(location);
+          const { latitude, longitude } = location.coords;
+          setMyLocation({
+            latitude,
+            longitude,
+          });
+          myLocationRef.current = {
+            latitude,
+            longitude,
+          };
+          getGeolocalisation();
+        } catch (error) {
+          console.log("Erreur localisation:", error);
+          setError(
+            "Impossible d'obtenir votre position. Choisissez sur la carte."
+          );
+          setPermission(true); // Afficher la carte pour sélection manuelle
+        }
       } else {
         setPermission(true);
       }
@@ -111,8 +130,7 @@ export default function App({ navigation }) {
     });
     const data2 = await response2.json();
     dispatch(addInfos(data2.user));
-    setDisabled(false),
-      navigation.navigate("MainTabNav", { screen: "SwipeNav" });
+    setDisabled(false), navigation.navigate("MainTabNav");
   };
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
   const addCityByTouch = async (touch_coordinates) => {

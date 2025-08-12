@@ -39,7 +39,8 @@ export default function ImagePickerScreen({ navigation }) {
   );
 
   const addUriToList = (uri) => {
-    setPhotoUriList([...photoUriList, uri]);
+    const orderedPhotos = [...photoUriList.filter((uri) => uri !== null)];
+    setPhotoUriList([...orderedPhotos, uri]);
   };
 
   const removeUriToList = (uri) => {
@@ -74,7 +75,8 @@ export default function ImagePickerScreen({ navigation }) {
         type: "image/jpeg",
       });
     }
-    console.log("test");
+    console.log("testa");
+
     const response = await fetch(
       process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length,
       {
@@ -85,6 +87,7 @@ export default function ImagePickerScreen({ navigation }) {
         body: formData,
       }
     );
+    console.log("testb");
     const data = await response.json();
     console.log(data);
     if (data.result) {
@@ -98,7 +101,7 @@ export default function ImagePickerScreen({ navigation }) {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <HeaderBeginning/>
+        <HeaderBeginning />
         <Text style={styles.inputTitle}>Ajoute au moins une photo</Text>
         <View>
           <View style={styles.containerPhoto}>{addedPhoto}</View>
@@ -110,7 +113,13 @@ export default function ImagePickerScreen({ navigation }) {
             disabled={disabled}
           >
             <Text style={styles.textValidateButton}>Valider</Text>
-            {disabled && <ActivityIndicator size="small" color="#FFFFFF" style={styles.loader} />}
+            {disabled && (
+              <ActivityIndicator
+                size="small"
+                color="#FFFFFF"
+                style={styles.loader}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -133,10 +142,10 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   containerLine: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   addPhotoButton: {
@@ -217,11 +226,11 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   boutonDisabled: {
-		backgroundColor: "#8b6762c0",
-		boxShadow: "0 1px 2px #976f68c0",
-	},
+    backgroundColor: "#8b6762c0",
+    boxShadow: "0 1px 2px #976f68c0",
+  },
   loader: {
-		position: "absolute",
-		left: 10,
-	},
+    position: "absolute",
+    left: 10,
+  },
 });

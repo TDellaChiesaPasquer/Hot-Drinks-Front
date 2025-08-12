@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     height: 66,
   },
   goBack: {
-    marginHorizontal: 10,
+    marginHorizontal: 25,
   },
   vu: {
     color: "#965A51",
@@ -415,6 +415,7 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: "row",
     alignItems: "center",
+    marginVertical: 10,
   },
   headerRight: {
     flexDirection: "row",
