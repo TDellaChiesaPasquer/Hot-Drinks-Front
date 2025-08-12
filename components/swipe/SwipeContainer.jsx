@@ -14,6 +14,14 @@ import SwipeProfileInformationsScreen from "../../screens/swipe/SwipeProfileInfo
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
 
+// Icônes de relation
+import ChocolatChaudIcon from "../../assets/images/relationImages/chocolat-chaud.svg";
+import AllongeIcon from "../../assets/images/relationImages/allonge.svg";
+import TheIcon from "../../assets/images/relationImages/the.svg";
+import EspressoIcon from "../../assets/images/relationImages/espresso.svg";
+import RistrettoIcon from "../../assets/images/relationImages/ristretto.svg";
+import MatchaIcon from "../../assets/images/relationImages/matcha.svg";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -74,13 +82,13 @@ const placeholderData = {
 
 /**
  * Formate les données du profil pour l'affichage attendu pour le profile de swipe
- * 
+ *
  * LOGIQUE DE DÉCISION MOCK DATA vs VRAIES DONNÉES :
  * - Si profileData est null/undefined → Utilise mock data générique (isPlaceholder = true)
  * - Si profileData === placeholderData (objet global) → Utilise mock data pré-définies (isPlaceholder = true)
  * - Si profileData a un _id → Vraies données du serveur (isPlaceholder = false)
  * - Sinon → Traite comme mock data mais avec les valeurs fournies (isPlaceholder = true par défaut)
- * 
+ *
  * @param {Object} profileData - Données reçues : vraies données du backend OU mock data OU null/undefined
  * @param {Object} placeholderSrc - Source d'images de remplacement pour les mock data
  * @return {Object} Données formatées pour le profil swipe avec indicateur isPlaceholder
@@ -172,6 +180,28 @@ function formatProfileData(profileData, placeholderSrc) {
 	return formattedData;
 }
 
+// Normalisation et mapping de l’icône relation
+function normalizeRelation(value) {
+	return String(value || "")
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.trim();
+}
+
+function getRelationIconComponent(relationship) {
+	const key = normalizeRelation(relationship);
+	if (!key) return null;
+	// Quelques alias courants (accents/casse déjà gérés par normalize)
+	if (key === "chocolat chaud") return ChocolatChaudIcon;
+	if (key === "allonge") return AllongeIcon;
+	if (key === "the") return TheIcon;
+	if (key === "expresso") return EspressoIcon;
+	if (key === "ristretto") return RistrettoIcon;
+	if (key === "matcha") return MatchaIcon;
+	return null;
+}
+
 export default function SwipeContainer(props) {
 	const navigation = useNavigation();
 
@@ -187,9 +217,11 @@ export default function SwipeContainer(props) {
 	// Déterminer la couleur du texte en fonction de isPlaceholder
 	const textColor = isPlaceholder ? "black" : "white";
 
+	// Icône relation
+	const RelationIcon = getRelationIconComponent(profileData?.relationship);
+
 	// Navigation vers la page d'infos avec passage des goûts
 	function goToProfileInformations() {
-		// console.log("goToProfileInformations");
 		navigation.navigate("SwipeProfileInformationsScreen", {
 			tastesList: Array.isArray(profileData?.tastesList) ? profileData.tastesList : [],
 			firstImage: imagesList && imagesList.length > 0 ? imagesList[0] : null,
@@ -211,7 +243,7 @@ export default function SwipeContainer(props) {
 					return <Image key={imageIndex} source={imageSource} style={styles.image} contentFit="cover" />;
 				})}
 			</Swiper>
-			
+
 			<View style={styles.overlay}>
 				<View style={styles.infos}>
 					{informationList.map(function (infoText, infoIndex) {
@@ -234,6 +266,15 @@ export default function SwipeContainer(props) {
 					})}
 				</View>
 			</View>
+
+			{/* Icône de relation – juste au-dessus du bouton flottant */}
+			{RelationIcon && (
+				<View style={styles.relationIconContainer} pointerEvents="box-none">
+					{/* Icône seule, sans texte */}
+					<RelationIcon width={56} height={56} />
+				</View>
+			)}
+
 			{/* Bouton flèche vers le haut (en bas à droite) */}
 			<View style={styles.fabContainer}>
 				<TouchableOpacity onPress={goToProfileInformations} style={styles.fabButton} activeOpacity={0.8}>
@@ -289,6 +330,13 @@ const styles = StyleSheet.create({
 
 	hashtag: {
 		fontSize: 16,
+	},
+
+	relationIconContainer: {
+		position: "absolute",
+		right: 11,
+		bottom: 110,
+		zIndex: 60,
 	},
 
 	fabContainer: {

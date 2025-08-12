@@ -5,7 +5,17 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 const { width, height } = Dimensions.get("window");
 
-const boat = require("../assets/images/boat.png");
+// Anciens imports avec require() - commentés car ne fonctionnent pas avec expo-image pour SVG
+// const boat = require("../assets/images/boat.png");
+
+// imports SVG comme composants React
+import BoatIcon from "../assets/images/boat.png"; // Gardé en require car c'est un PNG
+import ChocolatChaudIcon from "../assets/images/relationImages/chocolat-chaud.svg";
+import AllongeIcon from "../assets/images/relationImages/allonge.svg";
+import TheIcon from "../assets/images/relationImages/the.svg";
+import EspressoIcon from "../assets/images/relationImages/espresso.svg";
+import RistrettoIcon from "../assets/images/relationImages/ristretto.svg";
+import MatchaIcon from "../assets/images/relationImages/matcha.svg";
 
 export default function PreferencesScreen({ navigation }) {
 	const ageValues = Array.from(Array(48), (x, index) => index + 18);
@@ -150,7 +160,8 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Chocolat chaud")}
 					>
-						<Image source={boat} style={styles.image} />
+						{/* <Image source={chocolatChaud} style={styles.image} /> */}
+						<ChocolatChaudIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
 						<Text
 							style={[
 								styles.boutonChoixMultipleTextBoat,
@@ -181,12 +192,14 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Allongé")}
 					>
-						<Image source={boat} style={styles.image} />
+						{/* <Image source={allonge} style={styles.image} /> */}
+						<AllongeIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Allongé" ? "#F5EBE6" : "#965A51" }]}>Allongé</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Allongé" ? "#F5EBE6" : "#965A51" }]}>Relation sérieuse</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={[styles.boutonChoixMultipleBoat, { backgroundColor: relation === "Thé" ? "#E69B5C" : "#FFF5F0" }]} onPress={() => setRelation("Thé")}>
-						<Image source={boat} style={styles.image} />
+						{/* <Image source={the} style={styles.image} /> */}
+						<TheIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Thé" ? "#F5EBE6" : "#965A51" }]}>Thé</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Thé" ? "#F5EBE6" : "#965A51" }]}>Plus si affinités</Text>
 					</TouchableOpacity>
@@ -201,7 +214,8 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Expresso")}
 					>
-						<Image source={boat} style={styles.image} />
+						{/* <Image source={espresso} style={styles.image} /> */}
+						<EspressoIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Expresso" ? "#F5EBE6" : "#965A51" }]}>Expresso</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Expresso" ? "#F5EBE6" : "#965A51" }]}>Sans prise de tête</Text>
 					</TouchableOpacity>
@@ -214,7 +228,8 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Ristretto")}
 					>
-						<Image source={boat} style={styles.image} />
+						{/* <Image source={ristretto} style={styles.image} /> */}
+						<RistrettoIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Ristretto" ? "#F5EBE6" : "#965A51" }]}>Ristretto</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Ristretto" ? "#F5EBE6" : "#965A51" }]}>Un shot de plaisir</Text>
 					</TouchableOpacity>
@@ -227,11 +242,16 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Matcha")}
 					>
-						<Image source={boat} style={styles.image} />
+						{/* <Image source={matcha} style={styles.image} /> */}
+						<MatchaIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Matcha</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Relation amicale</Text>
 					</TouchableOpacity>
 				</View>
+
+				{/* Test avec boat.png si besoin */}
+				{/* <Image source={BoatIcon} style={styles.image} /> */}
+
 				<TouchableOpacity style={styles.bouton} onPress={() => sendInfos()}>
 					<Text style={styles.boutonText}>Valider</Text>
 				</TouchableOpacity>
@@ -321,10 +341,15 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		marginVertical: 10,
 	},
-	image: {
-		objectFit: "cover",
-		width: 0.18 * width,
-		height: 0.18 * width,
+	// Ancien style pour Image - gardé en commentaire
+	// image: {
+	// 	objectFit: "cover",
+	// 	width: 0.18 * width,
+	// 	height: 0.18 * width,
+	// 	marginVertical: 8,
+	// },
+	// Style pour les SVG
+	svgIcon: {
 		marginVertical: 8,
 	},
 	boutonChoixMultipleTextLegend: {

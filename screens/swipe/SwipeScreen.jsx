@@ -21,6 +21,21 @@ export default function SwipeScreen(props) {
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
 	const dispatch = useDispatch();
 
+	// Limiteur d'appuis: 3 actions max par seconde
+	const CLICKS_PER_WINDOW = 3;
+	const CLICK_WINDOW_MS = 1000;
+	const tapTimesRef = useRef([]);
+	function canTriggerAction() {
+		const now = Date.now();
+		// Ne conserver que les taps dans la fenêtre temporelle
+		tapTimesRef.current = tapTimesRef.current.filter((t) => now - t < CLICK_WINDOW_MS);
+		if (tapTimesRef.current.length >= CLICKS_PER_WINDOW) {
+			return false;
+		}
+		tapTimesRef.current.push(now);
+		return true;
+	}
+
 	useFocusEffect(
 		useCallback(() => {
 			const onBackPress = () => {
@@ -70,6 +85,14 @@ export default function SwipeScreen(props) {
 
 	function handleUserChoice(choiceAction) {
 		if (!swiperReference.current) return;
+
+		// Anti-spam: max 3 appuis/s
+		if (!canTriggerAction()) {
+			// Optionnel: afficher un feedback utilisateur
+			// console.warn("Action trop rapide, réessayez dans un instant.");
+			return;
+		}
+
 		if (choiceAction === "Like") {
 			swiperReference.current.swipeRight();
 		}
@@ -91,9 +114,6 @@ export default function SwipeScreen(props) {
 	function sendSwipeToServer(userId, userAction) {
 		const apiUrl = process.env.EXPO_PUBLIC_IP + "/profils/swipe";
 
-		// console.log("userId : " + userId);
-		// console.log("userAction : " + userAction);
-
 		const payload = {
 			action: userAction.toLowerCase(),
 			userId: userId,
@@ -111,8 +131,6 @@ export default function SwipeScreen(props) {
 				return response.json();
 			})
 			.then(function (data) {
-				// console.log("sendSwipeToServer -data");
-				// console.log(data);
 				if (data.match) console.log("Vous avez un match !");
 			})
 			.catch(function (error) {
@@ -197,21 +215,9 @@ const SUPERLIKE_GLOW_COLOR = "#75c7feff";
 
 // Fonction helper pour convertir hex en rgba
 const hexToRgba = (hexColor, alphaValue) => {
-	// Extraction de la composante rouge : caractères 1-2 de la chaîne hex (ex: "75" dans "#75c7fe" = 117)
 	const redColor = parseInt(hexColor.slice(1, 3), 16);
-
-	// Extraction de la composante verte : caractères 3-4 de la chaîne hex (ex: "c7" dans "#75c7fe" = 199)
 	const greenColor = parseInt(hexColor.slice(3, 5), 16);
-
-	// Extraction de la composante bleue : caractères 5-6 de la chaîne hex (ex: "fe" dans "#75c7fe" = 254)
 	const blueColor = parseInt(hexColor.slice(5, 7), 16);
-
-	// Conversion des valeurs hexadécimales (base 16) en valeurs décimales (base 10)
-	// parseInt(string, 16) convertit une chaîne hexadécimale en nombre décimal
-	// Résultat pour "#75c7fe" : rouge=117, vert=199, bleu=254 (couleur bleu clair/cyan)
-
-	// Construction de la chaîne rgba avec les composantes RGB (0-255) et alpha (0-1)
-	// Ex: hexToRgba("#75c7fe", 0.8) → "rgba(117, 199, 254, 0.8)"
 	return `rgba(${redColor}, ${greenColor}, ${blueColor}, ${alphaValue})`;
 };
 

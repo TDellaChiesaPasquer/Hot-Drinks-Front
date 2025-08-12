@@ -44,3 +44,4 @@ yarn.lock
 # Fichiers temporaires
 *projet.txt
 *frontend.txt
+*./logo_test/*
