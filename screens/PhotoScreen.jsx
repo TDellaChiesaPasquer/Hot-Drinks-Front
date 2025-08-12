@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Button,
   View,
@@ -17,12 +17,15 @@ import { addPhoto, removePhoto } from "../reducers/user";
 import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
 import HeaderBeginning from "../components/HeaderBeginning";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const { width, height } = Dimensions.get("window");
 
-export default function ImagePickerScreen({ navigation }) {
+export default function ImagePickerScreen({ navigation, route }) {
+  // console.log(route.params.photos);
   const [photoUriList, setPhotoUriList] = useState([]);
   const [disabled, setDisabled] = useState(false);
+
   const user = useSelector((state) => state.user.value);
   useFocusEffect(
     useCallback(() => {
@@ -38,6 +41,17 @@ export default function ImagePickerScreen({ navigation }) {
     }, [])
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      //condition
+      if (route.params.photoList === undefined) {
+        return;
+      } else {
+        setPhotoUriList(route.params.photoList);
+      }
+    }, [])
+  );
+
   const addUriToList = (uri) => {
     const orderedPhotos = [...photoUriList.filter((uri) => uri !== null)];
     setPhotoUriList([...orderedPhotos, uri]);
@@ -48,16 +62,34 @@ export default function ImagePickerScreen({ navigation }) {
   };
 
   const replaceUriInList = (index, uri) => {
-    setPhotoUriList(photoUriList.map((e, i) => i === index ? uri : e));
-  }
+    setPhotoUriList(photoUriList.map((e, i) => (i === index ? uri : e)));
+  };
 
   const addedPhoto = [];
   for (let i = 0; i < 3; i++) {
     addedPhoto.push(
       <View key={i} style={styles.containerLine}>
-        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i] || ''} index={3 * i}/>
-        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i + 1] || ''} index={3 * i + 1}/>
-        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i + 2] || ''} index={3 * i + 2}/>
+        <ImagePickerComponent
+          addUriToList={addUriToList}
+          removeUriToList={removeUriToList}
+          replaceUriInList={replaceUriInList}
+          source={photoUriList[3 * i] || ""}
+          index={3 * i}
+        />
+        <ImagePickerComponent
+          addUriToList={addUriToList}
+          removeUriToList={removeUriToList}
+          replaceUriInList={replaceUriInList}
+          source={photoUriList[3 * i + 1] || ""}
+          index={3 * i + 1}
+        />
+        <ImagePickerComponent
+          addUriToList={addUriToList}
+          removeUriToList={removeUriToList}
+          replaceUriInList={replaceUriInList}
+          source={photoUriList[3 * i + 2] || ""}
+          index={3 * i + 2}
+        />
       </View>
     );
   }
@@ -80,7 +112,7 @@ export default function ImagePickerScreen({ navigation }) {
       });
     }
     console.log("testa");
-    
+
     const response = await fetch(
       process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length,
       {
@@ -91,7 +123,7 @@ export default function ImagePickerScreen({ navigation }) {
         body: formData,
       }
     );
-    console.log('testb')
+    console.log("testb");
     const data = await response.json();
     console.log(data);
     if (data.result) {
@@ -106,6 +138,21 @@ export default function ImagePickerScreen({ navigation }) {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <HeaderBeginning />
+        {route.params.photoList && (
+          <TouchableOpacity
+            style={styles.conditionalButton}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <AntDesign
+              name="leftcircleo"
+              size={30}
+              color="#965a51c0"
+              style={styles.gobackIcon}
+            />
+          </TouchableOpacity>
+        )}
         <Text style={styles.inputTitle}>Ajoute au moins une photo</Text>
         <View>
           <View style={styles.containerPhoto}>{addedPhoto}</View>
@@ -136,6 +183,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#DFC9B4",
     alignItems: "center",
+  },
+
+  conditionalButton: {
+    // backgroundColor: "red",
+    width: "10%",
+    height: "5%",
+    // flexDirection: "row",
+    // justifyContent: "flex-start",
+    alignSelf: "flex-start",
+    marginLeft: 25,
+  },
+  gobackIcon: {
+    alignSelf: "center",
+    alignContent: "center",
+    marginTop: 4,
   },
 
   containerPhoto: {

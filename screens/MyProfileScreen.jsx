@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import React, { useEffect, useState } from "react";
+// import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { Dropdown } from "react-native-element-dropdown";
 import { setAnswer, toggleStar, setAllTastes } from "../reducers/user";
@@ -17,10 +18,12 @@ import DropDownComponent from "../components/DropDownComponent";
 import Swiper from "react-native-swiper";
 import { Image } from "expo-image";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import ImagePickerComponent from "../components/ImagePickerComponent";
 
 const { width, height } = Dimensions.get("window");
 
 export default function MyProfile({ navigation }) {
+  // const navigation = useNavigation();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.user.value.token);
   const dataPhoto = useSelector((state) => state.user.value);
@@ -203,7 +206,15 @@ export default function MyProfile({ navigation }) {
           contentContainerStyle={{ paddingBottom: 160 }}
         >
           <View style={styles.iconContainer}>
-            <TouchableOpacity style={styles.modifyIcon}>
+            <TouchableOpacity
+              style={styles.modifyIcon}
+              onPress={() => {
+                navigation.navigate("SignUpNav", {
+                  screen: "PhotoScreen",
+                  params: { photoList },
+                });
+              }}
+            >
               <FontAwesome5 name="pen" size={15} color="white" />
             </TouchableOpacity>
           </View>
