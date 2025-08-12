@@ -82,6 +82,15 @@ export default function ({ navigation, route }) {
   const lastOwnSeenMessageIndex = messageList.findLastIndex(
     (x) => x.creator !== otherUserNumber && x.seen === true
   );
+  const currentRdv = user.user && user.user.rdvList.find(x => (String(x.creator) === String(user.user._id) || String(x.receiver) === String(user.user._id)) && (new Date(x.date)).valueOf() - (new Date()).valueOf() > 0);
+  let currentRdvHTML;
+  if (currentRdv) {
+    if (currentRdv.status === 'demande') {
+      currentRdvHTML = <View>
+        <Text>Test</Text>
+      </View>
+    }
+  }
   const messagesHTML = messageList.map((message, index) => {
     let date;
     const messageDate = dayjs(message.date);

@@ -24,19 +24,28 @@ export default function AddRdvScreen({ navigation }) {
 
   console.log(choicePositionRdv, "LQQQQQQQQ");
 
-  const getMarker = async () => {};
+  const getMarker = async () => {
+    return <Marker></Marker>;
+  };
 
-  const Date = newDate();
-  // const year = Date.setUtcFullYear()
-  // const month = Date.setMonth()
-  // if(month < 10) {
-  //  return month +1
-  // }
-  // const date
+  const year = Date.getUtcFullYear();
+
+  const month = Date.getMonth();
+  if (month < 10) {
+    return month + 1;
+  }
+
+  const day = Date.getDate();
+  if (day < 10) {
+    return day + 1;
+  }
+
+  const newDate = `${year} + "--" + ${month} + "--" + ${day}`;
 
   const addRdv = async (coord) => {
     console.log("hello");
-
+    if (!marker && !newDate) {
+    }
     const response = await fetch(process.env.EXPO_PUBLIC_IP + "/rdv/ask", {
       method: "PUT",
       headers: {
