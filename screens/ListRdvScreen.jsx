@@ -13,13 +13,12 @@ import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef, useCallback } from "react";
-import { addPlace } from "../reducers/map";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ListRdvScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         key={data._id}
         style={styles.contactContainer}
         onPress={() =>
@@ -40,7 +39,7 @@ export default function ListRdvScreen({ navigation }) {
         <Text style={styles.contactName}>
           {name.length >= 15 ? name.slice(0, 12) + "..." : name}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 }
