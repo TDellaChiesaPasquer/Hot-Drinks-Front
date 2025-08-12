@@ -98,66 +98,79 @@ const receiveMatch = async (event, token, dispatch) => {
 };
 
 const MainTabNav = () => {
-	const dispatch = useDispatch();
-	const user = useSelector((state) => state.user.value);
-	let userId;
-	let token;
-	let messagerieNotif;
-	if (user.user) {
-		userId = user.user._id;
-		token = user.token;
-		messagerieNotif = user.user.conversationList.some((conv) => {
-			const lastMessage = conv.messageList.findLast((x) => String(conv[`user${x.creator}`]._id) !== String(userId));
-			return lastMessage && !lastMessage.seen;
-		});
-	}
-	useEffect(() => {
-		if (userId) {
-			const channel = pusher.subscribe(userId);
-			channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
-			channel.bind("block", (e) => receiveBlock(e, dispatch));
-			channel.bind("match", (e) => receiveMatch(e, token, dispatch));
-			return () => {
-				channel.unbind("newMessage");
-				channel.unbind("block");
-				channel.unbind("match");
-			};
-		}
-	}, [userId]);
-	return (
-		<SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
-			<Tab.Navigator
-				screenOptions={({ route }) => ({
-					tabBarStyle: styles.tabBar,
-					header: ({ route }) => {
-						return <HeaderMain route={route} />;
-					},
-					tabBarIcon: ({ color, size }) => {
-						let icon;
-						if (route.name === "MessagerieNav") {
-							icon = <MaterialCommunityIcons name="message-outline" size={30} color={color} />;
-						} else if (route.name === "MyProfileNav") {
-							icon = <Feather name="user" size={30} color={color} />;
-						} else if (route.name === "SwipeNav") {
-							icon = <Feather name="coffee" size={30} color={color} />;
-						} else {
-							icon = <Feather name="calendar" size={28} color={color} />;
-						}
-						return icon;
-					},
-					tabBarActiveTintColor: "#965A51",
-					tabBarInactiveTintColor: "#BC8D85",
-					tabBarShowLabel: false,
-					tabBarIconStyle: styles.tabBarIcon,
-				})}
-			>
-				<Tab.Screen name="MyProfileNav" component={MyProfileNav} />
-				<Tab.Screen name="SwipeNav" component={SwipeNav} />
-				<Tab.Screen name="MessagerieNav" component={MessagerieNav} options={messagerieNotif && { tabBarBadge: "" }} />
-				<Tab.Screen name="RdvNav" component={RdvNav} />
-			</Tab.Navigator>
-		</SafeAreaView>
-	);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+  let userId;
+  let token;
+  let messagerieNotif;
+  if (user.user) {
+    userId = user.user._id;
+    token = user.token;
+    messagerieNotif = user.user.conversationList.some((conv) => {
+      const lastMessage = conv.messageList.findLast(
+        (x) => String(conv[`user${x.creator}`]._id) !== String(userId)
+      );
+      return lastMessage && !lastMessage.seen;
+    });
+  }
+  useEffect(() => {
+    if (userId) {
+      const channel = pusher.subscribe(userId);
+      channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
+      channel.bind("block", (e) => receiveBlock(e, dispatch));
+      channel.bind("match", (e) => receiveMatch(e, token, dispatch));
+      return () => {
+        channel.unbind("newMessage");
+        channel.unbind("block");
+        channel.unbind("match");
+      };
+    }
+  }, [userId]);
+  return (
+    <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: styles.tabBar,
+          header: ({ route }) => {
+            return <HeaderMain route={route} />;
+          },
+          tabBarIcon: ({ color, size }) => {
+            let icon;
+            if (route.name === "MessagerieNav") {
+              icon = (
+                <MaterialCommunityIcons
+                  name="message-outline"
+                  size={30}
+                  color={color}
+                />
+              );
+            } else if (route.name === "MyProfileNav") {
+              icon = <Feather name="user" size={30} color={color} />;
+            } else if (route.name === "SwipeNav") {
+              icon = <Feather name="coffee" size={30} color={color} />;
+            } else {
+              icon = <Feather name="calendar" size={28} color={color} />;
+            }
+            return icon;
+          },
+          tabBarActiveTintColor: "#965A51",
+          tabBarInactiveTintColor: "#BC8D85",
+          tabBarShowLabel: false,
+          tabBarIconStyle: styles.tabBarIcon,
+          tabBarStyle: styles.tabBarMain
+        })}
+      >
+        <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
+        <Tab.Screen name="SwipeNav" component={SwipeNav} />
+        <Tab.Screen
+          name="MessagerieNav"
+          component={MessagerieNav}
+          options={messagerieNotif && { tabBarBadge: "" }}
+        />
+        <Tab.Screen name="RdvNav" component={RdvNav} />
+      </Tab.Navigator>
+    </SafeAreaView>
+  );
 };
 
 const SwipeNav = () => {
@@ -241,40 +254,44 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	tabBar: {
-		backgroundColor: "#F5EBE6",
-		borderTopWidth: 0,
-	},
-	tabBarNavContainer: {
-		flex: 1,
-		backgroundColor: "#F5EBE6",
-	},
-	tabBarIcon: {
-		fontSize: 30,
-	},
-	container: {
-		flex: 1,
-	},
-	tabBar: {
-		backgroundColor: "#F5EBE6",
-		borderTopWidth: 0,
-	},
-	tabBarNavContainer: {
-		flex: 1,
-		backgroundColor: "#F5EBE6",
-	},
-	tabBarIcon: {
-		fontSize: 30,
-	},
-	tabBarIndicator: {
-		backgroundColor: "#CAB4B0",
-		height: "90%",
-		marginBottom: "5%",
-		borderRadius: 5,
-		width: "30%",
-		marginLeft: "1.66%",
-	},
+  container: {
+    flex: 1,
+  },
+  tabBar: {
+    backgroundColor: "#F5EBE6",
+    borderTopWidth: 0,
+  },
+  tabBarNavContainer: {
+    flex: 1,
+    backgroundColor: "#F5EBE6",
+  },
+  tabBarIcon: {
+    fontSize: 30,
+  },
+  container: {
+    flex: 1,
+  },
+  tabBar: {
+    backgroundColor: "#F5EBE6",
+    borderTopWidth: 0,
+  },
+  tabBarNavContainer: {
+    flex: 1,
+    backgroundColor: "#F5EBE6",
+  },
+  tabBarIcon: {
+    fontSize: 30,
+  },
+  tabBarIndicator: {
+    backgroundColor: "#CAB4B0",
+    height: "90%",
+    marginBottom: "5%",
+    borderRadius: 5,
+    width: "30%",
+    marginLeft: "1.66%",
+  },
+  tabBarMain: {
+    backgroundColor: '#F5EBE6',
+    boxShadow: "0 -1px 2px #896761",
+  }
 });

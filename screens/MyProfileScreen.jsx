@@ -12,18 +12,19 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 const { width, height } = Dimensions.get("window");
 
 export default function MyProfile({ navigation }) {
-	const dispatch = useDispatch();
-	const token = useSelector((state) => state.user.value.token);
-	const dataPhoto = useSelector((state) => state.user.value);
-	const dataTaste = (dataPhoto.user && dataPhoto.user.tastesList) || [];
-	const tastesById = {};
-	for (const tastElement of dataTaste) {
-		tastesById[tastElement.category] = {
-			label: tastElement.label,
-			value: tastElement.value,
-			star: tastElement.star,
-		};
-	}
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.user.value.token);
+  const dataPhoto = useSelector((state) => state.user.value);
+  const dataTaste = (dataPhoto.user && dataPhoto.user.tastesList) || [];
+  const tastesById = {};
+  for (const tastElement of dataTaste) {
+    tastesById[tastElement.category] = {
+      label: tastElement.label,
+      value: tastElement.value,
+      star: tastElement.star,
+    };
+  }
+  console.log(tastesById)
 
 	//___________________________________________________________CAROUSSEL_____________________________________________________________
   
@@ -31,110 +32,110 @@ export default function MyProfile({ navigation }) {
 
 	//__________________________________________________________QUESTIONS DATA_________________________________________________________
 
-	const questions = [
-		{
-			id: "music",
-			question: "Quel est ton genre de musique préféré ?",
-			options: [
-				{ label: "Pop", value: "Pop" },
-				{ label: "Rock", value: "Rock" },
-				{ label: "Jazz", value: "Jazz" },
-				{ label: "Rap", value: "Rap" },
-				{ label: "Classique", value: "Classique" },
-				{ label: "Latino", value: "Latino" },
-			],
-		},
-		{
-			id: "sorties",
-			question: "Tu préfères les soirées...",
-			options: [
-				{ label: "Calmes", value: "soirées calmes" },
-				{ label: "Festives", value: "Soirées festives" },
-				{ label: "Entre amis", value: "Soirées entre amis" },
-				{ label: "En famille", value: "Soirées en famille" },
-			],
-		},
-		{
-			id: "films",
-			question: "Quel genre de films préfères-tu ?",
-			options: [
-				{ label: "Comédie", value: "Comédies" },
-				{ label: "Horreur", value: "Films d'orreur " },
-				{ label: "Dystopique", value: "Films dystopiques" },
-				{ label: "Historique", value: "Films historiques" },
-				{ label: "Psychologique", value: "Films psychologiques" },
-			],
-		},
-		{
-			id: "animaux",
-			question: "As tu des animaux de compagnie ?",
-			options: [
-				{ label: "Oui", value: "Ami(e) des animaux" },
-				{ label: "Non", value: "Pas d'animaux" },
-				{ label: "Non, mais j'aimerai en avoir", value: "Veut des animaux" },
-			],
-		},
-		{
-			id: "matin",
-			question: "Es-tu plutôt...",
-			options: [
-				{ label: "Matinal·e", value: "Matinal·e" },
-				{ label: "Couche-tard", value: "Couche-tard" },
-				{ label: "Les deux", value: "Les deux" },
-			],
-		},
-		{
-			id: "sport",
-			question: "Ta pratique sportive?",
-			options: [
-				{ label: "Accro au sport", value: "Accro au sport" },
-				{ label: "Souvent", value: "Sportif régulier" },
-				{ label: "Parfois", value: "Sportif du dimanche" },
-				{ label: "Jamais", value: "Pas sportif" },
-			],
-		},
-		{
-			id: "vacances",
-			question: "Vacances idéales ?",
-			options: [
-				{ label: "Hotel all inclusive", value: "Hotel all inclusive" },
-				{ label: "Voyage organisé", value: "Voyage organisé" },
-				{ label: "Camping", value: "Camping" },
-				{ label: "Road Trip", value: "Road Trip" },
-			],
-		},
-		{
-			id: "lecture",
-			question: "Lis-tu régulièrement ?",
-			options: [
-				{ label: "Oui", value: "Lecture" },
-				{ label: "Non", value: "Pas de lecture" },
-				{ label: "Parfois", value: "Lecteur amateur" },
-			],
-		},
-		{
-			id: "cuisine",
-			question: "Tes préférences alimentaires ?",
-			options: [
-				{ label: "Vegan", value: "Vegan" },
-				{ label: "Végétarien(ne)", value: "Végétarien(ne)" },
-				{ label: "Flexi", value: "Flexi" },
-				{ label: "Omnivore", value: "Omnivore" },
-				{ label: "Carnivore", value: "Carnivore" },
-			],
-		},
-	];
-	//__________________________________________________________DROP DOWN QUESTIONS____________________________________________________
-	const dropDownQuestion = questions.map((data, i) => {
-		const currentFromStore = tastesById[data.id];
-		let current = { label: null, value: null, star: false };
-		if (currentFromStore) {
-			current = {
-				label: currentFromStore.label,
-				value: currentFromStore.value,
-				star: Boolean(currentFromStore.star),
-			};
-		}
+  const questions = [
+    {
+      id: "music",
+      question: "Quel est ton genre de musique préféré ?",
+      options: [
+        { label: "Pop", value: "Pop" },
+        { label: "Rock", value: "Rock" },
+        { label: "Jazz", value: "Jazz" },
+        { label: "Rap", value: "Rap" },
+        { label: "Classique", value: "Classique" },
+        { label: "Latino", value: "Latino" },
+      ],
+    },
+    {
+      id: "sorties",
+      question: "Tu préfères les soirées...",
+      options: [
+        { label: "Calmes", value: "soirées calmes" },
+        { label: "Festives", value: "Soirées festives" },
+        { label: "Entre amis", value: "Soirées entre amis" },
+        { label: "En famille", value: "Soirées en famille" },
+      ],
+    },
+    {
+      id: "films",
+      question: "Quel genre de films préfères-tu ?",
+      options: [
+        { label: "Comédie", value: "Comédies" },
+        { label: "Horreur", value: "Films d'horreur " },
+        { label: "Dystopique", value: "Films dystopiques" },
+        { label: "Historique", value: "Films historiques" },
+        { label: "Psychologique", value: "Films psychologiques" },
+      ],
+    },
+    {
+      id: "animaux",
+      question: "As tu des animaux de compagnie ?",
+      options: [
+        { label: "Oui", value: "Ami(e) des animaux" },
+        { label: "Non", value: "Pas d'animaux" },
+        { label: "Non, mais j'aimerai en avoir", value: "Veut des animaux" },
+      ],
+    },
+    {
+      id: "matin",
+      question: "Es-tu plutôt...",
+      options: [
+        { label: "Matinal·e", value: "Matinal·e" },
+        { label: "Couche-tard", value: "Couche-tard" },
+        { label: "Les deux", value: "Les deux" },
+      ],
+    },
+    {
+      id: "sport",
+      question: "Ta pratique sportive?",
+      options: [
+        { label: "Accro au sport", value: "Accro au sport" },
+        { label: "Souvent", value: "Sportif régulier" },
+        { label: "Parfois", value: "Sportif du dimanche" },
+        { label: "Jamais", value: "Pas sportif" },
+      ],
+    },
+    {
+      id: "vacances",
+      question: "Vacances idéales ?",
+      options: [
+        { label: "Hotel all inclusive", value: "Hotel all inclusive" },
+        { label: "Voyage organisé", value: "Voyage organisé" },
+        { label: "Camping", value: "Camping" },
+        { label: "Road Trip", value: "Road Trip" },
+      ],
+    },
+    {
+      id: "lecture",
+      question: "Lis-tu régulièrement ?",
+      options: [
+        { label: "Oui", value: "Lecture" },
+        { label: "Non", value: "Pas de lecture" },
+        { label: "Parfois", value: "Lecteur amateur" },
+      ],
+    },
+    {
+      id: "cuisine",
+      question: "Tes préférences alimentaires ?",
+      options: [
+        { label: "Vegan", value: "Vegan" },
+        { label: "Végétarien(ne)", value: "Végétarien(ne)" },
+        { label: "Flexi", value: "Flexi" },
+        { label: "Omnivore", value: "Omnivore" },
+        { label: "Carnivore", value: "Carnivore" },
+      ],
+    },
+  ];
+  //__________________________________________________________DROP DOWN QUESTIONS____________________________________________________
+  const dropDownQuestion = questions.map((data, i) => {
+    const currentFromStore = tastesById[data.id];
+    let current = { label: null, value: null, star: false };
+    if (currentFromStore) {
+      current = {
+        label: currentFromStore.label,
+        value: currentFromStore.value,
+        star: Boolean(currentFromStore.star),
+      };
+    }
 
 		return (
 			<DropDownComponent
@@ -156,64 +157,78 @@ export default function MyProfile({ navigation }) {
 
 	//_____________________________________________________HASHTAGS_____________________________________________
 
-	const starredTags = [];
-	for (const key in tastesById) {
-		const t = tastesById[key];
-		if (t && t.star === true && t.value) {
-			starredTags.push(t.value);
-		}
-	}
+  const starredTags = [];
+  for (const key in tastesById) {
+    const t = tastesById[key];
+    console.log(t)
+    if (t && t.star === true && t.value) {
+      console.log(t)
+      starredTags.push(t.value);
+    }
+  }
+  console.log(starredTags)
+  //___________________________________________________________SAUVEGARDE TASTES________________________________________
+  const saveAllTastes = async () => {
+    const tastesList = dataTaste;
+    await fetch(process.env.EXPO_PUBLIC_IP + "/users/addAllTastes", {
+      method: "POST",
+      headers: {
+        authorization: token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tastesList }),
+    });
+    alert("Les modifications ont bien été enregistrées.");
+  };
 
-	//___________________________________________________________SAUVEGARDE TASTES________________________________________
-	const saveAllTastes = async () => {
-		const tastesList = dataTaste;
-		await fetch(process.env.EXPO_PUBLIC_IP + "/users/addAllTastes", {
-			method: "POST",
-			headers: {
-				authorization: token,
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ tastesList }),
-		});
-		alert("Les modifications ont bien été enregistrées.");
-	};
-
-	return (
-		<View style={styles.mainContainer}>
-			<View>
-				<TouchableOpacity onPress={() => navigation.navigate("MyProfileNav")} />
-				<TouchableOpacity onPress={() => navigation.navigate("MainTabNav")} />
-			</View>
-			<View style={styles.titleContainer}>
-				<Text style={styles.title}>Mon Profil</Text>
-			</View>
-			<View style={styles.scrollContainer}>
-				<ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 160 }}>
-					<View style={styles.iconContainer}>
-						<TouchableOpacity style={styles.modifyIcon}>
-							<FontAwesome5 name="pen" size={15} color="white" />
-						</TouchableOpacity>
-					</View>
-					<Swiper
-						style={styles.caroussel}
-						loop={true}
-						showsButtons
-						nextButton={<Text style={styles.arrow}>›</Text>}
-						prevButton={<Text style={styles.arrow}>‹</Text>}
-						activeDotColor="white"
-						scrollEnabled={false}
-					>
-						{photoList.map(function (url, i) {
-							return <Image key={i} source={url} style={styles.image} contentFit="cover" />;
-						})}
-					</Swiper>
-					<View style={styles.tagContainer}>
-						{starredTags.map((tag, idx) => (
-							<View key={idx} style={styles.tag}>
-								<Text style={styles.tagText}>#{tag}</Text>
-							</View>
-						))}
-					</View>
+  return (
+    <View style={styles.mainContainer}>
+      <View>
+        <TouchableOpacity onPress={() => navigation.navigate("MyProfileNav")} />
+        <TouchableOpacity onPress={() => navigation.navigate("MainTabNav")} />
+      </View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Mon Profil</Text>
+      </View>
+      <View style={styles.scrollContainer}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={{ paddingBottom: 160 }}
+        >
+          <View style={styles.iconContainer}>
+            <TouchableOpacity style={styles.modifyIcon}>
+              <FontAwesome5 name="pen" size={15} color="white" />
+            </TouchableOpacity>
+          </View>
+          <Swiper
+            style={styles.caroussel}
+            loop={true}
+            showsButtons
+            nextButton={<Text style={styles.arrow}>›</Text>}
+            prevButton={<Text style={styles.arrow}>‹</Text>}
+            activeDotColor="white"
+            scrollEnabled={false}
+          >
+            {photoList.map(function (url, i) {
+              return (
+                <Image
+                  key={i}
+                  source={url}
+                  style={styles.image}
+                  contentFit="cover"
+                />
+              );
+            })}
+          </Swiper>
+          <View style={styles.tagContainer}>
+            <View style={styles.tagContainerAbsolute}>
+              {starredTags.map((tag, idx) => (
+                <View key={tag} style={styles.tag}>
+                  <Text style={styles.tagText}>#{tag}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
 
 					{dropDownQuestion}
 
@@ -320,44 +335,42 @@ const styles = StyleSheet.create({
 		color: "#F5EBE6",
 	},
 
-	tagContainer: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		justifyContent: "center",
-		gap: 8,
-		marginHorizontal: 16,
-		marginBottom: 6,
-		position: "absolute",
-		zIndex: 999,
-		top: -25,
-		right: -7,
-	},
+  tagContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 8,
+    marginHorizontal: 16,
+    marginBottom: 6,
+    position: 'relative'
+  },
 
-	tag: {
-		flexDirection: "row",
-		alignItems: "center",
-		// alignSelf: "flex-start",
-		justifyContent: "space-evenly",
-		// backgroundColor: "rgba(150, 90, 81, 0.4)",
-		paddingHorizontal: 12,
-		paddingVertical: 16,
-		marginRight: 8,
-		marginBottom: 2,
-		// position: "absolute",
-		alignContent: "space-between ",
-		gap: "5",
-		position: "absolute",
-		zIndex: 999,
-		top: -25,
-		right: -7,
-	},
+  tagContainerAbsolute: {
+    position: 'absolute',
+    bottom: 30,
+    zIndex: 999,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: width * 0.9,
+    gap: 5
+  },
 
-	tagText: {
-		color: "white",
-		fontWeight: "bold",
-		position: "absolute",
-		zIndex: 999,
-		top: -25,
-		right: -7,
-	},
+  tag: {
+    flexDirection: "row",
+    alignItems: "center",
+    // alignSelf: "flex-start",
+    justifyContent: "space-evenly",
+    backgroundColor: "rgba(150, 90, 81, 0.4)",
+    borderRadius: 10,
+    padding: 5,
+    // position: "absolute",
+    alignContent: "space-between ",
+  },
+
+  tagText: {
+    color: "white",
+    fontWeight: "bold",
+  },
 });

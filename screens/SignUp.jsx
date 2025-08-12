@@ -117,45 +117,52 @@ export default function ({ navigation }) {
     }
   };
   const modalEmail = (
-		<Modal
-			animationType="slide"
-			transparent={true}
-			visible={emailVisible}
-			onRequestClose={() => {
-				setEmailVisible(false);
-			}}
-		>
-			<View style={styles.modalContainer}>
-				<View style={styles.modalEmail}>
-					<Pressable style={styles.crossModalDiv} onPress={() => setEmailVisible(false)}>
-						<FontAwesome6 name="xmark" size={24} style={styles.crossModal} />
-					</Pressable>
-					<Text style={styles.modalTitle}>Create account</Text>
-					<TextInput
-						style={styles.input}
-						placeholder="Email"
-						placeholderTextColor={"#965A51"}
-						type={"email"}
-						value={email}
-						onChangeText={(value) => setEmail(value)}
-						keyboardType="email-address"
-					/>
-					<TextInput
-						style={styles.input}
-						placeholder="Password"
-						placeholderTextColor={"#965A51"}
-						type={"password"}
-						secureTextEntry={true}
-						value={password}
-						onChangeText={(value) => setPassword(value)}
-					/>
-					<Text style={styles.error}>{error}</Text>
-					<TouchableOpacity style={styles.bouton} disabled={validateDisabled} onPress={() => tryLogin()}>
-						<Text style={styles.boutonText}>Connect</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-		</Modal>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={emailVisible}
+      onRequestClose={() => {
+        setEmailVisible(false);
+      }}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalEmail}>
+          <Pressable
+            style={styles.crossModalDiv}
+            onPress={() => setEmailVisible(false)}
+          >
+            <FontAwesome6 name="xmark" size={24} style={styles.crossModal} />
+          </Pressable>
+          <Text style={styles.modalTitle}>Create account</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            placeholderTextColor={"#965A51"}
+            type={"email"}
+            value={email}
+            onChangeText={(value) => setEmail(value)}
+            keyboardType="email-address"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor={"#965A51"}
+            type={"password"}
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(value) => setPassword(value)}
+          />
+          <Text style={styles.error}>{error}</Text>
+          <TouchableOpacity
+            style={styles.bouton}
+            disabled={validateDisabled}
+            onPress={() => tryLogin()}
+          >
+            <Text style={styles.boutonText}>Connect</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
   );
   return (
     <SafeAreaProvider>
