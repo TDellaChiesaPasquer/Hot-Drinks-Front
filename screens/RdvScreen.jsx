@@ -17,6 +17,8 @@ import { useState, useRef, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function RdvScreen({ navigation }) {
+  const user = useSelector(state => state.user.value);
+  console.log(user.user && user.user.rdvList);
   return <SafeAreaView style={styles.container}></SafeAreaView>;
 }
 const styles = StyleSheet.create({

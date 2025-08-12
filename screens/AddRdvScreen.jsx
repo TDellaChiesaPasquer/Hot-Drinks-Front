@@ -15,20 +15,37 @@ import { useState, useRef, useCallback } from "react";
 import { addPlace } from "../reducers/user";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function AddRdvScreen({}) {
+export default function AddRdvScreen({ navigation }) {
   const dispatch = useDispatch();
   const places = useSelector((state) => state.user.value.places);
   const token = useSelector((state) => state.user.value.token);
-  // const [latitude, setLatitude] = useState("");
-  // const [longitude, setLongitude] = useState("");
   const [rdvPlace, setRdvPlace] = useState("");
   const [choicePositionRdv, setChoicePositionRdv] = useState(null);
 
   console.log(choicePositionRdv, "LQQQQQQQQ");
 
+  const getMarker = async () => {
+    return <Marker></Marker>;
+  };
+
+  const year = Date.getUtcFullYear();
+
+  const month = Date.getMonth();
+  if (month < 10) {
+    return month + 1;
+  }
+
+  const day = Date.getDate();
+  if (day < 10) {
+    return day + 1;
+  }
+
+  const newDate = `${year} + "--" + ${month} + "--" + ${day}`;
+
   const addRdv = async (coord) => {
     console.log("hello");
-
+    if (!marker && !newDate) {
+    }
     const response = await fetch(process.env.EXPO_PUBLIC_IP + "/rdv/ask", {
       method: "PUT",
       headers: {
@@ -44,9 +61,10 @@ export default function AddRdvScreen({}) {
     const data = await response.json();
     console.log(data, "ou es tu");
     setChoicePositionRdv({
-      latitude: data.location.latitude,
-      longitude: data.location.longitude,
+      latitude: data.rdv.latitude,
+      longitude: data.rdv.longitude,
     });
+    navigation.goBack();
   };
 
   return (
@@ -60,7 +78,7 @@ export default function AddRdvScreen({}) {
           longitudeDelta: 0.0222,
         }}
         style={styles.map}
-        onLongPress={(action) => addRdv(action.nativeEvent.coordinate)}
+        onLongPress={(action) => getMarker(action.nativeEvent.coordinate)}
         // disabled={disabled}
       >
         {choicePositionRdv && (
@@ -75,12 +93,13 @@ export default function AddRdvScreen({}) {
       </MapView>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => addRdvByTouch()}
+        onPress={() => {
+          addRdv();
+        }}
         // disabled={disabled}
       >
         <Text style={styles.boutonText}>VALIDER</Text>
       </TouchableOpacity>
-      <View style={{ backgroundColor: "red", flex: 1 }}></View>
     </SafeAreaView>
   );
 }
@@ -91,8 +110,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   map: {
-    height: "100%",
-    width: "100%",
+    height: "75%",
+    width: "90%",
     marginHorizontal: 20,
     marginTop: 5,
     alignItems: "center",
