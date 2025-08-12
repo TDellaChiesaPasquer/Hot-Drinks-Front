@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Logo app — Tourbillon de boissons vers cœur puis goutte de café (traits fins)</title>
+  <desc id="desc">Icône majoritairement blanche: différentes boissons tourbillonnent au-dessus d’une tasse, se fondent en cœur, puis en goutte de café qui tombe dans la tasse.</desc>
+
+  <defs>
+    <style>
+      :root{
+        --bg1:#20110C;   /* haut du fond */
+        --bg2:#0C0705;   /* bas du fond  */
+        --ink:#FFFFFF;   /* tracés principaux (blanc) */
+        --accent:#8B5138;/* café (peut passer en blanc si souhaité) */
+
+        /* Épaisseurs fines (ajustables) */
+        --w:3.2;
+        --wThin:2.4;
+        --wHair:1.8;
+      }
+      .stroke{
+        stroke:var(--ink);
+        stroke-width:var(--w);
+        stroke-linecap:round;
+        stroke-linejoin:round;
+        fill:none;
+        vector-effect:non-scaling-stroke; /* garde la finesse malgré les rotations/scale */
+      }
+      .thin{stroke-width:var(--wThin)}
+      .hair{stroke-width:var(--wHair)}
+      .ink{fill:var(--ink)}
+      .accent{fill:var(--accent)}
+      .noFill{fill:none}
+    </style>
+
+    <!-- Fond dégradé discret -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="var(--bg1)"/>
+      <stop offset="1" stop-color="var(--bg2)"/>
+    </linearGradient>
+
+    <!-- Ombres très légères -->
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.16"/>
+    </filter>
+
+    <!-- Pictos (monochromes, traits fins) -->
+    <g id="ic-mug" class="stroke hair">
+      <rect x="6" y="18" width="48" height="34" rx="8"/>
+      <ellipse cx="30" cy="18" rx="24" ry="6"/>
+      <path d="M54 28c14-4 16 18 2 20-7 1-10-5-10-8"/>
+      <path d="M28 8c-5-9 5-12 0-20" class="hair"/>
+    </g>
+
+    <g id="ic-togo" class="stroke hair">
+      <path d="M6 20h48l-6 40H12z"/>
+      <rect x="4" y="10" width="52" height="12" rx="4"/>
+    </g>
+
+    <g id="ic-tea" class="stroke hair">
+      <path d="M10 26h36a10 10 0 0 1 10 10v4a16 16 0 0 1-16 16H26A16 16 0 0 1 10 40z"/>
+      <path d="M56 34c14-5 22 11 8 18-7 4-14 1-16-2"/>
+    </g>
+
+    <g id="ic-espresso" class="stroke hair">
+      <rect x="10" y="22" width="40" height="22" rx="8"/>
+      <ellipse cx="30" cy="48" rx="26" ry="6"/>
+      <path d="M50 28c10-2 16 7 10 14-4 5-12 6-16 4"/>
+    </g>
+
+    <g id="ic-glass" class="stroke hair">
+      <rect x="8" y="18" width="44" height="40" rx="10"/>
+      <path d="M8 30h44"/>
+    </g>
+
+    <!-- Cœur (symbole relation) -->
+    <path id="heart" d="M16.5 6.5c3.6-6.3 13.3-6.3 17 0 3.2 5.5-.6 11-4.4 14.1-3 2.6-6.6 4.8-8.1 5.9-1.5-1.1-5.1-3.3-8.1-5.9C9.1 17.5 5.3 12 8.5 6.5c3.7-6.3 13.4-6.3 17 0z" />
+  </defs>
+
+  <!-- Fond -->
+  <rect x="20" y="20" width="472" height="472" rx="112" fill="url(#bg)"/>
+
+  <!-- Trajectoire du tourbillon (guide fin) -->
+  <path class="stroke hair" opacity=".32"
+        d="M120 120
+           C 160 72, 250 66, 320 112
+           S 392 230, 286 268
+           S 154 250, 172 196
+           S 256 170, 306 198
+           S 360 252, 320 288" />
+
+  <!-- Pictos de boissons sur le tourbillon -->
+  <g filter="url(#soft)">
+    <g transform="translate(128,108) rotate(-18) scale(1.08)"><use href="#ic-mug"/></g>
+    <g transform="translate(302,112) rotate(10)"><use href="#ic-togo"/></g>
+    <g transform="translate(356,214) rotate(22) scale(0.95)"><use href="#ic-tea"/></g>
+    <g transform="translate(246,262) rotate(-6) scale(0.9)"><use href="#ic-espresso"/></g>
+    <g transform="translate(168,202) rotate(-22) scale(1.02)"><use href="#ic-glass"/></g>
+  </g>
+
+  <!-- Cœur fin au-dessus de la tasse -->
+  <g transform="translate(256,244)" class="ink" filter="url(#soft)">
+    <use href="#heart" transform="translate(-20,-20) scale(1.18)" class="ink"/>
+  </g>
+
+  <!-- Goutte de café (accent) -->
+  <path d="M256 274c10 14 16 24 16 34a16 16 0 1 1 -32 0c0-10 6-20 16-34z"
+        class="accent" filter="url(#soft)"/>
+
+  <!-- Tasse principale (traits fins) -->
+  <g transform="translate(116,300)" filter="url(#soft)">
+    <ellipse cx="140" cy="152" rx="124" ry="14" fill="rgba(255,255,255,0.10)"/>
+    <rect x="56" y="64" width="168" height="96" rx="28" class="stroke thin"/>
+    <ellipse cx="140" cy="64" rx="84" ry="16" class="stroke thin"/>
+    <ellipse cx="140" cy="64" rx="74" ry="12" class="accent"/>
+    <path d="M224 96c34-8 56 18 44 42-10 20-34 22-50 12" class="stroke thin"/>
+  </g>
+</svg>
