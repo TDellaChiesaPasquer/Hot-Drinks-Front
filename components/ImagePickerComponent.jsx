@@ -20,7 +20,7 @@ export default function ImagePickerScreen(props) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [5, 3],
       quality: 1,
     });
     if (!result.canceled) {
@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   textButton: {

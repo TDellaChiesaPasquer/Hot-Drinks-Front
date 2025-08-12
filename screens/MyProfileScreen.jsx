@@ -185,6 +185,7 @@ export default function MyProfile({ navigation }) {
       },
       body: JSON.stringify({ tastesList }),
     });
+    alert("Les modifications ont bien été enregistrées.");
   };
 
   return (
@@ -319,15 +320,18 @@ const styles = StyleSheet.create({
   },
 
   validationButton: {
+    marginVertical: 10,
+    marginTop: 100,
+    alignSelf: "center",
+
     alignItems: "center",
     justifyContent: "center",
     height: 36,
     borderRadius: 15,
-    width: "70%",
-    backgroundColor: "#965a51c0",
-    marginVertical: 10,
-    marginTop: 100,
-    alignSelf: "center",
+    boxShadow: "0 2px 3px #896761",
+    width: width * 0.7,
+    backgroundColor: "#965A51",
+    margin: 10,
   },
 
   textValidateButton: {
@@ -345,8 +349,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
     marginHorizontal: 16,
-    marginBottom: 12,
-    zIndex: 3,
+    marginBottom: 6,
+    position: "absolute",
+    zIndex: 999,
+    top: -25,
+    right: -7,
   },
 
   tag: {
@@ -362,10 +369,18 @@ const styles = StyleSheet.create({
     // position: "absolute",
     alignContent: "space-between ",
     gap: "5",
+    position: "absolute",
+    zIndex: 999,
+    top: -25,
+    right: -7,
   },
 
   tagText: {
     color: "white",
     fontWeight: "bold",
+    position: "absolute",
+    zIndex: 999,
+    top: -25,
+    right: -7,
   },
 });
