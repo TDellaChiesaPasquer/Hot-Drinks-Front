@@ -57,6 +57,8 @@ export default function SwipeScreen(props) {
 			})
 			.then(function (jsonResponse) {
 				const fetchedProfiles = jsonResponse.profilList || [];
+				// console.log("fetchedProfiles : ");
+				// console.log(fetchedProfiles);
 				setProfileList(fetchedProfiles);
 				setSwiperComponentKey(function (previousKey) {
 					return previousKey + 1;
