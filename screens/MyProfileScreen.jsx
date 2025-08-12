@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Dimensions, TouchableOpacity, Button } from "react-native";
 
 import React, { useEffect, useState } from "react";
+// import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { Dropdown } from "react-native-element-dropdown";
 import { setAnswer, toggleStar, setAllTastes } from "../reducers/user";
@@ -8,25 +9,25 @@ import DropDownComponent from "../components/DropDownComponent";
 import Swiper from "react-native-swiper";
 import { Image } from "expo-image";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import ImagePickerComponent from "../components/ImagePickerComponent";
 
 const { width, height } = Dimensions.get("window");
 
-import { capitalize } from "../Utils/utils.js";
-
 export default function MyProfile({ navigation }) {
-	const dispatch = useDispatch();
-	const token = useSelector((state) => state.user.value.token);
-	const dataPhoto = useSelector((state) => state.user.value);
-	const dataTaste = (dataPhoto.user && dataPhoto.user.tastesList) || [];
-	const tastesById = {};
-	for (const tastElement of dataTaste) {
-		tastesById[tastElement.category] = {
-			label: capitalize(tastElement.label),
-			value: capitalize(tastElement.value),
-			star: tastElement.star,
-		};
-	}
-	console.log(tastesById);
+  // const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.user.value.token);
+  const dataPhoto = useSelector((state) => state.user.value);
+  const dataTaste = (dataPhoto.user && dataPhoto.user.tastesList) || [];
+  const tastesById = {};
+  for (const tastElement of dataTaste) {
+    tastesById[tastElement.category] = {
+      label: tastElement.label,
+      value: tastElement.value,
+      star: tastElement.star,
+    };
+  }
+  console.log(tastesById)
 
 	//___________________________________________________________CAROUSSEL_____________________________________________________________
 
@@ -143,9 +144,9 @@ export default function MyProfile({ navigation }) {
 			<DropDownComponent
 				key={i}
 				questionId={data.id}
-				question={capitalize(data.question)}
-				options={capitalize(data.options)}
-				value={capitalize(current.value)}
+				question={data.question}
+				options={data.options}
+				value={current.value}
 				star={current.star}
 				onChange={(item) => {
 					dispatch(setAnswer({ id: data.id, label: data.label, value: item.value }));
@@ -183,44 +184,62 @@ export default function MyProfile({ navigation }) {
 		alert("Les modifications ont bien été enregistrées.");
 	};
 
-	return (
-		<View style={styles.mainContainer}>
-			<View>
-				<TouchableOpacity onPress={() => navigation.navigate("MyProfileNav")} />
-				<TouchableOpacity onPress={() => navigation.navigate("MainTabNav")} />
-			</View>
-			<View style={styles.titleContainer}>
-				<Text style={styles.title}>Mon Profil</Text>
-			</View>
-			<View style={styles.scrollContainer}>
-				<ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 160 }}>
-					<View style={styles.iconContainer}>
-						<TouchableOpacity style={styles.modifyIcon}>
-							<FontAwesome5 name="pen" size={15} color="white" />
-						</TouchableOpacity>
-					</View>
-					<Swiper
-						style={styles.caroussel}
-						loop={true}
-						showsButtons
-						nextButton={<Text style={styles.arrow}>›</Text>}
-						prevButton={<Text style={styles.arrow}>‹</Text>}
-						activeDotColor="white"
-						scrollEnabled={false}
-					>
-						{photoList.map(function (url, i) {
-							return <Image key={i} source={url} style={styles.image} contentFit="cover" />;
-						})}
-					</Swiper>
-					<View style={styles.tagContainer}>
-						<View style={styles.tagContainerAbsolute}>
-							{starredTags.map((tag, idx) => (
-								<View key={tag} style={styles.tag}>
-									<Text style={styles.tagText}>#{tag}</Text>
-								</View>
-							))}
-						</View>
-					</View>
+  return (
+    <View style={styles.mainContainer}>
+      <View>
+        <TouchableOpacity onPress={() => navigation.navigate("MyProfileNav")} />
+        <TouchableOpacity onPress={() => navigation.navigate("MainTabNav")} />
+      </View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Mon Profil</Text>
+      </View>
+      <View style={styles.scrollContainer}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={{ paddingBottom: 160 }}
+        >
+          <View style={styles.iconContainer}>
+            <TouchableOpacity
+              style={styles.modifyIcon}
+              onPress={() => {
+                navigation.navigate("SignUpNav", {
+                  screen: "PhotoScreen",
+                  params: { photoList },
+                });
+              }}
+            >
+              <FontAwesome5 name="pen" size={15} color="white" />
+            </TouchableOpacity>
+          </View>
+          <Swiper
+            style={styles.caroussel}
+            loop={true}
+            showsButtons
+            nextButton={<Text style={styles.arrow}>›</Text>}
+            prevButton={<Text style={styles.arrow}>‹</Text>}
+            activeDotColor="white"
+            scrollEnabled={false}
+          >
+            {photoList.map(function (url, i) {
+              return (
+                <Image
+                  key={i}
+                  source={url}
+                  style={styles.image}
+                  contentFit="cover"
+                />
+              );
+            })}
+          </Swiper>
+          <View style={styles.tagContainer}>
+            <View style={styles.tagContainerAbsolute}>
+              {starredTags.map((tag, idx) => (
+                <View key={tag} style={styles.tag}>
+                  <Text style={styles.tagText}>#{tag}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
 
 					{dropDownQuestion}
 
