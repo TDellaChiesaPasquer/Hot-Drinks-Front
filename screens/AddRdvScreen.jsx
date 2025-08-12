@@ -19,8 +19,6 @@ export default function AddRdvScreen({}) {
   const dispatch = useDispatch();
   const places = useSelector((state) => state.user.value.places);
   const token = useSelector((state) => state.user.value.token);
-  // const [latitude, setLatitude] = useState("");
-  // const [longitude, setLongitude] = useState("");
   const [rdvPlace, setRdvPlace] = useState("");
   const [choicePositionRdv, setChoicePositionRdv] = useState(null);
 

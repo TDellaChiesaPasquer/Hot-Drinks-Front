@@ -103,6 +103,22 @@ const receiveMatch = async (event, token, dispatch) => {
   receiveNewMessage(event, token, dispatch);
 };
 
+const receiveNewRdv = async (event, token, dispatch) => {
+  const response = await fetch(
+    process.env.EXPO_PUBLIC_IP + "/rdv/reload/" + event.rdvId,
+    {
+      headers: {
+        authorization: token,
+      },
+    }
+  );
+  const data = await response.json();
+  if (!data.result) {
+    return;
+  }
+  dispatch(updateRdv(event.rdvId));
+};
+
 const MainTabNav = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
@@ -125,10 +141,13 @@ const MainTabNav = () => {
       channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
       channel.bind("block", (e) => receiveBlock(e, dispatch));
       channel.bind("match", (e) => receiveMatch(e, token, dispatch));
+      channel.bind("newRdv", (e) => receiveNewRdv(e, token, dispatch));
+
       return () => {
         channel.unbind("newMessage");
         channel.unbind("block");
         channel.unbind("match");
+        channel.unbind("newRdv");
       };
     }
   }, [userId]);
@@ -163,6 +182,7 @@ const MainTabNav = () => {
           tabBarInactiveTintColor: "#BC8D85",
           tabBarShowLabel: false,
           tabBarIconStyle: styles.tabBarIcon,
+          tabBarStyle: styles.tabBarMain,
         })}
       >
         <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
@@ -221,7 +241,7 @@ const MyProfileNav = () => {
 
         tabBarActiveTintColor: "#965A51",
         tabBarInactiveTintColor: "#CAB4B0",
-        tabBarStyle: {backgroundColor: "#965A51"},
+        tabBarStyle: { backgroundColor: "#965A51" },
         tabBarIndicatorStyle: styles.tabBarIndicator,
         headerShown: false,
         swipeEnabled: false,
@@ -299,5 +319,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: "30%",
     marginLeft: "1.66%",
+  },
+  tabBarMain: {
+    backgroundColor: "#F5EBE6",
+    boxShadow: "0 -1px 2px #896761",
   },
 });

@@ -141,6 +141,7 @@ export default function ({ navigation }) {
             type={"email"}
             value={email}
             onChangeText={(value) => setEmail(value)}
+            keyboardType="email-address"
           />
           <TextInput
             style={styles.input}
@@ -150,7 +151,6 @@ export default function ({ navigation }) {
             secureTextEntry={true}
             value={password}
             onChangeText={(value) => setPassword(value)}
-            keyboardType="email-address"
           />
           <Text style={styles.error}>{error}</Text>
           <TouchableOpacity

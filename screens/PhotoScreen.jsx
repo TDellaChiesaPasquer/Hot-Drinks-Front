@@ -13,7 +13,6 @@ import { Image } from "expo-image";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ImagePickerComponent from "../components/ImagePickerComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { addPhoto, removePhoto } from "../reducers/user";
 import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
 import HeaderBeginning from "../components/HeaderBeginning";
@@ -43,17 +42,21 @@ export default function ImagePickerScreen({ navigation }) {
     setPhotoUriList([...orderedPhotos, uri]);
   };
 
-  const removeUriToList = (uri) => {
-    setPhotoUriList(photoUriList.filter((e) => e !== uri));
+  const removeUriToList = (index) => {
+    setPhotoUriList(photoUriList.filter((e, i) => i !== index));
   };
+
+  const replaceUriInList = (index, uri) => {
+    setPhotoUriList(photoUriList.map((e, i) => i === index ? uri : e));
+  }
 
   const addedPhoto = [];
   for (let i = 0; i < 3; i++) {
     addedPhoto.push(
       <View key={i} style={styles.containerLine}>
-        <ImagePickerComponent addUriToList={addUriToList} />
-        <ImagePickerComponent addUriToList={addUriToList} />
-        <ImagePickerComponent addUriToList={addUriToList} />
+        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i] || ''} index={3 * i}/>
+        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i + 1] || ''} index={3 * i + 1}/>
+        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i + 2] || ''} index={3 * i + 2}/>
       </View>
     );
   }
