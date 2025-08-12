@@ -15,7 +15,7 @@ import { useState, useRef, useCallback } from "react";
 import { addPlace } from "../reducers/user";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function AddRdvScreen({}) {
+export default function AddRdvScreen({ navigation }) {
   const dispatch = useDispatch();
   const places = useSelector((state) => state.user.value.places);
   const token = useSelector((state) => state.user.value.token);
@@ -23,6 +23,16 @@ export default function AddRdvScreen({}) {
   const [choicePositionRdv, setChoicePositionRdv] = useState(null);
 
   console.log(choicePositionRdv, "LQQQQQQQQ");
+
+  const getMarker = async () => {};
+
+  const Date = newDate();
+  // const year = Date.setUtcFullYear()
+  // const month = Date.setMonth()
+  // if(month < 10) {
+  //  return month +1
+  // }
+  // const date
 
   const addRdv = async (coord) => {
     console.log("hello");
@@ -42,9 +52,10 @@ export default function AddRdvScreen({}) {
     const data = await response.json();
     console.log(data, "ou es tu");
     setChoicePositionRdv({
-      latitude: data.location.latitude,
-      longitude: data.location.longitude,
+      latitude: data.rdv.latitude,
+      longitude: data.rdv.longitude,
     });
+    navigation.goBack();
   };
 
   return (
@@ -58,7 +69,7 @@ export default function AddRdvScreen({}) {
           longitudeDelta: 0.0222,
         }}
         style={styles.map}
-        onLongPress={(action) => addRdv(action.nativeEvent.coordinate)}
+        onLongPress={(action) => getMarker(action.nativeEvent.coordinate)}
         // disabled={disabled}
       >
         {choicePositionRdv && (
@@ -73,12 +84,13 @@ export default function AddRdvScreen({}) {
       </MapView>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => addRdvByTouch()}
+        onPress={() => {
+          addRdv();
+        }}
         // disabled={disabled}
       >
         <Text style={styles.boutonText}>VALIDER</Text>
       </TouchableOpacity>
-      <View style={{ backgroundColor: "red", flex: 1 }}></View>
     </SafeAreaView>
   );
 }

@@ -25,7 +25,7 @@ import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 import MapScreen from "./screens/MapScreen";
 import AddRdvScreen from "./screens/AddRdvScreen";
-// import ListRdvScreen from "./screens/ListRdvScreen";
+import ListRdvScreen from "./screens/ListRdvScreen";
 import RdvScreen from "./screens/RdvScreen";
 
 // Swipe
@@ -257,8 +257,8 @@ const MyProfileNav = () => {
 const RdvNav = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ListRdvScreen" component={RdvScreen} />
-      <Stack.Screen name="RdvScreen" component={ConversationScreen} />
+      <Stack.Screen name="ListRdvScreen" component={ListRdvScreen} />
+      <Stack.Screen name="RdvScreen" component={RdvScreen} />
     </Stack.Navigator>
   );
 };
