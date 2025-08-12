@@ -13,7 +13,7 @@ import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef, useCallback } from "react";
-import { addPlace } from "../reducers/map";
+// import { addPlace } from "../reducers/map";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ListRdvScreen({ navigation }) {
