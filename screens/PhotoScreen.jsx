@@ -13,7 +13,6 @@ import { Image } from "expo-image";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import ImagePickerComponent from "../components/ImagePickerComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { addPhoto, removePhoto } from "../reducers/user";
 import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
 import HeaderBeginning from "../components/HeaderBeginning";

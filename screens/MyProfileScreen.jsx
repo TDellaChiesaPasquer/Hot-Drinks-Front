@@ -33,6 +33,7 @@ export default function MyProfile({ navigation }) {
       star: tastElement.star,
     };
   }
+  console.log(tastesById)
 
   //___________________________________________________________CAROUSSEL________________________________________________________________
   const photoList = (dataPhoto.user && dataPhoto.user.photoList) || [];
@@ -67,7 +68,7 @@ export default function MyProfile({ navigation }) {
       question: "Quel genre de films préfères-tu ?",
       options: [
         { label: "Comédie", value: "Comédies" },
-        { label: "Horreur", value: "Films d'orreur " },
+        { label: "Horreur", value: "Films d'horreur " },
         { label: "Dystopique", value: "Films dystopiques" },
         { label: "Historique", value: "Films historiques" },
         { label: "Psychologique", value: "Films psychologiques" },
@@ -169,11 +170,13 @@ export default function MyProfile({ navigation }) {
   const starredTags = [];
   for (const key in tastesById) {
     const t = tastesById[key];
+    console.log(t)
     if (t && t.star === true && t.value) {
+      console.log(t)
       starredTags.push(t.value);
     }
   }
-
+  console.log(starredTags)
   //___________________________________________________________SAUVEGARDE TASTES________________________________________
   const saveAllTastes = async () => {
     const tastesList = dataTaste;
@@ -228,11 +231,13 @@ export default function MyProfile({ navigation }) {
             })}
           </Swiper>
           <View style={styles.tagContainer}>
-            {starredTags.map((tag, idx) => (
-              <View key={idx} style={styles.tag}>
-                <Text style={styles.tagText}>#{tag}</Text>
-              </View>
-            ))}
+            <View style={styles.tagContainerAbsolute}>
+              {starredTags.map((tag, idx) => (
+                <View key={tag} style={styles.tag}>
+                  <Text style={styles.tagText}>#{tag}</Text>
+                </View>
+              ))}
+            </View>
           </View>
 
           {dropDownQuestion}
@@ -350,10 +355,19 @@ const styles = StyleSheet.create({
     gap: 8,
     marginHorizontal: 16,
     marginBottom: 6,
-    position: "absolute",
+    position: 'relative'
+  },
+
+  tagContainerAbsolute: {
+    position: 'absolute',
+    bottom: 30,
     zIndex: 999,
-    top: -25,
-    right: -7,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: width * 0.9,
+    gap: 5
   },
 
   tag: {
@@ -361,26 +375,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // alignSelf: "flex-start",
     justifyContent: "space-evenly",
-    // backgroundColor: "rgba(150, 90, 81, 0.4)",
-    paddingHorizontal: 12,
-    paddingVertical: 16,
-    marginRight: 8,
-    marginBottom: 2,
+    backgroundColor: "rgba(150, 90, 81, 0.4)",
+    borderRadius: 10,
+    padding: 5,
     // position: "absolute",
     alignContent: "space-between ",
-    gap: "5",
-    position: "absolute",
-    zIndex: 999,
-    top: -25,
-    right: -7,
   },
 
   tagText: {
     color: "white",
     fontWeight: "bold",
-    position: "absolute",
-    zIndex: 999,
-    top: -25,
-    right: -7,
   },
 });

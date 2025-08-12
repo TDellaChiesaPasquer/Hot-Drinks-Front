@@ -163,6 +163,7 @@ const MainTabNav = () => {
           tabBarInactiveTintColor: "#BC8D85",
           tabBarShowLabel: false,
           tabBarIconStyle: styles.tabBarIcon,
+          tabBarStyle: styles.tabBarMain
         })}
       >
         <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
@@ -300,4 +301,8 @@ const styles = StyleSheet.create({
     width: "30%",
     marginLeft: "1.66%",
   },
+  tabBarMain: {
+    backgroundColor: '#F5EBE6',
+    boxShadow: "0 -1px 2px #896761",
+  }
 });
