@@ -43,7 +43,7 @@ export default function ImagePickerScreen({ navigation, route }) {
   useFocusEffect(
     useCallback(() => {
       //condition
-      if (route.params.photoList === undefined) {
+      if (!route.params || route.params.photoList === undefined) {
         return;
       } else {
         setPhotoUriList(route.params.photoList);
@@ -137,7 +137,7 @@ export default function ImagePickerScreen({ navigation, route }) {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <HeaderBeginning />
-        {route.params.photoList && (
+        {route.params && route.params.photoList && (
           <TouchableOpacity
             style={styles.conditionalButton}
             onPress={() => {

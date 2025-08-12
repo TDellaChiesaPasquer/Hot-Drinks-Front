@@ -1,12 +1,11 @@
 import { useState, useCallback, useRef } from "react";
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable, ActivityIndicator, Keyboard, TouchableWithoutFeedback, BackHandler } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderBeginning from "../components/HeaderBeginning";
 import { addTempInfo } from "../reducers/user";
 import dayjs from "dayjs";
 import { useFocusEffect } from "@react-navigation/native";
-import { BackHandler } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -32,23 +31,23 @@ export default function ({ navigation }) {
 		}, [])
 	);
 
-  const handleDayChange = (value) => {
+	const handleDayChange = (value) => {
 		setDay(value);
 		if (value.length === 2) {
 			monthRef.current?.focus();
 		}
-  };
+	};
 
-  const handleMonthChange = (value) => {
+	const handleMonthChange = (value) => {
 		setMonth(value);
 		if (value.length === 2) {
 			yearRef.current?.focus();
 		}
-  };
+	};
 
-  const handleYearChange = (value) => {
+	const handleYearChange = (value) => {
 		setYear(value);
-  };
+	};
 
 	const sanitizeInputs = () => {
 		setDisabled(true);
@@ -85,55 +84,65 @@ export default function ({ navigation }) {
 
 	return (
 		<SafeAreaProvider>
-			<SafeAreaView style={styles.container}>
-				<HeaderBeginning />
-				<Text style={styles.inputTitle}>Date de naissance</Text>
-				<Text style={styles.inputSub}>(Âge minimum de 18 ans)</Text>
-				<View style={styles.dateContainer}>
-          <TextInput
-            style={styles.inputDate}
-            placeholder="JJ"
-            placeholderTextColor={"#965A51"}
-            textContentType="birthdateDay"
-            keyboardType="numeric"
-            value={day}
-            onChangeText={handleDayChange}
-            maxLength={2}
-          />
-          <TextInput
-            ref={monthRef}
-            style={styles.inputDate}
-            placeholder="MM"
-            placeholderTextColor={"#965A51"}
-            textContentType="birthdateMonth"
-            keyboardType="numeric"
-            value={month}
-            onChangeText={handleMonthChange}
-            maxLength={2}
-          />
-          <TextInput
-            ref={yearRef}
-            style={styles.inputDate}
-            placeholder="AAAA"
-            placeholderTextColor={"#965A51"}
-            textContentType="birthdateYear"
-            keyboardType="numeric"
-            value={year}
-            onChangeText={handleYearChange}
-            maxLength={4}
-          />
-				</View>
-				<Text style={styles.inputTitle}>Username</Text>
-				<Text style={styles.inputSub}>(Visible sur le profil)</Text>
-				<TextInput style={styles.input} placeholder={"Username"} placeholderTextColor={"#965A51"} value={username} onChangeText={(value) => setUsername(value)} maxLength={40} />
-				<View style={styles.bottom}>
-					<Text style={styles.error}>{error}</Text>
-					<TouchableOpacity style={[styles.bouton, disabled && styles.boutonDisabled]} onPress={() => sanitizeInputs()} disabled={disabled}>
-						<Text style={styles.boutonText}>Continuer</Text>
-						{disabled && <ActivityIndicator size="small" color="#FFFFFF" style={styles.loader} />}
-					</TouchableOpacity>
-				</View>
-			</SafeAreaView>
+			{/* Tap hors des champs => ferme le clavier */}
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+				<SafeAreaView style={styles.container}>
+					<HeaderBeginning />
+					<Text style={styles.inputTitle}>Date de naissance</Text>
+					<Text style={styles.inputSub}>(Âge minimum de 18 ans)</Text>
+					<View style={styles.dateContainer}>
+						<TextInput
+							style={styles.inputDate}
+							placeholder="JJ"
+							placeholderTextColor={"#965A51"}
+							textContentType="birthdateDay"
+							keyboardType="numeric"
+							value={day}
+							onChangeText={handleDayChange}
+							maxLength={2}
+						/>
+						<TextInput
+							ref={monthRef}
+							style={styles.inputDate}
+							placeholder="MM"
+							placeholderTextColor={"#965A51"}
+							textContentType="birthdateMonth"
+							keyboardType="numeric"
+							value={month}
+							onChangeText={handleMonthChange}
+							maxLength={2}
+						/>
+						<TextInput
+							ref={yearRef}
+							style={styles.inputDate}
+							placeholder="AAAA"
+							placeholderTextColor={"#965A51"}
+							textContentType="birthdateYear"
+							keyboardType="numeric"
+							value={year}
+							onChangeText={handleYearChange}
+							maxLength={4}
+						/>
+					</View>
+					<Text style={styles.inputTitle}>Username</Text>
+					<Text style={styles.inputSub}>(Visible sur le profil)</Text>
+					<TextInput style={styles.input} placeholder={"Username"} placeholderTextColor={"#965A51"} value={username} onChangeText={(value) => setUsername(value)} maxLength={40} />
+					<View style={styles.bottom}>
+						<Text style={styles.error}>{error}</Text>
+						<TouchableOpacity
+							style={[styles.bouton, disabled && styles.boutonDisabled]}
+							onPress={() => {
+								Keyboard.dismiss(); // ferme le clavier avant la validation
+								sanitizeInputs();
+							}}
+							disabled={disabled}
+						>
+							<Text style={styles.boutonText}>Continuer</Text>
+							{disabled && <ActivityIndicator size="small" color="#FFFFFF" style={styles.loader} />}
+						</TouchableOpacity>
+					</View>
+				</SafeAreaView>
+			</TouchableWithoutFeedback>
 		</SafeAreaProvider>
 	);
 }
