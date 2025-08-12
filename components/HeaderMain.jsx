@@ -17,6 +17,8 @@ export default function ({ route }) {
     icon = <Feather name="user" size={30} color="#BC8D85" />;
   } else if (route.name === "SwipeScreen") {
     icon = <Feather name="coffee" size={30} color="#BC8D85" />;
+  } else if (route.name === "SwipeNav") {
+    icon = <Feather name="coffee" size={30} color="#BC8D85" />;
   } else {
     icon = <Feather name="calendar" size={28} color="#BC8D85" />;
   }
