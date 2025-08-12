@@ -46,6 +46,7 @@ export default function AddRdvScreen({ navigation, route }) {
     if (!Marker && !date) {
       return;
     }
+    console.log(route.params.conversationId);
     const response = await fetch(process.env.EXPO_PUBLIC_IP + "/rdv/ask", {
       method: "PUT",
       headers: {
@@ -55,15 +56,15 @@ export default function AddRdvScreen({ navigation, route }) {
       body: JSON.stringify({
         longitude: choicePositionRdv.longitude,
         latitude: choicePositionRdv.latitude,
-        conversation: route.params.conversationId,
+        conversationId: route.params.conversationId,
         date: dayjs(date).format("YYYY-MM-DDTHH:mm"),
       }),
     });
     console.log("ici");
     const data = await response.json();
+    console.log(data);
     navigation.goBack();
   };
-  console.log(date);
   return (
     <SafeAreaView style={styles.container}>
       <MapView
