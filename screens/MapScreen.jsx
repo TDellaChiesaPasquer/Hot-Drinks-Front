@@ -1,4 +1,4 @@
-import { StyleSheet, Modal, TextInput, View, Pressable, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, Modal, TextInput, View, Pressable, Text, TouchableOpacity, ActivityIndicator, Alert, Platform, Linking } from "react-native";
 import MapView from "react-native-maps";
 import { Dimensions } from "react-native";
 import { Marker } from "react-native-maps";
@@ -11,73 +11,109 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { addInfos } from "../reducers/user";
 import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
+import { startActivityAsync, ActivityAction } from "expo-intent-launcher";
 
 export default function App({ navigation }) {
-  const [myLocation, setMyLocation] = useState({});
-  const [disabled, setDisabled] = useState(false);
-  const [permission, setPermission] = useState(false);
-  const [error, setError] = useState(false);
-  const myLocationRef = useRef(myLocation);
-  const [givenPosition, setGivenPosition] = useState(null);
+	const [myLocation, setMyLocation] = useState({});
+	const [disabled, setDisabled] = useState(false);
+	const [permission, setPermission] = useState(false);
+	const [error, setError] = useState(false);
+	const myLocationRef = useRef(myLocation);
+	const [givenPosition, setGivenPosition] = useState(null);
 
-  const user = useSelector((state) => state.user.value);
-  const dispatch = useDispatch();
+	const user = useSelector((state) => state.user.value);
+	const dispatch = useDispatch();
 
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        return true;
-      };
-      const subscription = BackHandler.addEventListener(
-        "hardwareBackPress",
-        onBackPress
-      );
+	useFocusEffect(
+		useCallback(() => {
+			const onBackPress = () => {
+				return true;
+			};
+			const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-      return () => subscription.remove();
-    }, [])
-  );
+			return () => subscription.remove();
+		}, [])
+	);
 
 	useEffect(() => {
 		(async () => {
+			// Étape 0 : Log au montage du composant
 			console.log("map charged");
 
+			// Étape 1 : Demande de permission à l'utilisateur
 			const { status } = await Location.requestForegroundPermissionsAsync();
 
 			if (status === "granted") {
 				console.log("permission granted");
 
-				// AJOUT : Vérifier si la géolocalisation est activée
+				// Étape 2 : Vérifier si les services de localisation sont activés
 				const locationEnabled = await Location.hasServicesEnabledAsync();
 
 				if (!locationEnabled) {
+					// Étape 3 : Log et affichage d'une alerte si localisation désactivée
 					console.log("Géolocalisation désactivée");
-					setError("Veuillez activer la localisation dans les paramètres");
-					setPermission(true); // Afficher la carte pour sélection manuelle
+					Alert.alert("Localisation désactivée", "Nous avons besoin de la localisation. Souhaitez-vous l’activer ? Sinon, indiquez votre position manuellement.", [
+						{
+							text: "Réglages",
+							onPress: function () {
+								try {
+									// Étape 4 : Ouvrir les réglages selon la plateforme
+									// Pas de retest immédiat ici : on laisse un re-render déclencher la vérification
+									if (Platform.OS === "android") {
+										startActivityAsync(ActivityAction.LOCATION_SOURCE_SETTINGS).catch(console.log);
+									} else {
+										Linking.openURL("app-settings:").catch(console.log);
+									}
+								} catch (error) {
+									// Étape 5 : Log d'une erreur inattendue dans le bloc try
+									console.log(error);
+								}
+							},
+						},
+						{
+							text: "Saisir manuellement",
+							onPress: function () {
+								// Étape 6 : L'utilisateur choisit de saisir manuellement
+								setPermission(true);
+							},
+						},
+						{
+							text: "Annuler",
+							style: "cancel",
+							// Étape 7 : Fermer la boîte de dialogue sans action
+						},
+					]);
+
+					// Étape 8 : Message d'erreur dans l'UI
+					setError("Veuillez activer la localisation dans les paramètres ou saisir votre position manuellement");
+
+					// Étape 9 : On arrête ici, pas de tentative de récupération de position
 					return;
 				}
 
-				// AJOUT : Try/catch pour gérer les erreurs de localisation
+				// Étape 10 : Essayer de récupérer la position actuelle
 				try {
 					const location = await Location.getCurrentPositionAsync({});
 					console.log("location retrieved");
 
-					console.log(location);
+					// Étape 11 : Stockage de la position
 					const { latitude, longitude } = location.coords;
-					setMyLocation({
-						latitude,
-						longitude,
-					});
-					myLocationRef.current = {
-						latitude,
-						longitude,
-					};
+					setMyLocation({ latitude, longitude });
+					myLocationRef.current = { latitude, longitude };
+
+					// Étape 12 : Cacher la carte si elle était affichée
+					setPermission(false);
+
+					// Étape 13 : Envoi de la position au serveur
 					getGeolocalisation();
 				} catch (error) {
+					// Étape 14 : Gestion des erreurs de récupération
 					console.log("Erreur localisation:", error);
 					setError("Impossible d'obtenir votre position. Choisissez sur la carte.");
-					setPermission(true); // Afficher la carte pour sélection manuelle
+					setPermission(true);
 				}
 			} else {
+				// Étape 15 : Si pas de permission, affichage de la carte pour saisie manuelle
 				setPermission(true);
 			}
 		})();
