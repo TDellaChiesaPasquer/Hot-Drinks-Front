@@ -20,6 +20,8 @@ export default function App({ navigation }) {
 	const [error, setError] = useState(false);
 	const myLocationRef = useRef(myLocation);
 	const [givenPosition, setGivenPosition] = useState(null);
+	const [waitingForLocationService, setWaitingForLocationService] = useState(false);
+	const locationCheckIntervalRef = useRef(null);
 
 	const user = useSelector((state) => state.user.value);
 	const dispatch = useDispatch();
@@ -34,6 +36,57 @@ export default function App({ navigation }) {
 			return () => subscription.remove();
 		}, [])
 	);
+
+	function checkLocationServices() {
+		// Étape 1 : Démarrage de la vérification périodique
+		console.log("Vérification des services de localisation...");
+
+		// Étape 2 : Vérification si les services de localisation sont maintenant activés
+		Location.hasServicesEnabledAsync()
+			.then(function (locationEnabled) {
+				if (locationEnabled) {
+					// Étape 3 : Les services sont activés, on peut continuer
+					console.log("Services de localisation activés");
+
+					// Étape 4 : Nettoyage de l'intervalle puisqu'on a détecté l'activation
+					clearInterval(locationCheckIntervalRef.current);
+					locationCheckIntervalRef.current = null;
+					setWaitingForLocationService(false);
+
+					// Étape 5 : Tentative de récupération de la position actuelle
+					return Location.getCurrentPositionAsync({});
+				}
+				// Étape 6 : Les services sont toujours désactivés, on continue d'attendre
+				return Promise.reject("Services de localisation toujours désactivés");
+			})
+			.then(function (location) {
+				// Étape 7 : Position récupérée avec succès
+				console.log("location retrieved");
+
+				// Étape 8 : Stockage de la position
+				const { latitude, longitude } = location.coords;
+				setMyLocation({ latitude, longitude });
+				myLocationRef.current = { latitude, longitude };
+
+				// Étape 9 : Cacher la carte si elle était affichée
+				setPermission(false);
+
+				// Étape 10 : Envoi de la position au serveur
+				getGeolocalisation();
+			})
+			.catch(function (error) {
+				// Étape 11 : Gestion des erreurs
+				if (error === "Services de localisation toujours désactivés") {
+					// Étape 12 : Si les services sont toujours désactivés, on attend le prochain intervalle
+					return;
+				}
+
+				// Étape 13 : Erreur lors de la récupération de la position
+				console.log("Erreur localisation:", error);
+				setError("Impossible d'obtenir votre position. Choisissez sur la carte.");
+				setPermission(true);
+			});
+	}
 
 	useEffect(() => {
 		(async () => {
@@ -52,13 +105,23 @@ export default function App({ navigation }) {
 				if (!locationEnabled) {
 					// Étape 3 : Log et affichage d'une alerte si localisation désactivée
 					console.log("Géolocalisation désactivée");
-					Alert.alert("Localisation désactivée", "Nous avons besoin de la localisation. Souhaitez-vous l’activer ? Sinon, indiquez votre position manuellement.", [
+					Alert.alert("Localisation désactivée", "Nous avons besoin de la localisation. Souhaitez-vous l'activer ? Sinon, indiquez votre position manuellement.", [
 						{
 							text: "Réglages",
 							onPress: function () {
 								try {
-									// Étape 4 : Ouvrir les réglages selon la plateforme
-									// Pas de retest immédiat ici : on laisse un re-render déclencher la vérification
+									// Étape 4a : Activer le mode d'attente des services de localisation
+									setWaitingForLocationService(true);
+
+									// Étape 4b : Nettoyer l'ancien intervalle s'il existe
+									if (locationCheckIntervalRef.current) {
+										clearInterval(locationCheckIntervalRef.current);
+									}
+
+									// Étape 4c : Configurer un nouvel intervalle de vérification (toutes les 10 secondes)
+									locationCheckIntervalRef.current = setInterval(checkLocationServices, 1000);
+
+									// Étape 4d : Ouvrir les réglages selon la plateforme
 									if (Platform.OS === "android") {
 										startActivityAsync(ActivityAction.LOCATION_SOURCE_SETTINGS).catch(console.log);
 									} else {
@@ -116,6 +179,14 @@ export default function App({ navigation }) {
 				// Étape 15 : Si pas de permission, affichage de la carte pour saisie manuelle
 				setPermission(true);
 			}
+
+			// Étape 16 : Fonction de nettoyage exécutée lors du démontage du composant
+			return function () {
+				// Étape 17 : Arrêt de l'intervalle de vérification s'il est actif
+				if (locationCheckIntervalRef.current) {
+					clearInterval(locationCheckIntervalRef.current);
+				}
+			};
 		})();
 	}, []);
 
