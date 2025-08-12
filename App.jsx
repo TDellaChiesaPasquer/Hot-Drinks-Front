@@ -46,16 +46,15 @@ import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const pusher = new Pusher("ee5eeae5d340ff371be3", {
-  cluster: "eu",
+	cluster: "eu",
 });
 
 const reducers = combineReducers({ user });
 const persistConfig = { key: "faceup", storage: AsyncStorage };
 
 const store = configureStore({
-  reducer: persistReducer(persistConfig, reducers),
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
+	reducer: persistReducer(persistConfig, reducers),
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 const persistor = persistStore(store);
 
@@ -65,42 +64,37 @@ const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
 const SignUpNav = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
-    >
-      <Stack.Screen name="SignUp" component={SignUp} />
-      <Stack.Screen name="DateScreen" component={DateScreen} />
-      <Stack.Screen name="GenderScreen" component={GenderScreen} />
-      <Stack.Screen name="RelationScreen" component={RelationScreen} />
-      <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
-      <Stack.Screen name="MapScreen" component={MapScreen} />
-    </Stack.Navigator>
-  );
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+			<Stack.Screen name="SignUp" component={SignUp} />
+			<Stack.Screen name="DateScreen" component={DateScreen} />
+			<Stack.Screen name="GenderScreen" component={GenderScreen} />
+			<Stack.Screen name="RelationScreen" component={RelationScreen} />
+			<Stack.Screen name="PhotoScreen" component={PhotoScreen} />
+			<Stack.Screen name="MapScreen" component={MapScreen} />
+		</Stack.Navigator>
+	);
 };
 
 const receiveNewMessage = async (event, token, dispatch) => {
-  const response = await fetch(
-    process.env.EXPO_PUBLIC_IP + "/conversation/" + event.conversationId,
-    {
-      headers: {
-        authorization: token,
-      },
-    }
-  );
-  const data = await response.json();
-  if (!data.result) {
-    return;
-  }
-  dispatch(updateConv(data.conversation));
+	const response = await fetch(process.env.EXPO_PUBLIC_IP + "/conversation/" + event.conversationId, {
+		headers: {
+			authorization: token,
+		},
+	});
+	const data = await response.json();
+	if (!data.result) {
+		return;
+	}
+	dispatch(updateConv(data.conversation));
 };
 
 const receiveBlock = async (event, dispatch) => {
-  dispatch(deleteConv(event.conversationId));
+	dispatch(deleteConv(event.conversationId));
 };
 
 const receiveMatch = async (event, token, dispatch) => {
-  receiveNewMessage(event, token, dispatch);
+	receiveNewMessage(event, token, dispatch);
 };
 
 const MainTabNav = () => {
@@ -180,88 +174,83 @@ const MainTabNav = () => {
 };
 
 const SwipeNav = () => {
-  return (
-    <StackSwipe.Navigator screenOptions={{ headerShown: false }}>
-      <StackSwipe.Screen name="SwipeScreen" component={SwipeScreen} />
-      <StackSwipe.Screen
-        name="SwipeProfileInformationsScreen"
-        component={SwipeProfileInformationsScreen}
-      />
-    </StackSwipe.Navigator>
-  );
+	return (
+		<StackSwipe.Navigator screenOptions={{ headerShown: false }}>
+			<StackSwipe.Screen name="SwipeScreen" component={SwipeScreen} />
+			<StackSwipe.Screen name="SwipeProfileInformationsScreen" component={SwipeProfileInformationsScreen} />
+		</StackSwipe.Navigator>
+	);
 };
 
 const MessagerieNav = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
-      <Stack.Screen name="ConversationScreen" component={ConversationScreen} />
-      <Stack.Screen name="AddRdvScreen" component={AddRdvScreen} />
-    </Stack.Navigator>
-  );
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
+			<Stack.Screen name="ConversationScreen" component={ConversationScreen} />
+			<Stack.Screen name="AddRdvScreen" component={AddRdvScreen} />
+		</Stack.Navigator>
+	);
 };
 
 const MyProfileNav = () => {
-  return (
-    <TopTab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarStyle: styles.tabBar,
-        tabBarIcon: ({ color, size }) => {
-          let icon;
+	return (
+		<TopTab.Navigator
+			screenOptions={({ route }) => ({
+				tabBarStyle: styles.tabBar,
+				tabBarIcon: ({ color, size }) => {
+					let icon;
 
-          if (route.name === "Mon profil") {
-            icon = <Feather name="user" size={24} color={color} />;
-          } else if (route.name === "Préférences") {
-            icon = <FontAwesome name="heart-o" size={24} color={color} />;
-          } else if (route.name === "Réglages") {
-            icon = <MaterialIcons name="settings" size={24} color={color} />;
-          }
+					if (route.name === "Mon profil") {
+						icon = <Feather name="user" size={24} color={color} />;
+					} else if (route.name === "Préférences") {
+						icon = <FontAwesome name="heart-o" size={24} color={color} />;
+					} else if (route.name === "Réglages") {
+						icon = <MaterialIcons name="settings" size={24} color={color} />;
+					}
 
-          return icon;
-        },
+					return icon;
+				},
 
-        tabBarActiveTintColor: "#965A51",
-        tabBarInactiveTintColor: "#CAB4B0",
-        tabBarStyle: {backgroundColor: "#965A51"},
-        tabBarIndicatorStyle: styles.tabBarIndicator,
-        headerShown: false,
-        swipeEnabled: false,
-      })}
-    >
-      <TopTab.Screen name="Mon profil" component={MyProfileScreen} />
-      <TopTab.Screen name="Préférences" component={PreferencesScreen} />
-      <TopTab.Screen name="Réglages" component={SettingsScreen} />
-    </TopTab.Navigator>
-  );
+				tabBarActiveTintColor: "#965A51",
+				tabBarInactiveTintColor: "#CAB4B0",
+				tabBarStyle: { backgroundColor: "#965A51" },
+				tabBarIndicatorStyle: styles.tabBarIndicator,
+				headerShown: false,
+				swipeEnabled: false,
+			})}
+		>
+			<TopTab.Screen name="Mon profil" component={MyProfileScreen} />
+			<TopTab.Screen name="Préférences" component={PreferencesScreen} />
+			<TopTab.Screen name="Réglages" component={SettingsScreen} />
+		</TopTab.Navigator>
+	);
 };
 
 const RdvNav = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ListRdvScreen" component={RdvScreen} />
-      <Stack.Screen name="RdvScreen" component={ConversationScreen} />
-    </Stack.Navigator>
-  );
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="ListRdvScreen" component={RdvScreen} />
+			<Stack.Screen name="RdvScreen" component={ConversationScreen} />
+		</Stack.Navigator>
+	);
 };
 
 export default function App() {
-  return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <Stack.Navigator
-              screenOptions={{ headerShown: false, gestureEnabled: false }}
-            >
-              <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-              <Stack.Screen name="SignUpNav" component={SignUpNav} />
-              <Stack.Screen name="MainTabNav" component={MainTabNav} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </SafeAreaProvider>
-      </PersistGate>
-    </Provider>
-  );
+	return (
+		<Provider store={store}>
+			<PersistGate persistor={persistor}>
+				<SafeAreaProvider>
+					<NavigationContainer>
+						<Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+							<Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+							<Stack.Screen name="SignUpNav" component={SignUpNav} />
+							<Stack.Screen name="MainTabNav" component={MainTabNav} />
+						</Stack.Navigator>
+					</NavigationContainer>
+				</SafeAreaProvider>
+			</PersistGate>
+		</Provider>
+	);
 }
 
 const styles = StyleSheet.create({
