@@ -42,17 +42,21 @@ export default function ImagePickerScreen({ navigation }) {
     setPhotoUriList([...photoUriList, uri]);
   };
 
-  const removeUriToList = (uri) => {
-    setPhotoUriList(photoUriList.filter((e) => e !== uri));
+  const removeUriToList = (index) => {
+    setPhotoUriList(photoUriList.filter((e, i) => i !== index));
   };
+
+  const replaceUriInList = (index, uri) => {
+    setPhotoUriList(photoUriList.map((e, i) => i === index ? uri : e));
+  }
 
   const addedPhoto = [];
   for (let i = 0; i < 3; i++) {
     addedPhoto.push(
       <View key={i} style={styles.containerLine}>
-        <ImagePickerComponent addUriToList={addUriToList} />
-        <ImagePickerComponent addUriToList={addUriToList} />
-        <ImagePickerComponent addUriToList={addUriToList} />
+        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i] || ''} index={3 * i}/>
+        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i + 1] || ''} index={3 * i + 1}/>
+        <ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i + 2] || ''} index={3 * i + 2}/>
       </View>
     );
   }

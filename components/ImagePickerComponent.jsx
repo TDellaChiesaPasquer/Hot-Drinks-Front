@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get("window");
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function ImagePickerScreen(props) {
-  const [photo, setPhoto] = useState(null);
+  //const [photo, setPhoto] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -23,27 +23,26 @@ export default function ImagePickerScreen(props) {
       aspect: [4, 3],
       quality: 1,
     });
-    //console.log(result);
     if (!result.canceled) {
       const uri = result.assets[0].uri;
-      console.log("uri=", uri);
-      //   const next = [...photo];
-      //   next[index] = uri;
-      props.addUriToList(uri);
-      setPhoto(uri);
+      if (props.source) {
+        props.replaceUriInList(props.index, uri);
+      } else {
+        props.addUriToList(uri);
+      }
     } else {
       alert("Tu dois sélectionner au moins une image pour valider ton profil.");
     }
   };
   // Hello \o/
   const handleDelete = () => {
-    setPhoto("");
+    props.removeUriToList(props.index);
   };
 
   return (
     <TouchableOpacity onPress={pickImage} style={styles.addPhotoButton}>
-      {photo ? (<>
-          <Image source={photo} style={styles.addedPhoto} />
+      {props.source ? (<>
+          <Image source={props.source} style={styles.addedPhoto} />
           <TouchableOpacity
             onPress={() => handleDelete()}
             style={styles.deletePhotoDiv}
