@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
   scrollHeight: {
     width: width,
     height: 82,
+    marginTop: 5
   },
   conversationList: {
     width: width * 0.9,

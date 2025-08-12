@@ -239,7 +239,7 @@ export default function ReglagesScreen() {
 					keyboardType="email-address"
 					placeholder="ex: user@example.com"
 					placeholderTextColor="#9f8f88"
-					keyboardType="emailAddress"
+					keyboardType="email-address"
 				/>
 				<View style={styles.modalRow}>
 					<SecondaryButton label="Annuler" onPress={() => setShowEmailModal(false)} />

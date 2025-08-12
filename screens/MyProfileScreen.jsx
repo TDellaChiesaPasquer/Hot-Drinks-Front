@@ -1,13 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Dimensions,
-  TouchableOpacity,
-  Button,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Dimensions, TouchableOpacity, Button } from "react-native";
 
 import React, { useEffect, useState } from "react";
 // import { useNavigation } from "@react-navigation/native";
@@ -36,11 +27,13 @@ export default function MyProfile({ navigation }) {
       star: tastElement.star,
     };
   }
+  console.log(tastesById)
 
-  //___________________________________________________________CAROUSSEL________________________________________________________________
-  const photoList = (dataPhoto.user && dataPhoto.user.photoList) || [];
+	//___________________________________________________________CAROUSSEL_____________________________________________________________
+  
+	const photoList = (dataPhoto.user && dataPhoto.user.photoList) || [];
 
-  //__________________________________________________________QUESTIONS DATA_________________________________________________________
+	//__________________________________________________________QUESTIONS DATA_________________________________________________________
 
   const questions = [
     {
@@ -70,7 +63,7 @@ export default function MyProfile({ navigation }) {
       question: "Quel genre de films préfères-tu ?",
       options: [
         { label: "Comédie", value: "Comédies" },
-        { label: "Horreur", value: "Films d'orreur " },
+        { label: "Horreur", value: "Films d'horreur " },
         { label: "Dystopique", value: "Films dystopiques" },
         { label: "Historique", value: "Films historiques" },
         { label: "Psychologique", value: "Films psychologiques" },
@@ -147,36 +140,36 @@ export default function MyProfile({ navigation }) {
       };
     }
 
-    return (
-      <DropDownComponent
-        key={i}
-        questionId={data.id}
-        question={data.question}
-        options={data.options}
-        value={current.value}
-        star={current.star}
-        onChange={(item) => {
-          dispatch(
-            setAnswer({ id: data.id, label: data.label, value: item.value })
-          );
-        }}
-        onToggleStar={(next) => {
-          dispatch(toggleStar({ id: data.id, next }));
-        }}
-      />
-    );
-  });
+		return (
+			<DropDownComponent
+				key={i}
+				questionId={data.id}
+				question={data.question}
+				options={data.options}
+				value={current.value}
+				star={current.star}
+				onChange={(item) => {
+					dispatch(setAnswer({ id: data.id, label: data.label, value: item.value }));
+				}}
+				onToggleStar={(next) => {
+					dispatch(toggleStar({ id: data.id, next }));
+				}}
+			/>
+		);
+	});
 
-  //_____________________________________________________HASHTAGS_____________________________________________
+	//_____________________________________________________HASHTAGS_____________________________________________
 
   const starredTags = [];
   for (const key in tastesById) {
     const t = tastesById[key];
+    console.log(t)
     if (t && t.star === true && t.value) {
+      console.log(t)
       starredTags.push(t.value);
     }
   }
-
+  console.log(starredTags)
   //___________________________________________________________SAUVEGARDE TASTES________________________________________
   const saveAllTastes = async () => {
     const tastesList = dataTaste;
@@ -239,120 +232,119 @@ export default function MyProfile({ navigation }) {
             })}
           </Swiper>
           <View style={styles.tagContainer}>
-            {starredTags.map((tag, idx) => (
-              <View key={idx} style={styles.tag}>
-                <Text style={styles.tagText}>#{tag}</Text>
-              </View>
-            ))}
+            <View style={styles.tagContainerAbsolute}>
+              {starredTags.map((tag, idx) => (
+                <View key={tag} style={styles.tag}>
+                  <Text style={styles.tagText}>#{tag}</Text>
+                </View>
+              ))}
+            </View>
           </View>
 
-          {dropDownQuestion}
+					{dropDownQuestion}
 
-          <TouchableOpacity
-            style={styles.validationButton}
-            onPress={() => saveAllTastes()}
-          >
-            <Text style={styles.textValidateButton}>Valider</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    </View>
-  );
+					<TouchableOpacity style={styles.validationButton} onPress={() => saveAllTastes()}>
+						<Text style={styles.textValidateButton}>Valider</Text>
+					</TouchableOpacity>
+				</ScrollView>
+			</View>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    color: "#965a51c0",
-    backgroundColor: "#F5EBE6",
-    justifyContent: "center",
-    textAlign: "center",
-    fontWeight: "bold",
-    marginTop: 15,
-  },
+	mainContainer: {
+		flex: 1,
+	},
+	title: {
+		fontSize: 24,
+		color: "#965a51c0",
+		backgroundColor: "#F5EBE6",
+		justifyContent: "center",
+		textAlign: "center",
+		fontWeight: "bold",
+		marginTop: 15,
+	},
 
-  scrollContainer: {
-    flex: 1,
-    backgroundColor: "#F5EBE6",
-    width: "100%",
-  },
+	scrollContainer: {
+		flex: 1,
+		backgroundColor: "#F5EBE6",
+		width: "100%",
+	},
 
-  scrollView: {
-    backgroundColor: "#F5EBE6",
-    height: "100%",
-    width: "100%",
-  },
+	scrollView: {
+		backgroundColor: "#F5EBE6",
+		height: "100%",
+		width: "100%",
+	},
 
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: "100%",
-    backgroundColor: "#965A51",
-    overflow: "hidden",
-    justifyContent: "flex-end",
-    // backgroundColor: "blue",
-    alignItems: "flex-end",
-    // paddingRight: 10,
-    position: "absolute",
-    zIndex: 1,
-    top: 35,
-    right: 13,
-    // boxShadow: "0 2px 3px #BC8D85",
-  },
+	iconContainer: {
+		width: 40,
+		height: 40,
+		borderRadius: "100%",
+		backgroundColor: "#965A51",
+		overflow: "hidden",
+		justifyContent: "flex-end",
+		// backgroundColor: "blue",
+		alignItems: "flex-end",
+		// paddingRight: 10,
+		position: "absolute",
+		zIndex: 1,
+		top: 35,
+		right: 13,
+		// boxShadow: "0 2px 3px #BC8D85",
+	},
 
-  modifyIcon: {
-    justifyContent: "flex-end",
-    // backgroundColor: "blue",
-    alignItems: "flex-end",
-    paddingRight: 20,
-    position: "absolute",
-    zIndex: 999,
-    top: 13,
-    right: -7,
-  },
+	modifyIcon: {
+		justifyContent: "flex-end",
+		// backgroundColor: "blue",
+		alignItems: "flex-end",
+		paddingRight: 20,
+		position: "absolute",
+		zIndex: 999,
+		top: 13,
+		right: -7,
+	},
 
-  caroussel: {
-    height: height * 0.6,
-    backgroundColor: "lightblue",
-    marginVertical: 16,
-  },
+	caroussel: {
+		height: height * 0.6,
+		backgroundColor: "lightblue",
+		marginVertical: 16,
+	},
 
-  image: {
-    height: "100%",
-    width: "100%",
-  },
+	image: {
+		height: "100%",
+		width: "100%",
+	},
 
-  arrow: {
-    color: "white",
-    fontSize: 100,
-  },
+	arrow: {
+		color: "white",
+		fontSize: 100,
+	},
 
-  validationButton: {
-    marginVertical: 10,
-    marginTop: 100,
-    alignSelf: "center",
+	validationButton: {
+		marginVertical: 10,
+		marginTop: 100,
+		alignSelf: "center",
 
-    alignItems: "center",
-    justifyContent: "center",
-    height: 36,
-    borderRadius: 15,
-    boxShadow: "0 2px 3px #896761",
-    width: width * 0.7,
-    backgroundColor: "#965A51",
-    margin: 10,
-  },
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		backgroundColor: "#965A51",
+		margin: 10,
+	},
 
-  textValidateButton: {
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: "bold",
-    fontSize: 18,
-    color: "#F5EBE6",
-  },
+	textValidateButton: {
+		textAlign: "center",
+		alignItems: "center",
+		justifyContent: "center",
+		fontWeight: "bold",
+		fontSize: 18,
+		color: "#F5EBE6",
+	},
 
   tagContainer: {
     flexDirection: "row",
@@ -361,10 +353,19 @@ const styles = StyleSheet.create({
     gap: 8,
     marginHorizontal: 16,
     marginBottom: 6,
-    position: "absolute",
+    position: 'relative'
+  },
+
+  tagContainerAbsolute: {
+    position: 'absolute',
+    bottom: 30,
     zIndex: 999,
-    top: -25,
-    right: -7,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: width * 0.9,
+    gap: 5
   },
 
   tag: {
@@ -372,26 +373,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // alignSelf: "flex-start",
     justifyContent: "space-evenly",
-    // backgroundColor: "rgba(150, 90, 81, 0.4)",
-    paddingHorizontal: 12,
-    paddingVertical: 16,
-    marginRight: 8,
-    marginBottom: 2,
+    backgroundColor: "rgba(150, 90, 81, 0.4)",
+    borderRadius: 10,
+    padding: 5,
     // position: "absolute",
     alignContent: "space-between ",
-    gap: "5",
-    position: "absolute",
-    zIndex: 999,
-    top: -25,
-    right: -7,
   },
 
   tagText: {
     color: "white",
     fontWeight: "bold",
-    position: "absolute",
-    zIndex: 999,
-    top: -25,
-    right: -7,
   },
 });
