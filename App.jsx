@@ -259,11 +259,12 @@ const SwipeNav = () => {
 
 const MessagerieNav = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
-      <Stack.Screen name="ConversationScreen" component={ConversationScreen} />
-      <Stack.Screen name="AddRdvScreen" component={AddRdvScreen} />
-    </Stack.Navigator>
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
+			<Stack.Screen name="ConversationScreen" component={ConversationScreen} />
+			<Stack.Screen name="AddRdvScreen" component={AddRdvScreen} />
+			<Stack.Screen name="ProfileInformationsScreen" component={ProfileInformationsScreen} />
+		</Stack.Navigator>
   );
 };
 

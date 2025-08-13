@@ -42,6 +42,10 @@ function calculateAge(birthdate) {
 	return age;
 }
 
+const isValidDistance = (distance) => {
+	return distance !== undefined && distance !== null && distance.trim().toLowerCase() !== "nan";
+};
+
 export default function SwipeProfileInformations() {
 	const navigation = useNavigation();
 	const route = useRoute();
@@ -113,10 +117,13 @@ export default function SwipeProfileInformations() {
 						<Text style={styles.infoValue}>{relationship}</Text>
 					</View>
 
-					<View style={styles.infoItem}>
-						<Text style={styles.infoLabel}>Distance</Text>
-						<Text style={styles.infoValue}>{distance}</Text>
-					</View>
+					{/* Afficher la distance seulement si elle existe et est valide */}
+					{isValidDistance(profileData.distance) && (
+						<View style={styles.infoItem}>
+							<Text style={styles.infoLabel}>Distance</Text>
+							<Text style={styles.infoValue}>{profileData.distance}</Text>
+						</View>
+					)}
 				</View>
 
 				{/* Goûts et préférences */}
