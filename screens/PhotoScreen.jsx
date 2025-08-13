@@ -66,12 +66,10 @@ export default function ImagePickerScreen({ navigation, route }) {
 		setDisabled(true);
 		const formData = new FormData();
 		// console.log("click", photo);
-		console.log(photoUriList);
 		if (photoUriList.length === 0) {
 			setDisabled(false);
 			return;
 		}
-		console.log("test");
 		for (let i = 0; i < photoUriList.length; i++) {
 			formData.append("photoFromFront" + i, {
 				uri: photoUriList[i],
@@ -79,7 +77,6 @@ export default function ImagePickerScreen({ navigation, route }) {
 				type: "image/jpeg",
 			});
 		}
-		console.log("testa");
 
 		const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length, {
 			method: "POST",
@@ -88,9 +85,7 @@ export default function ImagePickerScreen({ navigation, route }) {
 			},
 			body: formData,
 		});
-		console.log("testb");
 		const data = await response.json();
-		console.log(data);
 		if (data.result) {
 			navigation.navigate("MapScreen");
 			setDisabled(false);

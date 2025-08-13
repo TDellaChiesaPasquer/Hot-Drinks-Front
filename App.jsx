@@ -123,11 +123,9 @@ const receiveNewRdv = async (event, token, dispatch) => {
     }
   );
   const data = await response.json();
-  console.log(data);
   if (!data.result) {
     return;
   }
-  console.log(data);
   dispatch(updateRdv(data.rdv));
 };
 
@@ -187,7 +185,6 @@ const MainTabNav = () => {
   );
 
   const handleModal = (bool) => {
-    console.log(bool);
     setIsModalVisible(() => bool);
   };
 
@@ -263,6 +260,7 @@ const MessagerieNav = () => {
       <Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
       <Stack.Screen name="ConversationScreen" component={ConversationScreen} />
       <Stack.Screen name="AddRdvScreen" component={AddRdvScreen} />
+      <Stack.Screen name="RdvScreen" component={RdvScreen} />
     </Stack.Navigator>
   );
 };

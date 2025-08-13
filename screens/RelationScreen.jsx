@@ -63,7 +63,6 @@ export default function ({ navigation }) {
 		const data = await response.json();
 		if (!data.result) {
 			setError("Une erreur a eu lieu");
-			console.log(data);
 			setDisabled(false);
 			return;
 		}

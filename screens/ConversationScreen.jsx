@@ -88,18 +88,44 @@ export default function ({ navigation, route }) {
       (x) =>
       (String(otherUser._id) === String(x.creator._id) || String(otherUser._id) === String(x.receiver._id)) && (new Date(x.date)).valueOf() > (new Date()).valueOf() && (x.status === 'demande' || x.status === 'confirm')
     );
-  let currentRdvHTML;
+    <AntDesign
+            name="left"
+            size={24}
+            color="#965A51"
+            style={styles.goBack}
+            onPress={() => navigation.goBack()}
+            disabled={modalBlockVisible}
+          />
+  let currentRdvText;
   if (currentRdv) {
     if (currentRdv.status === "demande") {
-      currentRdvHTML = (
-        <TouchableOpacity style={styles.currentRdvContainer} onPress={() => {
-          navigation.navigate("RdvNav", {screen: 'RdvScreen', params: currentRdv})
-        }}>
-          <Text style={styles.currentRdvText}>Vous avez un rendez-vous</Text>
-        </TouchableOpacity>
-      );
+      if (String(currentRdv.creator._id) !== String(user.user._id)) {
+        currentRdvText = <Text style={styles.currentRdvText}>Vous avez une demande de rendez-vous</Text>
+      } else {
+        currentRdvText = <Text style={styles.currentRdvText}>En attente de la réponse</Text>
+      }
+    } else {
+      currentRdvText = <Text style={styles.currentRdvText}>Vous avez un rendez-vous</Text>
     }
   }
+  const currentRdvHTML = (
+        <TouchableOpacity style={styles.currentRdvContainer} onPress={() => {
+          navigation.navigate("RdvScreen",  currentRdv)
+        }}>
+          <View style={styles.rightIcon}>
+
+          </View>
+          {currentRdvText}
+          <AntDesign
+            name="right"
+            size={24}
+            color="#F5EBE6"
+            style={styles.rightIcon}
+            onPress={() => navigation.goBack()}
+            disabled={modalBlockVisible}
+          />
+        </TouchableOpacity>
+      );
   const messagesHTML = messageList.map((message, index) => {
     let date;
     const messageDate = dayjs(message.date);
@@ -511,11 +537,16 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: 'gray',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: "#965A51"
+    justifyContent: 'space-between',
+    backgroundColor: "#965A51",
+    flexDirection: 'row'
   },
   currentRdvText: {
     color: '#F5EBE6',
     fontWeight: 'bold'
+  },
+  rightIcon: {
+    marginHorizontal: width * 0.05,
+    width: 24
   }
 });
