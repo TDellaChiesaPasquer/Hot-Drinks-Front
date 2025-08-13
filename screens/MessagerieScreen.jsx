@@ -5,6 +5,12 @@ import dayjs from "dayjs";
 import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
+const EmptyState = () => (
+	<View style={styles.emptyState}>
+		<Text style={styles.emptyText}>Les messages de vos match s'afficheront ici...</Text>
+	</View>
+);
+
 export default function ({ navigation }) {
 	const user = useSelector((state) => state.user.value);
 	const isFocused = useIsFocused();
@@ -75,8 +81,10 @@ export default function ({ navigation }) {
 					{contactHTML}
 				</ScrollView>
 			</View>
-			<Text style={styles.title}>Messages</Text>
-			{user.user.conversationList.length === 0 && <Text>Vos conversations et matchs se trouveront ici</Text>}
+			<View style={styles.emptyMessagesList}>
+				<Text style={styles.title}>Messages</Text>
+			</View>
+			{user.user.conversationList.length === 0 && <EmptyState />}
 			<ScrollView contentContainerStyle={styles.conversationList}>{conversationHTML}</ScrollView>
 		</View>
 	);
@@ -141,6 +149,7 @@ const styles = StyleSheet.create({
 		fontSize: 10,
 	},
 	title: {
+		bottom: "65%",
 		color: "#965A51",
 		fontWeight: "bold",
 		fontSize: 18,
@@ -173,5 +182,33 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		backgroundColor: "#FFF5F0",
 		right: 25,
+	},
+	emptyMessagesList: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	emptyState: {
+		top: "-10%",
+		width: width * 0.9,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "#FFF5F0",
+		borderRadius: 16,
+		paddingVertical: 24,
+		paddingHorizontal: 18,
+		borderWidth: 1,
+		borderColor: "rgba(188, 141, 133, 0.25)",
+	},
+	emptyEmojiLine: {
+		fontSize: 30,
+		marginBottom: 8,
+	},
+	emptyText: {
+		color: "#965A51",
+		textAlign: "center",
+		fontSize: 24,
+		fontWeight: "800",
+		lineHeight: 32,
 	},
 });
