@@ -1,16 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  Modal,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Pressable } from "react-native";
 import { Image } from "expo-image";
 import dayjs from "dayjs";
 import { useState, useRef, useEffect } from "react";
@@ -22,11 +10,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import Animated, {
-  useAnimatedKeyboard,
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
+import Animated, { useAnimatedKeyboard, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
@@ -41,6 +25,7 @@ export default function ({ navigation, route }) {
   }));
   const keyboardStyleScroll = useAnimatedStyle(() => ({
     height: keyboard.state.value === 1 ? 250 : 0,
+    opacity: 0
   }));
   const [newMessage, setNewMessage] = useState("");
   const [sendDisabled, setSendDisabled] = useState(false);
@@ -86,20 +71,41 @@ export default function ({ navigation, route }) {
     user.user &&
     user.user.rdvList.find(
       (x) =>
-        (String(x.creator) === String(user.user._id) ||
-          String(x.receiver) === String(user.user._id)) &&
-        new Date(x.date).valueOf() - new Date().valueOf() > 0
+        (String(otherUser._id) === String(x.creator._id) ||
+          String(otherUser._id) === String(x.receiver._id)) &&
+        new Date(x.date).valueOf() > new Date().valueOf() &&
+        (x.status === "demande" || x.status === "confirm")
     );
-  let currentRdvHTML;
+  let currentRdvText;
   if (currentRdv) {
     if (currentRdv.status === "demande") {
-      currentRdvHTML = (
-        <View>
-          <Text>Test</Text>
-        </View>
-      );
+      if (String(currentRdv.creator._id) !== String(user.user._id)) {
+        currentRdvText = <Text style={styles.currentRdvText}>Vous avez une demande de rendez-vous</Text>
+      } else {
+        currentRdvText = <Text style={styles.currentRdvText}>En attente de la réponse</Text>
+      }
+    } else {
+      currentRdvText = <Text style={styles.currentRdvText}>Vous avez un rendez-vous</Text>
     }
   }
+  const currentRdvHTML = (
+        <TouchableOpacity style={styles.currentRdvContainer} onPress={() => {
+          navigation.navigate("RdvScreen",  currentRdv)
+        }}
+          disabled={modalBlockVisible}
+        >
+          <View style={styles.rightIcon}>
+
+          </View>
+          {currentRdvText}
+          <AntDesign
+            name="right"
+            size={24}
+            color="#F5EBE6"
+            style={styles.rightIcon}
+          />
+        </TouchableOpacity>
+      );
   const messagesHTML = messageList.map((message, index) => {
     let date;
     const messageDate = dayjs(message.date);
@@ -212,108 +218,93 @@ export default function ({ navigation, route }) {
     setModalBlockVisible(false);
   };
   return (
-    <View style={styles.container}>
-      {modalBlock}
-      <View style={styles.conversationHeader}>
-        <View style={styles.headerLeft}>
-          <AntDesign
-            name="left"
-            size={24}
-            color="#965A51"
-            style={styles.goBack}
-            onPress={() => navigation.goBack()}
-            disabled={modalBlockVisible}
-          />
-          <View style={styles.avatarContainer}>
-            {/* Ajouter un lien vers le profil de la personne, sur l'image */}
-            <Image
-              style={styles.avatar}
-              source={
-                conversation
-                  ? otherUser.photoList.length === 0
-                    ? ""
-                    : otherUser.photoList[0]
-                  : null
-              }
-            />
-          </View>
-          <Text style={styles.username}>
-            {conversation ? otherUser.username : null}
-          </Text>
-        </View>
-        <View style={styles.headerRight}>
-          {conversation && (
-            <MaterialIcons
-              name="block"
-              size={24}
-              color="#965A51"
-              style={styles.block}
-              onPress={() => {
-                setModalBlockVisible(true);
-              }}
-              disabled={modalBlockVisible}
-            />
-          )}
-        </View>
-      </View>
-      <View style={styles.convKey}>
-        {conversation ? (
-          <ScrollView
-            contentContainerStyle={styles.messageList}
-            ref={scrollViewRef}
-            onContentSizeChange={() =>
-              scrollViewRef.current.scrollToEnd({ animated: true })
-            }
-          >
-            {messagesHTML}
-            <Animated.View style={keyboardStyleScroll}></Animated.View>
-          </ScrollView>
-        ) : (
-          <Text style={styles.textBlocked}>Vous avez été bloqué</Text>
-        )}
-      </View>
-      <Animated.View
-        style={[styles.conversationBottomRelative, keyboardStyleBottom]}
-      >
-        {conversation && (
-          <View style={styles.conversationBottom}>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder={"Ecrire un message..."}
-                placeholderTextColor={"#965A51"}
-                value={newMessage}
-                onChangeText={(value) => setNewMessage(value)}
-                maxLength={200}
-                multiline={true}
-                textAlignVertical={"vertical"}
-                onFocus={() =>
-                  scrollViewRef.current.scrollToEnd({ animated: true })
-                }
-              />
-            </View>
-            <TouchableOpacity
-              style={styles.bottomButton}
-              onPress={() => sendMessage()}
-              disabled={sendDisabled || modalBlockVisible}
-            >
-              <Ionicons name="send" size={24} color="#F5EBE6" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.bottomButton}
-              disabled={modalBlockVisible}
-              onPress={() => {
-                navigation.navigate("AddRdvScreen", {
-                  conversationId: route.params._id,
-                });
-              }}
-            >
-              <Feather name="calendar" size={24} color="#F5EBE6" />
-            </TouchableOpacity>
-          </View>
-        )}
-      </Animated.View>
-    </View>
+		<View style={styles.container}>
+			{modalBlock}
+			<View style={styles.conversationHeader}>
+				<View style={styles.headerLeft}>
+          <TouchableOpacity onPress={() => navigation.goBack()} disabled={modalBlockVisible} style={styles.buttonLeft}>
+            <AntDesign name="left" size={24} color="#965A51"/>
+          </TouchableOpacity>
+					<View style={styles.avatarContainer}>
+						<TouchableOpacity
+							style={styles.avatarContainer}
+							onPress={() => {
+								// Navigation vers ProfileInformationsScreen avec les données du profil sans la distance
+								if (conversation && otherUser) {
+									const profileData = { ...otherUser };
+									// S'assurer que la distance n'est pas incluse
+									navigation.navigate("ProfileInformationsScreen", {
+										profileData: profileData,
+										firstImage: otherUser.photoList.length === 0 ? null : otherUser.photoList[0],
+									});
+								}
+							}}
+						>
+							<Image style={styles.avatar} source={conversation ? (otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]) : null} />
+						</TouchableOpacity>
+					</View>
+					<Text style={styles.username}>{conversation ? otherUser.username : null}</Text>
+				</View>
+				<View style={styles.headerRight}>
+					{conversation && (
+						<MaterialIcons
+							name="block"
+							size={24}
+							color="#965A51"
+							style={styles.block}
+							onPress={() => {
+								setModalBlockVisible(true);
+							}}
+							disabled={modalBlockVisible}
+						/>
+					)}
+				</View>
+			</View>
+			{currentRdv && currentRdvHTML}
+			<View style={styles.convKey}>
+				{conversation ? (
+					<ScrollView contentContainerStyle={styles.messageList} ref={scrollViewRef} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
+						{messagesHTML}
+						<Animated.View style={keyboardStyleScroll}></Animated.View>
+					</ScrollView>
+				) : (
+					<Text style={styles.textBlocked}>Vous avez été bloqué</Text>
+				)}
+			</View>
+			<Animated.View style={[styles.conversationBottomRelative, keyboardStyleBottom]}>
+				{conversation && (
+					<View style={styles.conversationBottom}>
+						<View style={styles.inputContainer}>
+							<TextInput
+								style={styles.input}
+								placeholder={"Ecrire un message..."}
+								placeholderTextColor={"#965A51"}
+								value={newMessage}
+								onChangeText={(value) => setNewMessage(value)}
+								maxLength={200}
+								multiline={true}
+								textAlignVertical={"vertical"}
+								onFocus={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+							/>
+						</View>
+						<TouchableOpacity style={styles.bottomButton} onPress={() => sendMessage()} disabled={sendDisabled || modalBlockVisible}>
+							<Ionicons name="send" size={24} color="#F5EBE6" />
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[styles.bottomButton, Boolean(currentRdv) && { backgroundColor: "#BC8D85" }]}
+							disabled={modalBlockVisible || Boolean(currentRdv)}
+							onPress={() => {
+								navigation.navigate("AddRdvScreen", {
+									conversationId: route.params._id,
+								});
+							}}
+						>
+							<Feather name="calendar" size={24} color="#F5EBE6" />
+						</TouchableOpacity>
+					</View>
+				)}
+			</Animated.View>
+		</View>
   );
 }
 
@@ -505,4 +496,27 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     height: "100%",
   },
+  currentRdvContainer: {
+    width: width,
+    height: 50,
+    backgroundColor: 'gray',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: "#965A51",
+    flexDirection: 'row'
+  },
+  currentRdvText: {
+    color: '#F5EBE6',
+    fontWeight: 'bold'
+  },
+  rightIcon: {
+    marginHorizontal: width * 0.05,
+    width: 24
+  },
+  buttonLeft: {
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });

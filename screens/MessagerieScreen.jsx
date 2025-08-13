@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get("window");
 const EmptyState = () => (
   <View style={styles.emptyState}>
     <Text style={styles.emptyText}>
-      Les messages de vos match s'afficheront ici...
+      Les messages de tes match s'afficheront ici...
     </Text>
   </View>
 );
@@ -111,18 +111,18 @@ export default function ({ navigation }) {
   });
   return (
     <View style={styles.container}>
-      <View style={styles.scrollHeight}>
-        <ScrollView
-          style={styles.contactScroll}
-          contentContainerStyle={styles.contactList}
-          horizontal={true}
-        >
-          {contactHTML}
-        </ScrollView>
-      </View>
-      <View style={styles.emptyMessagesList}>
-        <Text style={styles.title}>Messages</Text>
-      </View>
+      {contactHTML.length !== 0 && (
+        <View style={styles.scrollHeight}>
+          <ScrollView
+            style={styles.contactScroll}
+            contentContainerStyle={styles.contactList}
+            horizontal={true}
+          >
+            {contactHTML}
+          </ScrollView>
+        </View>
+      )}
+      <Text style={styles.title}>Messages</Text>
       {user.user.conversationList.length === 0 && <EmptyState />}
       <ScrollView contentContainerStyle={styles.conversationList}>
         {conversationHTML}
@@ -190,7 +190,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   title: {
-    bottom: "65%",
     color: "#965A51",
     fontWeight: "bold",
     fontSize: 18,
@@ -202,14 +201,15 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: width * 0.05,
     gap: 10,
-    height: 82,
+    paddingTop: 8,
+    height: 90,
   },
   contactScroll: {
     width: "100%",
   },
   scrollHeight: {
     width: width,
-    height: 82,
+    height: 90,
     marginTop: 5,
   },
   conversationList: {
@@ -224,13 +224,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF5F0",
     right: 25,
   },
-  emptyMessagesList: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   emptyState: {
-    top: "-10%",
+    marginTop: "50%",
     width: width * 0.9,
     alignItems: "center",
     justifyContent: "center",
@@ -241,15 +236,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(188, 141, 133, 0.25)",
   },
-  emptyEmojiLine: {
-    fontSize: 30,
-    marginBottom: 8,
-  },
   emptyText: {
     color: "#965A51",
     textAlign: "center",
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 24,
+    fontWeight: "800",
     lineHeight: 32,
   },
 });

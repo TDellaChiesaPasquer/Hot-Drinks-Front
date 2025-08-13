@@ -24,7 +24,6 @@ import { newSuperlike } from "../reducers/user";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const maxNumberOfCards = 10;
-const enTest = false;
 
 export default function SwipeScreen(props) {
   const swiperReference = useRef(null);
@@ -141,9 +140,7 @@ export default function SwipeScreen(props) {
       .then(function (response) {
         return response.json();
       })
-      .then(function (data) {
-        if (data.match) console.log("Vous avez un match !");
-      })
+      .then(function (data) {})
       .catch(function (error) {
         console.error("Erreur réseau lors du swipe :", error);
       });

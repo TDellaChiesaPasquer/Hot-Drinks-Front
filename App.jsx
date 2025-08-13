@@ -128,11 +128,9 @@ const receiveNewRdv = async (event, token, dispatch) => {
     }
   );
   const data = await response.json();
-  console.log(data);
   if (!data.result) {
     return;
   }
-  console.log(data);
   dispatch(updateRdv(data.rdv));
 };
 
@@ -143,6 +141,7 @@ const MainTabNav = () => {
   let userId;
   let token;
   let messagerieNotif;
+  let rdvNotif;
   if (user.user) {
     userId = user.user._id;
     token = user.token;
@@ -152,6 +151,12 @@ const MainTabNav = () => {
       );
       return lastMessage && !lastMessage.seen;
     });
+    rdvNotif = user.user.rdvList.find(
+      (x) =>
+        String(userId) === String(x.receiver._id) &&
+        new Date(x.date).valueOf() > new Date().valueOf() &&
+        x.status === "demande"
+    );
   }
   useEffect(() => {
     if (userId) {
@@ -192,7 +197,6 @@ const MainTabNav = () => {
   );
 
   const handleModal = (bool) => {
-    console.log(bool);
     setIsModalVisible(() => bool);
   };
 
@@ -244,7 +248,11 @@ const MainTabNav = () => {
           component={MessagerieNav}
           options={messagerieNotif && { tabBarBadge: "" }}
         />
-        <Tab.Screen name="RdvNav" component={RdvNav} />
+        <Tab.Screen
+          name="RdvNav"
+          component={RdvNav}
+          options={rdvNotif && { tabBarBadge: "" }}
+        />
       </Tab.Navigator>
     </SafeAreaView>
   );
@@ -268,6 +276,11 @@ const MessagerieNav = () => {
       <Stack.Screen name="MessagerieScreen" component={MessagerieScreen} />
       <Stack.Screen name="ConversationScreen" component={ConversationScreen} />
       <Stack.Screen name="AddRdvScreen" component={AddRdvScreen} />
+      <Stack.Screen name="RdvScreen" component={RdvScreen} />
+      <Stack.Screen
+        name="ProfileInformationsScreen"
+        component={ProfileInformationsScreen}
+      />
     </Stack.Navigator>
   );
 };
@@ -311,6 +324,10 @@ const RdvNav = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="ListRdvScreen" component={ListRdvScreen} />
       <Stack.Screen name="RdvScreen" component={RdvScreen} />
+      <StackSwipe.Screen
+        name="ProfileInformationsScreen"
+        component={ProfileInformationsScreen}
+      />
     </Stack.Navigator>
   );
 };
@@ -374,7 +391,7 @@ const styles = StyleSheet.create({
   },
   tabBarMain: {
     backgroundColor: "#F5EBE6",
-    boxShadow: "0 -1px 2px #896761",
+    boxShadow: "0 -1px 2px #965a51c0",
   },
   centeredView: {
     flex: 1,
@@ -393,12 +410,8 @@ const styles = StyleSheet.create({
   },
 
   modalText: {
+    marginBottom: 15,
     textAlign: "center",
-    fontWeight: "600",
-  },
-
-  modal: {
-    borderColor: "red",
-    boxShadow: "5 5 5 0 rgba(255, 0, 0, 0.5)",
+    fontWeight: "900",
   },
 });

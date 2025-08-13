@@ -56,7 +56,6 @@ export default function PreferencesScreen({ navigation }) {
   const defaultRelation = (user.user && user.user.relationship) || "";
   const [relation, setRelation] = useState(defaultRelation);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  console.log(isModalVisible);
   const modalModificationCheck = (
     <Modal
       style={styles.modal}
@@ -73,7 +72,6 @@ export default function PreferencesScreen({ navigation }) {
   );
 
   const handleModal = (bool) => {
-    console.log(bool);
     setIsModalVisible(() => bool);
   };
 
@@ -96,7 +94,6 @@ export default function PreferencesScreen({ navigation }) {
       }
     );
     const data = await response.json();
-    console.log(data);
     handleModal(true);
     setTimeout(handleModal, 1500, false);
   };
