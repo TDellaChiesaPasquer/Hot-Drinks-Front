@@ -87,20 +87,23 @@ export default function AddRdvScreen({ navigation, route }) {
       </View>
       {/* <MobileDateTimePicker /> */}
       <View style={styles.containerCalendar}>
+        <Text style={styles.textRdv}> Rendez-vous le</Text>
+
         <Text style={styles.text} onPress={showDate}>
           {`${("0" + date.getDate()).slice(-2)}/${(
             "0" + Number(date.getMonth() + 1)
           ).slice(-2)}/${date.getFullYear()}`}
         </Text>
+        <Text style={styles.textRdv}>à</Text>
         <Text style={styles.text} onPress={showTime}>
           {`${("0" + date.getHours()).slice(-2)}:${(
             "0" + date.getMinutes()
           ).slice(-2)}`}
         </Text>
-        {visible && (
-          <DateTimePicker value={date} mode={mode} onChange={dateChange} />
-        )}
       </View>
+      {visible && (
+        <DateTimePicker value={date} mode={mode} onChange={dateChange} />
+      )}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
@@ -120,19 +123,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerRadius: {
-    height: "65%",
-    width: "80%",
-    backgroundcolor: "red",
-    borderRadius: 25,
+    height: "70%",
+    width: "90%",
+    backgroundColor: "red",
+    borderRadius: 30,
+    overflow: "hidden",
+    boxShadow: "0 2px 3px #896761",
   },
   map: {
-    // height: "65%",
-    // width: "80%",
+    height: "100%",
+    width: "100%",
     // marginHorizontal: 20,
     // marginTop: 5,
-    // alignItems: "center",
-    // justifyContent: "center",
-    // boxShadow: "0 2px 3px #896761",
+    alignItems: "center",
+    justifyContent: "center",
   },
   button: {
     alignItems: "center",
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
     // width: width * 0.7,
     backgroundColor: "#965a51c0",
     marginHorizontal: 70,
-    marginTop: 30,
+    marginTop: 40,
     width: "70%",
   },
   boutonText: {
@@ -154,21 +158,27 @@ const styles = StyleSheet.create({
   containerCalendar: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
-    // backgroundColor: "#fc5400ff",
+    justifyContent: "space-between",
     padding: 3,
     marginTop: 20,
-    width: "80%",
-    height: "11%",
+    width: "90%",
+    height: "8%",
+    // gap: 9,
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     borderColor: "#965a51c0",
-    boxShadow: "0 2px 3px #896761",
+    backgroundColor: "#F5EBE6",
+    boxShadow: "0 1px 2px #896761",
     color: "#965a51c0",
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 15,
-    padding: 20,
+    padding: 10,
+  },
+  textRdv: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: "#965a51c0",
   },
 });
