@@ -4,17 +4,17 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
 import Swiper from "react-native-deck-swiper";
-import SwipeContainer from "../../components/swipe/SwipeContainer";
+import SwipeContainer from "../components/swipe/SwipeContainer";
 import PagerView from "react-native-pager-view";
-import SwipeButton from "../../components/swipe/SwipeButton";
+import SwipeButton from "../components/swipe/SwipeButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
-import { newSuperlike } from "../../reducers/user";
+import { newSuperlike } from "../reducers/user";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const maxNumberOfCards = 10;
-const enTest = false;
+const enTest = true;
 
 export default function SwipeScreen(props) {
 	const swiperReference = useRef(null);
@@ -24,13 +24,13 @@ export default function SwipeScreen(props) {
 	const minDuration = 1000;
 	const [lastTimeSwipe, setLastTimeSwipe] = useState(new Date());
 	function canTriggerAction() {
-		const now = new Date;
+		const now = new Date();
 		// Ne conserver que les taps dans la fenêtre temporelle
-    if ((new Date()).valueOf() - lastTimeSwipe.valueOf() < minDuration) {
-      return false;
-    }
-    setLastTimeSwipe(now);
-    return true;
+		if (new Date().valueOf() - lastTimeSwipe.valueOf() < minDuration) {
+			return false;
+		}
+		setLastTimeSwipe(now);
+		return true;
 	}
 
 	useFocusEffect(
@@ -160,10 +160,10 @@ export default function SwipeScreen(props) {
 						ref={swiperReference}
 						cards={profileList}
 						renderCard={(card, index) => renderCardForIndex(card, index)}
-						keyExtractor={(card) =>  card ? card._id : 26}
+						keyExtractor={(card) => (card ? card._id : 26)}
 						onSwipedAll={() => setTimeout(fetchProfilesFromAPI, 500)}
 						backgroundColor="transparent"
-            stackSize={3}
+						stackSize={3}
 						onSwipedLeft={(cardIndex) => handleSwipe(cardIndex, "Dislike")}
 						onSwipedRight={(cardIndex) => handleSwipe(cardIndex, "Like")}
 						onSwipedTop={(cardIndex) => handleSwipe(cardIndex, "SuperLike")}

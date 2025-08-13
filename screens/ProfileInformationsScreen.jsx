@@ -6,7 +6,7 @@ import { FontAwesome } from "@expo/vector-icons";
 // tmp pour le test
 import Swiper from "react-native-swiper";
 import { Image } from "expo-image";
-import { capitalize } from "../../Utils/utils.js";
+import { capitalize } from "../Utils/utils.js";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
