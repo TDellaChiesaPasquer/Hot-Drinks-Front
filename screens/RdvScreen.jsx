@@ -163,22 +163,24 @@ export default function RdvScreen({ navigation, route }) {
           <Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
         </View>
       </View>
-      <Text>Rendez-vous</Text>
-      <Text>
-        {
-          [
-            "Dimanche",
-            "Lundi",
-            "Mardi",
-            "Mercredi",
-            "Jeudi",
-            "Vendredi",
-            "Samedi",
-          ][rdvDate.get("day")]
-        }{" "}
-        {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
-      </Text>
-      <Text>{rdv.address}</Text>
+      <Text style={styles.textTitle}>RENDEZ-VOUS</Text>
+      <View style={styles.rdv}>
+        <Text style={styles.textRdv}>
+          {
+            [
+              "Dimanche",
+              "Lundi",
+              "Mardi",
+              "Mercredi",
+              "Jeudi",
+              "Vendredi",
+              "Samedi",
+            ][rdvDate.get("day")]
+          }{" "}
+          {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
+        </Text>
+        <Text style={styles.textRdv}>{rdv.address}</Text>
+      </View>
       <View style={styles.containerRadius}>
         <MapView
           initialRegion={{
@@ -240,8 +242,28 @@ const styles = StyleSheet.create({
   goBack: {
     marginHorizontal: 25,
   },
+  textTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: -5,
+    marginBottom: 10,
+    color: "#965A51",
+  },
+  rdv: {
+    flex: "column",
+    width: "90%",
+  },
+  textRdv: {
+    fontSize: 14,
+    fontWeight: "bold",
+    justifyContent: "flex-start",
+    color: "#965A51",
+    // alignItems: "center",
+    marginLeft: 5,
+    marginBottom: 10,
+  },
   containerRadius: {
-    height: "70%",
+    height: "55%",
     width: "90%",
     backgroundColor: "red",
     borderRadius: 30,
@@ -255,12 +277,14 @@ const styles = StyleSheet.create({
   statusText: {
     color: "#965A51",
     fontWeight: "bold",
+    marginTop: 10,
   },
   demandeContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
     width: "90%",
+    marginTop: 20,
   },
   demandeButton: {
     alignItems: "center",
