@@ -110,14 +110,14 @@ export default function RdvScreen({ navigation, route }) {
             <TouchableOpacity
               style={styles.demandeButton}
               disabled={Boolean(statusDemande)}
-              onPress={() => acceptDemande()}
+              onPress={() => refuseDemande()}
             >
               <Text style={styles.demandeButtonText}>Refuser</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.demandeButton}
               disabled={Boolean(statusDemande)}
-              onPress={() => refuseDemande()}
+              onPress={() => acceptDemande()}
             >
               <Text style={styles.demandeButtonText}>Accepter</Text>
             </TouchableOpacity>
