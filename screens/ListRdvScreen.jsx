@@ -48,8 +48,8 @@ export default function ListRdvScreen({ navigation }) {
 	});
 	return (
 		<View style={styles.container}>
-			<ScrollView contentContainerStyle={styles.conversationList}>{rdvHTML}</ScrollView>
 			{rdvList.length === 0 && <EmptyState />}
+			<ScrollView contentContainerStyle={styles.conversationList}>{rdvHTML}</ScrollView>
 		</View>
 	);
 }
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#F5EBE6",
 		alignItems: "center",
+    justifyContent: 'flex-start'
 	},
 	contactContainer: {
 		alignItems: "center",
@@ -124,8 +125,7 @@ const styles = StyleSheet.create({
 		right: 25,
 	},
 	emptyState: {
-    marginTop: "30%",
-    top: "-45%",
+    marginTop: "70%",
 		width: width * 0.9,
 		alignItems: "center",
 		justifyContent: "center",
