@@ -54,7 +54,7 @@ export default function MyProfile({ navigation }) {
 
   const questions = [
     {
-      id: "music",
+      id: "Musique",
       question: "Quel est ton genre de musique préféré ?",
       options: [
         { label: "Pop", value: "Pop" },
@@ -66,7 +66,7 @@ export default function MyProfile({ navigation }) {
       ],
     },
     {
-      id: "sorties",
+      id: "Sorties",
       question: "Tu préfères les soirées...",
       options: [
         { label: "Calmes", value: "Soirées calmes" },
@@ -76,7 +76,7 @@ export default function MyProfile({ navigation }) {
       ],
     },
     {
-      id: "films",
+      id: "Films",
       question: "Quel genre de films préfères-tu ?",
       options: [
         { label: "Comédie", value: "Comédies" },
@@ -87,7 +87,7 @@ export default function MyProfile({ navigation }) {
       ],
     },
     {
-      id: "animaux",
+      id: "Animaux",
       question: "As tu des animaux de compagnie ?",
       options: [
         { label: "Oui", value: "Ami(e) des animaux" },
@@ -96,7 +96,7 @@ export default function MyProfile({ navigation }) {
       ],
     },
     {
-      id: "matin",
+      id: "Rythme de vie",
       question: "Es-tu plutôt...",
       options: [
         { label: "Matinal·e", value: "Matinal·e" },
@@ -105,7 +105,7 @@ export default function MyProfile({ navigation }) {
       ],
     },
     {
-      id: "sport",
+      id: "Sport",
       question: "Ta pratique sportive?",
       options: [
         { label: "Accro au sport", value: "Accro au sport" },
@@ -115,7 +115,7 @@ export default function MyProfile({ navigation }) {
       ],
     },
     {
-      id: "vacances",
+      id: "Vacances",
       question: "Vacances idéales ?",
       options: [
         { label: "Hotel all inclusive", value: "Hotel all inclusive" },
@@ -125,7 +125,7 @@ export default function MyProfile({ navigation }) {
       ],
     },
     {
-      id: "lecture",
+      id: "Lecture",
       question: "Lis-tu régulièrement ?",
       options: [
         { label: "Oui", value: "Lecture" },
@@ -134,7 +134,7 @@ export default function MyProfile({ navigation }) {
       ],
     },
     {
-      id: "cuisine",
+      id: "Cuisine",
       question: "Tes préférences alimentaires ?",
       options: [
         { label: "Vegan", value: "Vegan" },
@@ -303,12 +303,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#F5EBE6",
     height: "7%",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
-    paddingBottom: 6,
+    marginLeft: 10,
+    marginTop: 5,
   },
   titleUsername: {
-    fontSize: 24,
+    fontSize: 20,
     color: "#965a51c0",
     // backgroundColor: "#F5EBE6",
     justifyContent: "center",
@@ -317,13 +318,13 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   titleAge: {
-    fontSize: 16,
+    fontSize: 13,
     color: "#965a51c0",
     // backgroundColor: "#F5EBE6",
     justifyContent: "center",
     textAlign: "center",
     // paddingTop: 7,
-    marginTop: 17,
+    marginTop: 15,
   },
 
   scrollContainer: {
