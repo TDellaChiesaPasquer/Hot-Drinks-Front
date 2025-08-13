@@ -136,6 +136,7 @@ const MainTabNav = () => {
   let userId;
   let token;
   let messagerieNotif;
+  let rdvNotif;
   if (user.user) {
     userId = user.user._id;
     token = user.token;
@@ -145,6 +146,9 @@ const MainTabNav = () => {
       );
       return lastMessage && !lastMessage.seen;
     });
+    rdvNotif = user.user.rdvList.find(
+      (x) => String(userId) === String(x.receiver._id) && new Date(x.date).valueOf() > new Date().valueOf() && x.status === "demande"
+    );
   }
   useEffect(() => {
     if (userId) {
@@ -236,7 +240,7 @@ const MainTabNav = () => {
           component={MessagerieNav}
           options={messagerieNotif && { tabBarBadge: "" }}
         />
-        <Tab.Screen name="RdvNav" component={RdvNav} />
+        <Tab.Screen name="RdvNav" component={RdvNav} options={rdvNotif && {tabBarBadge: ''}}/>
       </Tab.Navigator>
     </SafeAreaView>
   );

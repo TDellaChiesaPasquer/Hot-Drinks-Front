@@ -41,6 +41,7 @@ export default function ({ navigation, route }) {
   }));
   const keyboardStyleScroll = useAnimatedStyle(() => ({
     height: keyboard.state.value === 1 ? 250 : 0,
+    opacity: 0
   }));
   const [newMessage, setNewMessage] = useState("");
   const [sendDisabled, setSendDisabled] = useState(false);
@@ -330,8 +331,8 @@ export default function ({ navigation, route }) {
               <Ionicons name="send" size={24} color="#F5EBE6" />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.bottomButton}
-              disabled={modalBlockVisible}
+              style={[styles.bottomButton, Boolean(currentRdv) && {backgroundColor: '#BC8D85'}]}
+              disabled={modalBlockVisible || Boolean(currentRdv)}
               onPress={() => {
                 navigation.navigate("AddRdvScreen", {
                   conversationId: route.params._id,
