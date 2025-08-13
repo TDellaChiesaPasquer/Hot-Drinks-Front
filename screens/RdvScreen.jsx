@@ -179,22 +179,24 @@ export default function RdvScreen({ navigation, route }) {
         {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
       </Text>
       <Text>{rdv.address}</Text>
-      <MapView
-        initialRegion={{
-          latitude: rdv.latitude,
-          longitude: rdv.longitude,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }}
-        style={styles.map}
-      >
-        <Marker
-          coordinate={{
+      <View style={styles.containerRadius}>
+        <MapView
+          initialRegion={{
             latitude: rdv.latitude,
             longitude: rdv.longitude,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
           }}
-        />
-      </MapView>
+          style={styles.map}
+        >
+          <Marker
+            coordinate={{
+              latitude: rdv.latitude,
+              longitude: rdv.longitude,
+            }}
+          />
+        </MapView>
+      </View>
       {statusBloc}
     </View>
   );
@@ -247,10 +249,8 @@ const styles = StyleSheet.create({
     boxShadow: "0 2px 3px #896761",
   },
   map: {
-    width: width * 0.9,
-    height: width * 0.9,
-    borderRadius: 20,
-    boxShadow: "0 2px 3px #896761",
+    width: "100%",
+    height: "100%",
   },
   statusText: {
     color: "#965A51",
