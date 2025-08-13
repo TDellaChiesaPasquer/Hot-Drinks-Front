@@ -36,8 +36,8 @@ import ListRdvScreen from "./screens/ListRdvScreen";
 import RdvScreen from "./screens/RdvScreen";
 
 // Swipe
-import SwipeScreen from "./screens/swipe/SwipeScreen";
-import SwipeProfileInformationsScreen from "./screens/swipe/SwipeProfileInformationsScreen";
+import SwipeScreen from "./screens/SwipeScreen";
+import ProfileInformationsScreen from "./screens/ProfileInformationsScreen";
 
 import MyProfileScreen from "./screens/MyProfileScreen";
 import PreferencesScreen from "./screens/PreferencesScreen";
@@ -250,8 +250,8 @@ const SwipeNav = () => {
     <StackSwipe.Navigator screenOptions={{ headerShown: false }}>
       <StackSwipe.Screen name="SwipeScreen" component={SwipeScreen} />
       <StackSwipe.Screen
-        name="SwipeProfileInformationsScreen"
-        component={SwipeProfileInformationsScreen}
+        name="ProfileInformationsScreen"
+        component={ProfileInformationsScreen}
       />
     </StackSwipe.Navigator>
   );

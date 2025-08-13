@@ -9,7 +9,7 @@ import { capitalize } from "../../Utils/utils.js";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 
-import SwipeProfileInformationsScreen from "../../screens/swipe/SwipeProfileInformationsScreen";
+import ProfileInformationsScreen from "../../screens/ProfileInformationsScreen";
 
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
@@ -222,7 +222,7 @@ export default function SwipeContainer(props) {
 
 	// Navigation vers la page d'infos avec passage des goûts
 	function goToProfileInformations() {
-		navigation.navigate("SwipeProfileInformationsScreen", {
+		navigation.navigate("ProfileInformationsScreen", {
 			tastesList: Array.isArray(profileData?.tastesList) ? profileData.tastesList : [],
 			firstImage: imagesList && imagesList.length > 0 ? imagesList[0] : null,
 		});
