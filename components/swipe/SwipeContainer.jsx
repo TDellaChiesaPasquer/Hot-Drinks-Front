@@ -223,7 +223,7 @@ export default function SwipeContainer(props) {
 	// Navigation vers la page d'infos avec passage des goûts
 	function goToProfileInformations() {
 		navigation.navigate("ProfileInformationsScreen", {
-			tastesList: Array.isArray(profileData?.tastesList) ? profileData.tastesList : [],
+			profileData: profileData,
 			firstImage: imagesList && imagesList.length > 0 ? imagesList[0] : null,
 		});
 	}
