@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
   },
   tabBarMain: {
     backgroundColor: "#F5EBE6",
-    boxShadow: "0 -1px 2px #896761",
+    boxShadow: "0 -1px 2px #965a51c0",
   },
   centeredView: {
     flex: 1,

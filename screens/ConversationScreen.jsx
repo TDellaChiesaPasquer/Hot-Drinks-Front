@@ -86,7 +86,10 @@ export default function ({ navigation, route }) {
     user.user &&
     user.user.rdvList.find(
       (x) =>
-      (String(otherUser._id) === String(x.creator._id) || String(otherUser._id) === String(x.receiver._id)) && (new Date(x.date)).valueOf() > (new Date()).valueOf() && (x.status === 'demande' || x.status === 'confirm')
+        (String(otherUser._id) === String(x.creator._id) ||
+          String(otherUser._id) === String(x.receiver._id)) &&
+        new Date(x.date).valueOf() > new Date().valueOf() &&
+        (x.status === "demande" || x.status === "confirm")
     );
     <AntDesign
             name="left"

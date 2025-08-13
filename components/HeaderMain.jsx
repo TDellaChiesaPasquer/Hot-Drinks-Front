@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 10,
     paddingBottom: 10,
-    boxShadow: "0 1px 2px #896761",
+    boxShadow: "0 1px 2px #965a51c0",
   },
   text: {
     fontSize: 30,
