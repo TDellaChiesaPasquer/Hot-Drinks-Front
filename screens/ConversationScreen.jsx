@@ -86,15 +86,25 @@ export default function ({ navigation, route }) {
     user.user &&
     user.user.rdvList.find(
       (x) =>
-      (String(otherUser._id) === String(x.creator._id) || String(otherUser._id) === String(x.receiver._id)) && (new Date(x.date)).valueOf() > (new Date()).valueOf() && (x.status === 'demande' || x.status === 'confirm')
+        (String(otherUser._id) === String(x.creator._id) ||
+          String(otherUser._id) === String(x.receiver._id)) &&
+        new Date(x.date).valueOf() > new Date().valueOf() &&
+        (x.status === "demande" || x.status === "confirm")
     );
+  console.log(currentRdv);
   let currentRdvHTML;
   if (currentRdv) {
     if (currentRdv.status === "demande") {
       currentRdvHTML = (
-        <TouchableOpacity style={styles.currentRdvContainer} onPress={() => {
-          navigation.navigate("RdvNav", {screen: 'RdvScreen', params: currentRdv})
-        }}>
+        <TouchableOpacity
+          style={styles.currentRdvContainer}
+          onPress={() => {
+            navigation.navigate("RdvNav", {
+              screen: "RdvScreen",
+              params: currentRdv,
+            });
+          }}
+        >
           <Text style={styles.currentRdvText}>Vous avez un rendez-vous</Text>
         </TouchableOpacity>
       );
@@ -509,13 +519,13 @@ const styles = StyleSheet.create({
   currentRdvContainer: {
     width: width,
     height: 50,
-    backgroundColor: 'gray',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: "#965A51"
+    backgroundColor: "gray",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#965A51",
   },
   currentRdvText: {
-    color: '#F5EBE6',
-    fontWeight: 'bold'
-  }
+    color: "#F5EBE6",
+    fontWeight: "bold",
+  },
 });
