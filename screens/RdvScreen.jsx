@@ -21,6 +21,7 @@ export default function RdvScreen({ navigation, route }) {
   const [statusDemande, setStatusDemande] = useState('');
   const [statusCancel, setStatusCancel] = useState('');
   const user = useSelector(state => state.user.value);
+  console.log(route.params)
   const rdv = user.user ? user.user.rdvList.find(
         (x) => String(x._id) === String(route.params._id)
       )

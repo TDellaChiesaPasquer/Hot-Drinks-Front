@@ -92,9 +92,11 @@ export default function ({ navigation, route }) {
   if (currentRdv) {
     if (currentRdv.status === "demande") {
       currentRdvHTML = (
-        <View style={styles.currentRdvContainer}>
+        <TouchableOpacity style={styles.currentRdvContainer} onPress={() => {
+          navigation.navigate("RdvNav", {screen: 'RdvScreen', params: currentRdv})
+        }}>
           <Text style={styles.currentRdvText}>Vous avez un rendez-vous</Text>
-        </View>
+        </TouchableOpacity>
       );
     }
   }
