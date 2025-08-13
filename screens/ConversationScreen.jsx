@@ -86,17 +86,17 @@ export default function ({ navigation, route }) {
     user.user &&
     user.user.rdvList.find(
       (x) =>
-        (String(x.creator) === String(user.user._id) ||
-          String(x.receiver) === String(user.user._id)) &&
-        new Date(x.date).valueOf() - new Date().valueOf() > 0
+      (String(otherUser._id) === String(x.creator._id) || String(otherUser._id) === String(x.receiver._id)) && (new Date(x.date)).valueOf() > (new Date()).valueOf() && (x.status === 'demande' || x.status === 'confirm')
     );
   let currentRdvHTML;
   if (currentRdv) {
     if (currentRdv.status === "demande") {
       currentRdvHTML = (
-        <View>
-          <Text>Test</Text>
-        </View>
+        <TouchableOpacity style={styles.currentRdvContainer} onPress={() => {
+          navigation.navigate("RdvNav", {screen: 'RdvScreen', params: currentRdv})
+        }}>
+          <Text style={styles.currentRdvText}>Vous avez un rendez-vous</Text>
+        </TouchableOpacity>
       );
     }
   }
@@ -256,6 +256,7 @@ export default function ({ navigation, route }) {
           )}
         </View>
       </View>
+      {currentRdv && currentRdvHTML}
       <View style={styles.convKey}>
         {conversation ? (
           <ScrollView
@@ -505,4 +506,16 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     height: "100%",
   },
+  currentRdvContainer: {
+    width: width,
+    height: 50,
+    backgroundColor: 'gray',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#965A51"
+  },
+  currentRdvText: {
+    color: '#F5EBE6',
+    fontWeight: 'bold'
+  }
 });

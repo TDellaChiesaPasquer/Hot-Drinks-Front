@@ -24,7 +24,7 @@ export default function ({ route }) {
   }
   return (
     <View style={styles.header}>
-      {icon}
+      {/* {icon} */}
       <Text style={styles.text}>Hot Drinks</Text>
       <View style={styles.icon}></View>
     </View>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     width: "100%",
     backgroundColor: "#F5EBE6",
     flexDirection: "row",

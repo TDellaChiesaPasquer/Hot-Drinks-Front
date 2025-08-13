@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Modal } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -10,7 +10,11 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCoffee, faUser, faCalendar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCoffee,
+  faUser,
+  faCalendar,
+} from "@fortawesome/free-solid-svg-icons";
 
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -32,8 +36,8 @@ import ListRdvScreen from "./screens/ListRdvScreen";
 import RdvScreen from "./screens/RdvScreen";
 
 // Swipe
-import SwipeScreen from "./screens/swipe/SwipeScreen";
-import SwipeProfileInformationsScreen from "./screens/swipe/SwipeProfileInformationsScreen";
+import SwipeScreen from "./screens/SwipeScreen";
+import ProfileInformationsScreen from "./screens/ProfileInformationsScreen";
 
 import MyProfileScreen from "./screens/MyProfileScreen";
 import PreferencesScreen from "./screens/PreferencesScreen";
@@ -41,7 +45,7 @@ import SettingsScreen from "./screens/SettingsScreen";
 
 import user, { deleteConv, updateConv, updateRdv } from "./reducers/user";
 import Pusher from "pusher-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
@@ -119,14 +123,16 @@ const receiveNewRdv = async (event, token, dispatch) => {
     }
   );
   const data = await response.json();
-  console.log(data)
+  console.log(data);
   if (!data.result) {
     return;
   }
+  console.log(data);
   dispatch(updateRdv(data.rdv));
 };
 
 const MainTabNav = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   let userId;
@@ -147,7 +153,11 @@ const MainTabNav = () => {
       const channel = pusher.subscribe(userId);
       channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
       channel.bind("block", (e) => receiveBlock(e, dispatch));
-      channel.bind("match", (e) => receiveMatch(e, token, dispatch));
+      channel.bind("match", (e) => {
+        handleModal(true);
+        setTimeout(handleModal, 1000, false);
+        receiveMatch(e, token, dispatch);
+      });
       channel.bind("newRdv", (e) => receiveNewRdv(e, token, dispatch));
       channel.bind("rdv", (e) => receiveNewRdv(e, token, dispatch));
 
@@ -160,42 +170,78 @@ const MainTabNav = () => {
       };
     }
   }, [userId]);
+
+  const modalModificationCheck = (
+    <Modal
+      style={styles.modal}
+      visible={isModalVisible}
+      animationType="fade"
+      transparent={true}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Tu as un nouveau match!</Text>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  const handleModal = (bool) => {
+    console.log(bool);
+    setIsModalVisible(() => bool);
+  };
+
   return (
-		<SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
-			<Tab.Navigator
-				screenOptions={({ route }) => ({
-					tabBarStyle: styles.tabBar,
-					header: ({ route }) => {
-						return <HeaderMain route={route} />;
-					},
-					tabBarIcon: ({ color }) => {
-						let icon;
-						if (route.name === "MessagerieNav") {
-							icon = <MaterialCommunityIcons name="message" size={30} color={color} />;
-						} else if (route.name === "MyProfileNav") {
-							icon = <FontAwesomeIcon icon={faUser} size={30} color={color} />;
-						} else if (route.name === "SwipeNav") {
-							icon = <FontAwesomeIcon icon={faCoffee} size={30} color={color} />;
-						} else {
-							icon = <FontAwesomeIcon icon={faCalendar} size={28} color={color} />;
-						}
-						return icon;
-					},
-					tabBarActiveTintColor: "#965A51",
-					tabBarInactiveTintColor: "#BC8D85",
-					tabBarActiveTintColor: "#965A51",
-					tabBarInactiveTintColor: "#BC8D85",
-					tabBarShowLabel: false,
-					tabBarIconStyle: styles.tabBarIcon,
-					tabBarStyle: styles.tabBarMain,
-				})}
-			>
-				<Tab.Screen name="MyProfileNav" component={MyProfileNav} />
-				<Tab.Screen name="SwipeNav" component={SwipeNav} />
-				<Tab.Screen name="MessagerieNav" component={MessagerieNav} options={messagerieNotif && { tabBarBadge: "" }} />
-				<Tab.Screen name="RdvNav" component={RdvNav} />
-			</Tab.Navigator>
-		</SafeAreaView>
+    <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+      {modalModificationCheck}
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: styles.tabBar,
+          header: ({ route }) => {
+            return <HeaderMain route={route} />;
+          },
+          tabBarIcon: ({ color }) => {
+            let icon;
+            if (route.name === "MessagerieNav") {
+              icon = (
+                <MaterialCommunityIcons
+                  name="message"
+                  size={30}
+                  color={color}
+                />
+              );
+            } else if (route.name === "MyProfileNav") {
+              icon = <FontAwesomeIcon icon={faUser} size={30} color={color} />;
+            } else if (route.name === "SwipeNav") {
+              icon = (
+                <FontAwesomeIcon icon={faCoffee} size={30} color={color} />
+              );
+            } else {
+              icon = (
+                <FontAwesomeIcon icon={faCalendar} size={28} color={color} />
+              );
+            }
+            return icon;
+          },
+          tabBarActiveTintColor: "#965A51",
+          tabBarInactiveTintColor: "#BC8D85",
+          tabBarActiveTintColor: "#965A51",
+          tabBarInactiveTintColor: "#BC8D85",
+          tabBarShowLabel: false,
+          tabBarIconStyle: styles.tabBarIcon,
+          tabBarStyle: styles.tabBarMain,
+        })}
+      >
+        <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
+        <Tab.Screen name="SwipeNav" component={SwipeNav} />
+        <Tab.Screen
+          name="MessagerieNav"
+          component={MessagerieNav}
+          options={messagerieNotif && { tabBarBadge: "" }}
+        />
+        <Tab.Screen name="RdvNav" component={RdvNav} />
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 };
 
@@ -204,8 +250,8 @@ const SwipeNav = () => {
     <StackSwipe.Navigator screenOptions={{ headerShown: false }}>
       <StackSwipe.Screen name="SwipeScreen" component={SwipeScreen} />
       <StackSwipe.Screen
-        name="SwipeProfileInformationsScreen"
-        component={SwipeProfileInformationsScreen}
+        name="ProfileInformationsScreen"
+        component={ProfileInformationsScreen}
       />
     </StackSwipe.Navigator>
   );
@@ -324,5 +370,29 @@ const styles = StyleSheet.create({
   tabBarMain: {
     backgroundColor: "#F5EBE6",
     boxShadow: "0 -1px 2px #896761",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center",
+      fontWeight: "900",
+    },
   },
 });

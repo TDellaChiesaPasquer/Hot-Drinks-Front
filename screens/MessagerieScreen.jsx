@@ -5,6 +5,12 @@ import dayjs from "dayjs";
 import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
+const EmptyState = () => (
+	<View style={styles.emptyState}>
+		<Text style={styles.emptyText}>Les messages de tes match s'afficheront ici...</Text>
+	</View>
+);
+
 export default function ({ navigation }) {
 	const user = useSelector((state) => state.user.value);
 	const isFocused = useIsFocused();
@@ -70,13 +76,15 @@ export default function ({ navigation }) {
 	});
 	return (
 		<View style={styles.container}>
-			<View style={styles.scrollHeight}>
-				<ScrollView style={styles.contactScroll} contentContainerStyle={styles.contactList} horizontal={true}>
-					{contactHTML}
-				</ScrollView>
-			</View>
+			{contactHTML.length !== 0 && (
+				<View style={styles.scrollHeight}>
+					<ScrollView style={styles.contactScroll} contentContainerStyle={styles.contactList} horizontal={true}>
+						{contactHTML}
+					</ScrollView>
+				</View>
+			)}
 			<Text style={styles.title}>Messages</Text>
-			{user.user.conversationList.length === 0 && <Text>Vos conversations et matchs se trouveront ici</Text>}
+			{user.user.conversationList.length === 0 && <EmptyState />}
 			<ScrollView contentContainerStyle={styles.conversationList}>{conversationHTML}</ScrollView>
 		</View>
 	);
@@ -173,5 +181,24 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		backgroundColor: "#FFF5F0",
 		right: 25,
+	},
+	emptyState: {
+		marginTop: "50%",
+		width: width * 0.9,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "#FFF5F0",
+		borderRadius: 16,
+		paddingVertical: 24,
+		paddingHorizontal: 18,
+		borderWidth: 1,
+		borderColor: "rgba(188, 141, 133, 0.25)",
+	},
+	emptyText: {
+		color: "#965A51",
+		textAlign: "center",
+		fontSize: 24,
+		fontWeight: "800",
+		lineHeight: 32,
 	},
 });
