@@ -186,7 +186,7 @@ export default function RdvScreen({ navigation, route }) {
         </View>
       </View>
       <View style={styles.rdv}>
-        <Text style={styles.textRdv}>
+        <Text style={styles.textDay}>
           {
             [
               "Dimanche",
