@@ -158,7 +158,7 @@ export default function RdvScreen({ navigation, route }) {
 							<Image style={styles.avatar} source={rdv ? (otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]) : null} />
 						</TouchableOpacity>
 					</View>
-					<Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
+					<Text style={styles.username}>{rdv ? otherUser.username.length > 12 ? otherUser.username.slice(0, 9) + '...' : otherUser.username : null}</Text>
 				</View>
 				<View style={styles.headerRight}>
 					<Text style={styles.textTitle}>RENDEZ-VOUS</Text>
