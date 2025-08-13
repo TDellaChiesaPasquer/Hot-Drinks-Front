@@ -214,13 +214,13 @@ function NoProfilesMessage(props) {
 
       {/* Message */}
       <Text style={styles.noProfilesSubtitle}>
-        Plus de nouveaux profils à swiper pour l'instant
+        Il n'y a plus de nouveaux profils à swiper pour l'instant
       </Text>
 
       {/* Message encourageant */}
       <View style={styles.encouragementBox}>
         <Text style={styles.encouragementText}>
-          💫 Revenez plus tard pour découvrir de nouveaux profils intéressants !
+          💫 Reviens plus tard pour découvrir de nouveaux profils intéressants !
         </Text>
       </View>
 
@@ -296,12 +296,13 @@ const styles = StyleSheet.create({
     left: screenWidth / 7,
     right: screenWidth / 20,
     height: "20%",
-    bottom: "-1%",
+    bottom: "4",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
     alignContent: "center",
     elevation: 5,
+
     zIndex: 10,
   },
   noProfilesContainer: {
