@@ -143,7 +143,6 @@ export const userSlice = createSlice({
       const index = state.value.user.rdvList.findIndex(
         (x) => String(x._id) === String(action.payload._id)
       );
-      console.log(index);
       if (index === -1) {
         state.value.user.rdvList.push(action.payload);
       } else {

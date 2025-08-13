@@ -39,7 +39,6 @@ export default function MyProfile({ navigation }) {
       star: tastElement.star,
     };
   }
-  console.log(tastesById);
 
   const todaysDate = new Date();
   const ageMili =
@@ -183,13 +182,10 @@ export default function MyProfile({ navigation }) {
   const starredTags = [];
   for (const key in tastesById) {
     const t = tastesById[key];
-    console.log(t);
     if (t && t.star === true && t.value) {
-      console.log(t);
       starredTags.push(t.value);
     }
   }
-  console.log(starredTags);
 
   //___________________________________________________________MODAL________________________________________
   const modalModificationCheck = (
@@ -208,7 +204,6 @@ export default function MyProfile({ navigation }) {
   );
 
   const handleModal = (bool) => {
-    console.log(bool);
     setIsModalVisible(() => bool);
   };
 
