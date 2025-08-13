@@ -110,16 +110,16 @@ export default function RdvScreen({ navigation, route }) {
             <TouchableOpacity
               style={styles.demandeButton}
               disabled={Boolean(statusDemande)}
-              onPress={() => refuseDemande()}
+              onPress={() => acceptDemande()}
             >
-              <Text style={styles.demandeButtonText}>Refuser</Text>
+              <Text style={styles.demandeButtonText}>Accepter</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.demandeButton}
               disabled={Boolean(statusDemande)}
-              onPress={() => acceptDemande()}
+              onPress={() => refuseDemande()}
             >
-              <Text style={styles.demandeButtonText}>Accepter</Text>
+              <Text style={styles.demandeButtonText}>Refuser</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -141,9 +141,9 @@ export default function RdvScreen({ navigation, route }) {
       </>
     );
   } else if (rdv.status === "cancel") {
-    statusBloc = <Text style={styles.statusText}>Annulé</Text>;
-  } else {
     statusBloc = <Text style={styles.statusText}>Refusé</Text>;
+  } else {
+    statusBloc = <Text style={styles.statusText}>Annulé</Text>;
   }
   return (
     <View style={styles.container}>
@@ -213,7 +213,13 @@ export default function RdvScreen({ navigation, route }) {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
+          <Text style={styles.username}>
+            {rdv
+              ? otherUser.username.length > 12
+                ? otherUser.username.slice(0, 9) + "..."
+                : otherUser.username
+              : null}
+          </Text>
         </View>
         <View style={styles.headerRight}>
           <Text style={styles.textTitle}>RENDEZ-VOUS</Text>
@@ -417,10 +423,10 @@ const styles = StyleSheet.create({
   },
   buttonCancel: {
     backgroundColor: "#965A51",
+    opacity: 0.7,
   },
   buttonConfirm: {
     backgroundColor: "#965A51",
-    opacity: 0.7,
   },
   textStyle: {
     color: "#F5EBE6",
