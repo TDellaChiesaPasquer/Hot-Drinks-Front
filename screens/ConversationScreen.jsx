@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Pressable, Keyboard } from "react-native";
 import { Image } from "expo-image";
 import dayjs from "dayjs";
 import { useState, useRef, useEffect } from "react";
@@ -12,10 +12,8 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Keyboard } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
-
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,34 +26,15 @@ export default function ({ navigation, route }) {
 		height: keyboard.state.value === 1 ? 250 : 0,
 		opacity: 0,
 	}));
-	const keyboardStyleBottom = useAnimatedStyle(() => ({
-		height: keyboard.state.value === 0 ? 66 : Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66,
-	}));
 	const [newMessage, setNewMessage] = useState("");
 	const [sendDisabled, setSendDisabled] = useState(false);
 	const [modalBlockVisible, setModalBlockVisible] = useState(false);
 	const [blockDisabled, setBlockDisabled] = useState(false);
 
-	// Ferme le clavier quand l'écran perd le focus
-	useFocusEffect(
-		useCallback(() => {
-			// Quand l'écran reçoit le focus, pas besoin d'action spéciale
-
-			// Quand l'écran perd le focus, fermer le clavier
-			return () => {
-				Keyboard.dismiss();
-			};
-		}, [])
-	);
-
-	// Ferme le clavier avant la navigation
-	useEffect(() => {
-		const unsubscribe = navigation.addListener("beforeRemove", () => {
-			Keyboard.dismiss();
-		});
-
-		return unsubscribe;
-	}, [navigation]);
+	// Style animé modifié pour prendre en compte l'état local du clavier
+	const keyboardStyleBottom = useAnimatedStyle(() => ({
+		height: keyboard.state.value === 0 ? 66 : Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66,
+	}));
 
 	const conversation = user.user ? user.user.conversationList.find((x) => String(x._id) === String(route.params._id)) : null;
 	const messageList = conversation?.messageList || [];
@@ -294,214 +273,214 @@ export default function ({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5EBE6",
-    alignItems: "center",
-    position: "relative",
-  },
-  messageDate: {
-    width: width * 0.9,
-    textAlign: "center",
-    color: "#965A51",
-    fontSize: 10,
-  },
-  messageDiv: {
-    width: width * 0.9,
-    marginVertical: 2,
-  },
-  messageContentContainer: {
-    maxWidth: width * 0.6,
-    padding: 10,
-    borderRadius: 20,
-  },
-  messageList: {
-    alignItems: "center",
-    width: width * 0.9,
-    justifyContent: "flex-start",
-  },
-  messageContent: {
-    color: "#FFF5F0",
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    objectFit: "cover",
-  },
-  avatarContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: "100%",
-    backgroundColor: "#965A51",
-    overflow: "hidden",
-  },
-  conversationHeader: {
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    flexDirection: "row",
-    paddingBottom: 10,
-  },
-  username: {
-    color: "#965A51",
-    fontWeight: "bold",
-    marginLeft: 5,
-  },
-  input: {
-    fontWeight: "bold",
-    color: "#965A51",
-    fontSize: 12,
-    paddingVertical: 16,
-    width: width * 0.6,
-    flex: 1,
-  },
-  conversationBottom: {
-    maxHeight: 115,
-    position: "absolute",
-    top: 0,
-    flexDirection: "row",
-    alignItems: "flex-end",
-    justifyContent: "space-between",
-    width: width * 0.9,
-    paddingVertical: 10,
-  },
-  inputContainer: {
-    borderRadius: 24,
-    paddingHorizontal: 12,
-    boxShadow: "0 2px 3px #896761",
-    width: width * 0.9 - 100,
-    backgroundColor: "#FFF5F0",
-    overflow: "hidden",
-    alignItems: "flex-end",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  bottomButton: {
-    height: 46,
-    width: 46,
-    backgroundColor: "#965A51",
-    borderRadius: 40,
-    boxShadow: "0 2px 3px #896761",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    fontWeight: "bold",
-    fontSize: 18,
-    color: "#F5EBE6",
-  },
-  conversationBottomPlaceholder: {
-    width: "100%",
-    alignItems: "center",
-    height: 60,
-  },
-  conversationBottomRelative: {
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    width: width,
-    height: 66,
-  },
-  goBack: {
-    marginHorizontal: 25,
-  },
-  vu: {
-    color: "#965A51",
-    fontSize: 10,
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  headerRight: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  block: {
-    marginHorizontal: 10,
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modalBlock: {
-    backgroundColor: "#DFC9B4",
-    alignItems: "center",
-    padding: 10,
-    borderRadius: 20,
-    position: "relative",
-  },
-  modalTitle: {
-    color: "#965A51",
-    fontWeight: "bold",
-    fontSize: 16,
-    margin: 10,
-  },
-  crossModal: {
-    color: "#965A51",
-  },
-  crossModalDiv: {
-    position: "absolute",
-    top: -10,
-    right: -10,
-    width: 26,
-    height: 26,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: "100%",
-  },
-  buttonModal: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: 36,
-    borderRadius: 15,
-    boxShadow: "0 2px 3px #896761",
-    width: width * 0.7,
-    backgroundColor: "#965A51",
-    margin: 10,
-  },
-  modalText: {
-    color: "#965A51",
-    fontWeight: "bold",
-    fontSize: 12,
-  },
-  textBlocked: {
-    color: "#965A51",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  convKey: {
-    width: width,
-    alignItems: "center",
-    justifyContent: "flex-end",
-    flexShrink: 1,
-    height: "100%",
-  },
-  currentRdvContainer: {
-    width: width,
-    height: 50,
-    backgroundColor: 'gray',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: "#965A51",
-    flexDirection: 'row'
-  },
-  currentRdvText: {
-    color: '#F5EBE6',
-    fontWeight: 'bold'
-  },
-  rightIcon: {
-    marginHorizontal: width * 0.05,
-    width: 24
-  },
-  buttonLeft: {
-    height: 50,
-    width: 50,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
+	container: {
+		flex: 1,
+		backgroundColor: "#F5EBE6",
+		alignItems: "center",
+		position: "relative",
+	},
+	messageDate: {
+		width: width * 0.9,
+		textAlign: "center",
+		color: "#965A51",
+		fontSize: 10,
+	},
+	messageDiv: {
+		width: width * 0.9,
+		marginVertical: 2,
+	},
+	messageContentContainer: {
+		maxWidth: width * 0.6,
+		padding: 10,
+		borderRadius: 20,
+	},
+	messageList: {
+		alignItems: "center",
+		width: width * 0.9,
+		justifyContent: "flex-start",
+	},
+	messageContent: {
+		color: "#FFF5F0",
+	},
+	avatar: {
+		width: 60,
+		height: 60,
+		objectFit: "cover",
+	},
+	avatarContainer: {
+		width: 60,
+		height: 60,
+		borderRadius: "100%",
+		backgroundColor: "#965A51",
+		overflow: "hidden",
+	},
+	conversationHeader: {
+		alignItems: "center",
+		justifyContent: "space-between",
+		width: "100%",
+		flexDirection: "row",
+		paddingBottom: 10,
+	},
+	username: {
+		color: "#965A51",
+		fontWeight: "bold",
+		marginLeft: 5,
+	},
+	input: {
+		fontWeight: "bold",
+		color: "#965A51",
+		fontSize: 12,
+		paddingVertical: 16,
+		width: width * 0.6,
+		flex: 1,
+	},
+	conversationBottom: {
+		maxHeight: 115,
+		position: "absolute",
+		top: 0,
+		flexDirection: "row",
+		alignItems: "flex-end",
+		justifyContent: "space-between",
+		width: width * 0.9,
+		paddingVertical: 10,
+	},
+	inputContainer: {
+		borderRadius: 24,
+		paddingHorizontal: 12,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.9 - 100,
+		backgroundColor: "#FFF5F0",
+		overflow: "hidden",
+		alignItems: "flex-end",
+		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+	bottomButton: {
+		height: 46,
+		width: 46,
+		backgroundColor: "#965A51",
+		borderRadius: 40,
+		boxShadow: "0 2px 3px #896761",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	buttonText: {
+		fontWeight: "bold",
+		fontSize: 18,
+		color: "#F5EBE6",
+	},
+	conversationBottomPlaceholder: {
+		width: "100%",
+		alignItems: "center",
+		height: 60,
+	},
+	conversationBottomRelative: {
+		position: "relative",
+		alignItems: "center",
+		justifyContent: "flex-start",
+		width: width,
+		height: 66,
+	},
+	goBack: {
+		marginHorizontal: 25,
+	},
+	vu: {
+		color: "#965A51",
+		fontSize: 10,
+	},
+	headerLeft: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginVertical: 10,
+	},
+	headerRight: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	block: {
+		marginHorizontal: 10,
+	},
+	modalContainer: {
+		flex: 1,
+		backgroundColor: "rgba(0,0,0,0.5)",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	modalBlock: {
+		backgroundColor: "#DFC9B4",
+		alignItems: "center",
+		padding: 10,
+		borderRadius: 20,
+		position: "relative",
+	},
+	modalTitle: {
+		color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 16,
+		margin: 10,
+	},
+	crossModal: {
+		color: "#965A51",
+	},
+	crossModalDiv: {
+		position: "absolute",
+		top: -10,
+		right: -10,
+		width: 26,
+		height: 26,
+		backgroundColor: "white",
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: "100%",
+	},
+	buttonModal: {
+		alignItems: "center",
+		justifyContent: "center",
+		height: 36,
+		borderRadius: 15,
+		boxShadow: "0 2px 3px #896761",
+		width: width * 0.7,
+		backgroundColor: "#965A51",
+		margin: 10,
+	},
+	modalText: {
+		color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 12,
+	},
+	textBlocked: {
+		color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 16,
+	},
+	convKey: {
+		width: width,
+		alignItems: "center",
+		justifyContent: "flex-end",
+		flexShrink: 1,
+		height: "100%",
+	},
+	currentRdvContainer: {
+		width: width,
+		height: 50,
+		backgroundColor: "gray",
+		alignItems: "center",
+		justifyContent: "space-between",
+		backgroundColor: "#965A51",
+		flexDirection: "row",
+	},
+	currentRdvText: {
+		color: "#F5EBE6",
+		fontWeight: "bold",
+	},
+	rightIcon: {
+		marginHorizontal: width * 0.05,
+		width: 24,
+	},
+	buttonLeft: {
+		height: 50,
+		width: 50,
+		alignItems: "center",
+		justifyContent: "center",
+	},
 });
