@@ -31,12 +31,12 @@ export default function ({ navigation }) {
 			<TouchableOpacity
 				key={data._id}
 				style={styles.conversationContainer}
-				onPress={() =>
+				onPress={() => {
 					navigation.navigate("ConversationScreen", {
 						otherUserNumber,
 						...data,
-					})
-				}
+					});
+				}}
 			>
 				<View style={styles.avatarContainer}>
 					<Image style={styles.avatar} source={otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]} />
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		paddingHorizontal: width * 0.05,
 		gap: 10,
-    paddingTop: 8,
+		paddingTop: 8,
 		height: 90,
 	},
 	contactScroll: {
