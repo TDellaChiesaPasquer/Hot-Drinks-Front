@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Modal } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -38,7 +38,7 @@ import SettingsScreen from "./screens/SettingsScreen";
 
 import user, { deleteConv, updateConv, updateRdv } from "./reducers/user";
 import Pusher from "pusher-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
@@ -113,14 +113,16 @@ const receiveNewRdv = async (event, token, dispatch) => {
     }
   );
   const data = await response.json();
-  console.log(data)
+  console.log(data);
   if (!data.result) {
     return;
   }
+  console.log(data);
   dispatch(updateRdv(data.rdv));
 };
 
 const MainTabNav = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   let userId;
@@ -141,7 +143,11 @@ const MainTabNav = () => {
       const channel = pusher.subscribe(userId);
       channel.bind("newMessage", (e) => receiveNewMessage(e, token, dispatch));
       channel.bind("block", (e) => receiveBlock(e, dispatch));
-      channel.bind("match", (e) => receiveMatch(e, token, dispatch));
+      channel.bind("match", (e) => {
+        handleModal(true);
+        setTimeout(handleModal, 1000, false);
+        receiveMatch(e, token, dispatch);
+      });
       channel.bind("newRdv", (e) => receiveNewRdv(e, token, dispatch));
 
       return () => {
@@ -152,8 +158,30 @@ const MainTabNav = () => {
       };
     }
   }, [userId]);
+
+  const modalModificationCheck = (
+    <Modal
+      style={styles.modal}
+      visible={isModalVisible}
+      animationType="fade"
+      transparent={true}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Modifications enregistrées!</Text>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  const handleModal = (bool) => {
+    console.log(bool);
+    setIsModalVisible(() => bool);
+  };
+
   return (
     <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+      {modalModificationCheck}
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarStyle: styles.tabBar,

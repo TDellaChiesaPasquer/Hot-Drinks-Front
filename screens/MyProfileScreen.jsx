@@ -19,6 +19,7 @@ import Swiper from "react-native-swiper";
 import { Image } from "expo-image";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import ImagePickerComponent from "../components/ImagePickerComponent";
+import { DEFAULT_ICON_SIZE } from "@expo/vector-icons/build/createIconSet";
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,6 +28,7 @@ export default function MyProfile({ navigation }) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.user.value.token);
   const dataPhoto = useSelector((state) => state.user.value);
+  const username = dataPhoto.user && dataPhoto.user.username;
   const dataTaste = (dataPhoto.user && dataPhoto.user.tastesList) || [];
   const [isModalVisible, setIsModalVisible] = useState(false);
   const tastesById = {};
@@ -38,6 +40,11 @@ export default function MyProfile({ navigation }) {
     };
   }
   console.log(tastesById);
+
+  const todaysDate = new Date();
+  const ageMili =
+    todaysDate.valueOf() - new Date(dataPhoto.user.birthdate).valueOf();
+  const age = Math.floor(ageMili / (1000 * 60 * 60 * 24 * 365.25));
 
   //___________________________________________________________CAROUSSEL_____________________________________________________________
 
@@ -227,7 +234,8 @@ export default function MyProfile({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate("MainTabNav")} />
       </View>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Mon Profil</Text>
+        <Text style={styles.titleUsername}>{username},</Text>
+        <Text style={styles.titleAge}> {age} ans</Text>
       </View>
       <View style={styles.scrollContainer}>
         <ScrollView
@@ -295,14 +303,31 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
-  title: {
+  titleContainer: {
+    flexDirection: "row",
+    backgroundColor: "#F5EBE6",
+    height: "7%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 6,
+  },
+  titleUsername: {
     fontSize: 24,
     color: "#965a51c0",
-    backgroundColor: "#F5EBE6",
+    // backgroundColor: "#F5EBE6",
     justifyContent: "center",
     textAlign: "center",
     fontWeight: "bold",
-    marginTop: 15,
+    paddingTop: 10,
+  },
+  titleAge: {
+    fontSize: 16,
+    color: "#965a51c0",
+    // backgroundColor: "#F5EBE6",
+    justifyContent: "center",
+    textAlign: "center",
+    // paddingTop: 7,
+    marginTop: 17,
   },
 
   scrollContainer: {
