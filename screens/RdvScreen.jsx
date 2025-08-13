@@ -138,18 +138,12 @@ export default function RdvScreen({ navigation, route }) {
     statusBloc = <Text style={styles.statusText}>Refusé</Text>;
   }
   return (
-    <View style={styles.container}>
-      <View style={styles.conversationHeader}>
-        <View style={styles.headerLeft}>
-          <AntDesign
-            name="left"
-            size={24}
-            color="#965A51"
-            style={styles.goBack}
-            onPress={() => navigation.goBack()}
-          />
-          <View style={styles.avatarContainer}>
-            <Image
+		<View style={styles.container}>
+			<View style={styles.conversationHeader}>
+				<View style={styles.headerLeft}>
+					<AntDesign name="left" size={24} color="#965A51" style={styles.goBack} onPress={() => navigation.goBack()} />
+					<View style={styles.avatarContainer}>
+						{/* <Image
               style={styles.avatar}
               source={
                 rdv
@@ -158,45 +152,50 @@ export default function RdvScreen({ navigation, route }) {
                     : otherUser.photoList[0]
                   : null
               }
-            />
-          </View>
-          <Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
-        </View>
-      </View>
-      <Text>Rendez-vous</Text>
-      <Text>
-        {
-          [
-            "Dimanche",
-            "Lundi",
-            "Mardi",
-            "Mercredi",
-            "Jeudi",
-            "Vendredi",
-            "Samedi",
-          ][rdvDate.get("day")]
-        }{" "}
-        {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
-      </Text>
-      <Text>{rdv.address}</Text>
-      <MapView
-        initialRegion={{
-          latitude: rdv.latitude,
-          longitude: rdv.longitude,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }}
-        style={styles.map}
-      >
-        <Marker
-          coordinate={{
-            latitude: rdv.latitude,
-            longitude: rdv.longitude,
-          }}
-        />
-      </MapView>
-      {statusBloc}
-    </View>
+            /> */}
+						<TouchableOpacity
+							style={styles.avatarContainer}
+							onPress={() => {
+								// Navigation vers ProfileInformationsScreen avec les données du profil sans la distance
+								if (rdv && otherUser) {
+									const profileData = { ...otherUser };
+									// S'assurer que la distance n'est pas incluse
+									navigation.navigate("ProfileInformationsScreen", {
+										profileData: profileData,
+										firstImage: otherUser.photoList.length === 0 ? null : otherUser.photoList[0],
+									});
+								}
+							}}
+						>
+							<Image style={styles.avatar} source={rdv ? (otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]) : null} />
+						</TouchableOpacity>
+					</View>
+					<Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
+				</View>
+			</View>
+			<Text>Rendez-vous</Text>
+			<Text>
+				{["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"][rdvDate.get("day")]} {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
+			</Text>
+			<Text>{rdv.address}</Text>
+			<MapView
+				initialRegion={{
+					latitude: rdv.latitude,
+					longitude: rdv.longitude,
+					latitudeDelta: 0.05,
+					longitudeDelta: 0.05,
+				}}
+				style={styles.map}
+			>
+				<Marker
+					coordinate={{
+						latitude: rdv.latitude,
+						longitude: rdv.longitude,
+					}}
+				/>
+			</MapView>
+			{statusBloc}
+		</View>
   );
 }
 const styles = StyleSheet.create({
