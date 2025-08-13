@@ -20,20 +20,16 @@ export default function SwipeScreen(props) {
 	const [profileList, setProfileList] = useState([]);
 	const [swiperComponentKey, setSwiperComponentKey] = useState(0);
 	const dispatch = useDispatch();
-
-	// Limiteur d'appuis: 3 actions max par seconde
-	const CLICKS_PER_WINDOW = 3;
-	const CLICK_WINDOW_MS = 1000;
-	const tapTimesRef = useRef([]);
+	const minDuration = 1000;
+	const [lastTimeSwipe, setLastTimeSwipe] = useState(new Date());
 	function canTriggerAction() {
-		const now = Date.now();
+		const now = new Date;
 		// Ne conserver que les taps dans la fenêtre temporelle
-		tapTimesRef.current = tapTimesRef.current.filter((t) => now - t < CLICK_WINDOW_MS);
-		if (tapTimesRef.current.length >= CLICKS_PER_WINDOW) {
-			return false;
-		}
-		tapTimesRef.current.push(now);
-		return true;
+    if ((new Date()).valueOf() - lastTimeSwipe.valueOf() < minDuration) {
+      return false;
+    }
+    setLastTimeSwipe(now);
+    return true;
 	}
 
 	useFocusEffect(
@@ -60,7 +56,6 @@ export default function SwipeScreen(props) {
 	}, []);
 
 	function fetchProfilesFromAPI() {
-		console.log("test");
 		fetch(process.env.EXPO_PUBLIC_IP + "/profils/profil", {
 			headers: {
 				"Content-Type": "application/json",
@@ -165,6 +160,7 @@ export default function SwipeScreen(props) {
 						keyExtractor={(card) =>  card ? card._id : 26}
 						onSwipedAll={() => setTimeout(fetchProfilesFromAPI, 500)}
 						backgroundColor="transparent"
+            stackSize={3}
 						onSwipedLeft={(cardIndex) => handleSwipe(cardIndex, "Dislike")}
 						onSwipedRight={(cardIndex) => handleSwipe(cardIndex, "Like")}
 						onSwipedTop={(cardIndex) => handleSwipe(cardIndex, "SuperLike")}
