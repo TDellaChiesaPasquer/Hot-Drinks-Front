@@ -10,7 +10,7 @@ const height = Dimensions.get("window").height;
 const SURFACE_BG = "#F5EBE6";
 const CARD_BG = "#BC8D85";
 
-// Nouveau composant InfoItem générique
+
 function InfoItem({ label, value }) {
 	return (
 		<View style={styles.infoItem}>
