@@ -97,7 +97,8 @@ export default function PreferencesScreen({ navigation }) {
     );
     const data = await response.json();
     console.log(data);
-    alert("Tes préférences ont bien été enregistrées.");
+    handleModal(true);
+    setTimeout(handleModal, 1500, false);
   };
   return (
     <View style={styles.container}>

@@ -7,9 +7,6 @@ const { width, height } = Dimensions.get("window");
 
 const EmptyState = () => (
 	<View style={styles.emptyState}>
-		<Text style={styles.emptyEmojiLine} accessible accessibilityLabel="Étoiles magiques">
-			✨ 🌟 ✨
-		</Text>
 		<Text style={styles.emptyText}>Les messages de vos match s'afficheront ici...</Text>
 	</View>
 );
