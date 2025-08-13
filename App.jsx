@@ -39,7 +39,7 @@ import MyProfileScreen from "./screens/MyProfileScreen";
 import PreferencesScreen from "./screens/PreferencesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
-import user, { deleteConv, updateConv } from "./reducers/user";
+import user, { deleteConv, updateConv, updateRdv } from "./reducers/user";
 import Pusher from "pusher-js";
 import { useEffect } from "react";
 
@@ -119,10 +119,11 @@ const receiveNewRdv = async (event, token, dispatch) => {
     }
   );
   const data = await response.json();
+  console.log(data)
   if (!data.result) {
     return;
   }
-  dispatch(updateRdv(event.rdvId));
+  dispatch(updateRdv(data.rdv));
 };
 
 const MainTabNav = () => {

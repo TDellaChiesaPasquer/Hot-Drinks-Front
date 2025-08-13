@@ -64,7 +64,6 @@ export default function SwipeButton(props) {
 	// Gestion du clic sur le bouton
 	function handlePress() {
 		if (props.onChoice) {
-			console.log(buttonType);
 			props.onChoice(buttonType);
 		}
 	}

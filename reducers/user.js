@@ -35,6 +35,7 @@ export const userSlice = createSlice({
           new Date(a.lastActionDate).valueOf()
       );
     },
+
     updateConv: (state, action) => {
       const index = state.value.user.conversationList.findIndex(
         (x) => String(x._id) === String(action.payload._id)
@@ -142,6 +143,7 @@ export const userSlice = createSlice({
       const index = state.value.user.rdvList.findIndex(
         (x) => String(x._id) === String(action.payload._id)
       );
+      console.log(index);
       if (index === -1) {
         state.value.user.rdvList.push(action.payload);
       } else {
@@ -165,5 +167,6 @@ export const {
   newSuperlike,
   // addPlace,
   // removePlace,
+  updateRdv,
 } = userSlice.actions;
 export default userSlice.reducer;
