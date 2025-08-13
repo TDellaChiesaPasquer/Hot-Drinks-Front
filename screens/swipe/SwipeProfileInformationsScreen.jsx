@@ -32,10 +32,6 @@ const infoList = [
 	{ label: "Goût", value: "Animaux" },
 ];
 
-//   category: String,
-//   label: String,
-//   value: String,
-
 function TasteItem(props) {
 	return (
 		<View style={styles.item}>
