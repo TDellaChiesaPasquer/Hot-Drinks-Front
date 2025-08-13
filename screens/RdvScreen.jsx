@@ -162,7 +162,7 @@ export default function RdvScreen({ navigation, route }) {
           <Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
         </View>
         <View style={styles.headerRight}>
-          <Text style={styles.textTitle}>RENDEZ-VOUS</Text>
+          <Text style={styles.textTitle}>Rendez-vous</Text>
         </View>
       </View>
       <View style={styles.rdv}>
@@ -259,6 +259,7 @@ const styles = StyleSheet.create({
   rdv: {
     flex: "column",
     width: "90%",
+    marginTop: 20,
   },
   textRdv: {
     fontSize: 14,
