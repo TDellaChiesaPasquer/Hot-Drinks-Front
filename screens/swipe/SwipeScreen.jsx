@@ -162,7 +162,7 @@ export default function SwipeScreen(props) {
 						ref={swiperReference}
 						cards={profileList}
 						renderCard={(card, index) => renderCardForIndex(card, index)}
-						keyExtractor={(card) => card}
+						keyExtractor={(card) =>  card ? card._id : 26}
 						onSwipedAll={() => setTimeout(fetchProfilesFromAPI, 500)}
 						backgroundColor="transparent"
 						onSwipedLeft={(cardIndex) => handleSwipe(cardIndex, "Dislike")}
