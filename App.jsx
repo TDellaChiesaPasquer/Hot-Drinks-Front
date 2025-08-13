@@ -143,12 +143,14 @@ const MainTabNav = () => {
       channel.bind("block", (e) => receiveBlock(e, dispatch));
       channel.bind("match", (e) => receiveMatch(e, token, dispatch));
       channel.bind("newRdv", (e) => receiveNewRdv(e, token, dispatch));
+      channel.bind("rdv", (e) => receiveNewRdv(e, token, dispatch));
 
       return () => {
         channel.unbind("newMessage");
         channel.unbind("block");
         channel.unbind("match");
         channel.unbind("newRdv");
+        channel.unbind("rdv");
       };
     }
   }, [userId]);
