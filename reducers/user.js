@@ -77,10 +77,13 @@ export const userSlice = createSlice({
       }
     },
     deleteConv: (state, action) => {
+      const conv = state.value.user.conversationList.find((x) => String(x._id) === action.payload)
+      const otherUser = String(conv.user1._id) === String(state.value.user._id) ? conv.user2 : conv.user1;
       state.value.user.conversationList =
         state.value.user.conversationList.filter(
           (x) => String(x._id) !== action.payload
         );
+      state.value.user.rdvList = state.value.user.rdvList.filter(x => String(x.creator._id) !== String(otherUser._id) && String(x.receiver._id) !== String(otherUser._id));
     },
     disconnect: (state, action) => {
       action.payload.navigate("SignUpNav");
