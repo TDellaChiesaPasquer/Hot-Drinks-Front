@@ -84,20 +84,20 @@ export default function AddRdvScreen({ navigation, route }) {
         )}
       </MapView>
       {/* <MobileDateTimePicker /> */}
-      <View style={styles.container}>
+      <View style={styles.containerCalendar}>
         <Text style={styles.text} onPress={showDate}>
-          {`${("0" + date.getDate()).slice(-2)}/${("0" + date.getMonth()).slice(
-            -2
-          )}/${date.getFullYear()}`}
+          {`${("0" + date.getDate()).slice(-2)}/${(
+            "0" + Number(date.getMonth() + 1)
+          ).slice(-2)}/${date.getFullYear()}`}
         </Text>
         <Text style={styles.text} onPress={showTime}>
           {`${("0" + date.getHours()).slice(-2)}:${(
             "0" + date.getMinutes()
           ).slice(-2)}`}
         </Text>
-        {visible && (
-          <DateTimePicker value={date} mode={mode} onChange={dateChange} />
-        )}
+        {/* {visible && ( */}
+        {/* <DateTimePicker value={date} mode={mode} onChange={dateChange} /> */}
+        {/* )} */}
       </View>
       <TouchableOpacity
         style={styles.button}
@@ -136,10 +136,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#965a51c0",
     marginHorizontal: 70,
     marginTop: 50,
+    width: "70%",
   },
   boutonText: {
     fontWeight: "bold",
     fontSize: 18,
     color: "#F5EBE6",
+  },
+  containerCalendar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    // backgroundColor: "#fc5400ff",
+    padding: 3,
+    marginTop: 50,
+    width: "90%",
+    height: "11%",
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "bold",
+    borderColor: "#965a51c0",
+    backgroundColor: "#965a51c0",
+    color: "#F5EBE6",
+    borderWidth: 2,
+    borderRadius: 15,
+    padding: 20,
   },
 });
