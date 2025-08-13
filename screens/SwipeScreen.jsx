@@ -24,6 +24,7 @@ import { newSuperlike } from "../reducers/user";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const maxNumberOfCards = 10;
+const enTest = false;
 
 export default function SwipeScreen(props) {
   const swiperReference = useRef(null);
