@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: hexToRgba(SUPERLIKE_GLOW_COLOR, 0.6),
     // Effet de triple ombre pour plus de brillance
-    boxShadow: `0 0 15px ${hexToRgba(
+    boxShadow: `0 0 12px 12px ${hexToRgba(
       SUPERLIKE_GLOW_COLOR,
       0.8
     )}, 0 0 25px ${hexToRgba(SUPERLIKE_GLOW_COLOR, 0.4)}, 0 0 35px ${hexToRgba(

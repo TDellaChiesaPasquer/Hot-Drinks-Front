@@ -141,53 +141,67 @@ export default function RdvScreen({ navigation, route }) {
     <View style={styles.container}>
       <View style={styles.conversationHeader}>
         <View style={styles.headerLeft}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
-            <AntDesign name="left" size={24} color="#965A51"/>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.buttonLeft}
+          >
+            <AntDesign name="left" size={24} color="#965A51" />
           </TouchableOpacity>
           <View style={styles.avatarContainer}>
-						<TouchableOpacity
-							style={styles.avatarContainer}
-							onPress={() => {
-								// Navigation vers ProfileInformationsScreen avec les données du profil sans la distance
-								if (rdv && otherUser) {
-									const profileData = { ...otherUser };
-									// S'assurer que la distance n'est pas incluse
-									navigation.navigate("ProfileInformationsScreen", {
-										profileData: profileData,
-										firstImage: otherUser.photoList.length === 0 ? null : otherUser.photoList[0],
-									});
-								}
-							}}
-						>
-							<Image style={styles.avatar} source={rdv ? (otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]) : null} />
-						</TouchableOpacity>
-					</View>
-					<Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
-				</View>
-			</View>
-			<Text>Rendez-vous</Text>
-			<Text>
-				{["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"][rdvDate.get("day")]} {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
-			</Text>
-			<Text>{rdv.address}</Text>
-			<MapView
-				initialRegion={{
-					latitude: rdv.latitude,
-					longitude: rdv.longitude,
-					latitudeDelta: 0.05,
-					longitudeDelta: 0.05,
-				}}
-				style={styles.map}
-			>
-				<Marker
-					coordinate={{
-						latitude: rdv.latitude,
-						longitude: rdv.longitude,
-					}}
-				/>
-			</MapView>
-			{statusBloc}
-		</View>
+            <Image
+              style={styles.avatar}
+              source={
+                rdv
+                  ? otherUser.photoList.length === 0
+                    ? ""
+                    : otherUser.photoList[0]
+                  : null
+              }
+            />
+          </View>
+          <Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
+        </View>
+        <View style={styles.headerRight}>
+          <Text style={styles.textTitle}>RENDEZ-VOUS</Text>
+        </View>
+      </View>
+      <View style={styles.rdv}>
+        <Text style={styles.textRdv}>
+          {
+            [
+              "Dimanche",
+              "Lundi",
+              "Mardi",
+              "Mercredi",
+              "Jeudi",
+              "Vendredi",
+              "Samedi",
+            ][rdvDate.get("day")]
+          }{" "}
+          {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
+        </Text>
+        <Text style={styles.textRdv}>{rdv.address}</Text>
+      </View>
+      <View style={styles.containerRadius}>
+        <MapView
+          initialRegion={{
+            latitude: rdv.latitude,
+            longitude: rdv.longitude,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          }}
+          style={styles.map}
+        >
+          <Marker
+            coordinate={{
+              latitude: rdv.latitude,
+              longitude: rdv.longitude,
+            }}
+          />
+        </MapView>
+      </View>
+      {statusBloc}
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -197,17 +211,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
-  },
   conversationHeader: {
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
     flexDirection: "row",
     paddingBottom: 10,
+  },
+  headerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+    justifyContent: "flex-start",
   },
   username: {
     color: "#965A51",
@@ -226,8 +241,35 @@ const styles = StyleSheet.create({
     backgroundColor: "#965A51",
     overflow: "hidden",
   },
+  headerRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
+    justifyContent: "flex-end",
+  },
+  goBack: {
+    marginHorizontal: 25,
+  },
+  textTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginRight: 5,
+    color: "#965A51",
+  },
+  rdv: {
+    flex: "column",
+    width: "90%",
+  },
+  textRdv: {
+    fontSize: 14,
+    fontWeight: "bold",
+    justifyContent: "flex-start",
+    color: "#965A51",
+    marginLeft: 5,
+    marginBottom: 10,
+  },
   containerRadius: {
-    height: "70%",
+    height: "55%",
     width: "90%",
     backgroundColor: "red",
     borderRadius: 30,
@@ -235,20 +277,20 @@ const styles = StyleSheet.create({
     boxShadow: "0 2px 3px #896761",
   },
   map: {
-    width: width * 0.9,
-    height: width * 0.9,
-    borderRadius: 20,
-    boxShadow: "0 2px 3px #896761",
+    width: "100%",
+    height: "100%",
   },
   statusText: {
     color: "#965A51",
     fontWeight: "bold",
+    marginTop: 10,
   },
   demandeContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
     width: "90%",
+    marginTop: 20,
   },
   demandeButton: {
     alignItems: "center",
@@ -267,7 +309,7 @@ const styles = StyleSheet.create({
   buttonLeft: {
     height: 50,
     width: 50,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
