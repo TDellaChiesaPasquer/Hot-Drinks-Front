@@ -177,7 +177,7 @@ export default function ({ navigation }) {
 						style={[
 							styles.boutonChoixMultiple,
 							{
-								backgroundColor: relation === "Matcha" ? "#C4E1B8" : "#FFF5F0",
+								backgroundColor: relation === "Matcha" ? "#6CBF44" : "#FFF5F0",
 							},
 						]}
 						onPress={() => setRelation("Matcha")}
