@@ -138,12 +138,14 @@ export default function RdvScreen({ navigation, route }) {
     statusBloc = <Text style={styles.statusText}>Refusé</Text>;
   }
   return (
-		<View style={styles.container}>
-			<View style={styles.conversationHeader}>
-				<View style={styles.headerLeft}>
-					<AntDesign name="left" size={24} color="#965A51" style={styles.goBack} onPress={() => navigation.goBack()} />
-					<View style={styles.avatarContainer}>
-						{/* <Image
+    <View style={styles.container}>
+      <View style={styles.conversationHeader}>
+        <View style={styles.headerLeft}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
+            <AntDesign name="left" size={24} color="#965A51"/>
+          </TouchableOpacity>
+          <View style={styles.avatarContainer}>
+            <Image
               style={styles.avatar}
               source={
                 rdv
@@ -152,7 +154,7 @@ export default function RdvScreen({ navigation, route }) {
                     : otherUser.photoList[0]
                   : null
               }
-            /> */}
+            />
 						<TouchableOpacity
 							style={styles.avatarContainer}
 							onPress={() => {
@@ -234,9 +236,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#965A51",
     overflow: "hidden",
   },
-  goBack: {
-    marginHorizontal: 25,
-  },
   containerRadius: {
     height: "70%",
     width: "90%",
@@ -275,4 +274,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#F5EBE6",
   },
+  buttonLeft: {
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });

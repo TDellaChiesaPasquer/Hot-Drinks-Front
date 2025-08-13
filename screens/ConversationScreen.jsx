@@ -76,14 +76,6 @@ export default function ({ navigation, route }) {
         new Date(x.date).valueOf() > new Date().valueOf() &&
         (x.status === "demande" || x.status === "confirm")
     );
-    <AntDesign
-            name="left"
-            size={24}
-            color="#965A51"
-            style={styles.goBack}
-            onPress={() => navigation.goBack()}
-            disabled={modalBlockVisible}
-          />
   let currentRdvText;
   if (currentRdv) {
     if (currentRdv.status === "demande") {
@@ -99,7 +91,9 @@ export default function ({ navigation, route }) {
   const currentRdvHTML = (
         <TouchableOpacity style={styles.currentRdvContainer} onPress={() => {
           navigation.navigate("RdvScreen",  currentRdv)
-        }}>
+        }}
+          disabled={modalBlockVisible}
+        >
           <View style={styles.rightIcon}>
 
           </View>
@@ -109,8 +103,6 @@ export default function ({ navigation, route }) {
             size={24}
             color="#F5EBE6"
             style={styles.rightIcon}
-            onPress={() => navigation.goBack()}
-            disabled={modalBlockVisible}
           />
         </TouchableOpacity>
       );
@@ -230,7 +222,9 @@ export default function ({ navigation, route }) {
 			{modalBlock}
 			<View style={styles.conversationHeader}>
 				<View style={styles.headerLeft}>
-					<AntDesign name="left" size={24} color="#965A51" style={styles.goBack} onPress={() => navigation.goBack()} disabled={modalBlockVisible} />
+          <TouchableOpacity onPress={() => navigation.goBack()} disabled={modalBlockVisible} style={styles.buttonLeft}>
+            <AntDesign name="left" size={24} color="#965A51"/>
+          </TouchableOpacity>
 					<View style={styles.avatarContainer}>
 						<TouchableOpacity
 							style={styles.avatarContainer}
@@ -518,5 +512,11 @@ const styles = StyleSheet.create({
   rightIcon: {
     marginHorizontal: width * 0.05,
     width: 24
+  },
+  buttonLeft: {
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function AddRdvScreen({ navigation, route }) {
   const token = useSelector((state) => state.user.value.token);
@@ -62,7 +63,17 @@ export default function AddRdvScreen({ navigation, route }) {
     navigation.goBack();
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.goLeftContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
+          <AntDesign
+            name="left"
+            size={24}
+            color="#965A51"
+            style={styles.goBack}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.containerRadius}>
         <MapView
           zoomEnabled={true}
@@ -109,7 +120,7 @@ export default function AddRdvScreen({ navigation, route }) {
       >
         <Text style={styles.boutonText}>VALIDER</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -117,6 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5EBE6",
     alignItems: "center",
+    justifyContent: 'flex-start'
   },
   containerRadius: {
     height: "70%",
@@ -177,4 +189,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#965a51c0",
   },
+  goLeftContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: '90%',
+    height: 50
+  },
+  buttonLeft: {
+    height: 50,
+    width: 50,
+    marginLeft: (24 - 50) / 2,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });

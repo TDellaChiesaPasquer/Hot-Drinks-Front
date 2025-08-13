@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { capitalize } from "../Utils/utils.js";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -97,14 +98,13 @@ export default function SwipeProfileInformations() {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Informations du profil</Text>
-
-			{/* Bouton de retour (flèche gauche) */}
-			<View style={styles.backButtonWrapper}>
-				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton} activeOpacity={0.8}>
-					<FontAwesome name="arrow-left" size={20} color="#000" />
-				</TouchableOpacity>
-			</View>
+      <View style={styles.top}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
+          <AntDesign name="left" size={24} color="#965A51"/>
+        </TouchableOpacity>
+			  <Text style={styles.title}>Informations du profil</Text>
+        <View style={styles.buttonLeft}></View>
+      </View>
 
 			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper} alwaysBounceVertical={true}>
 				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" />
@@ -305,6 +305,19 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "600",
 	},
+  buttonLeft: {
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  top: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%'
+  }
 });
 
 
