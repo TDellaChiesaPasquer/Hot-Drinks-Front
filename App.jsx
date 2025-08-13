@@ -180,7 +180,7 @@ const MainTabNav = () => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>Modifications enregistrées!</Text>
+          <Text style={styles.modalText}>Tu as un nouveau match!</Text>
         </View>
       </View>
     </Modal>
@@ -193,6 +193,7 @@ const MainTabNav = () => {
 
   return (
     <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+      {modalModificationCheck}
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarStyle: styles.tabBar,
@@ -369,5 +370,29 @@ const styles = StyleSheet.create({
   tabBarMain: {
     backgroundColor: "#F5EBE6",
     boxShadow: "0 -1px 2px #896761",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center",
+      fontWeight: "900",
+    },
   },
 });
