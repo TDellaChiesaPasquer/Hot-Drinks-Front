@@ -76,14 +76,12 @@ export default function ({ navigation }) {
 	});
 	return (
 		<View style={styles.container}>
-			<View style={styles.scrollHeight}>
+			{contactHTML.length !== 0 && <View style={styles.scrollHeight}>
 				<ScrollView style={styles.contactScroll} contentContainerStyle={styles.contactList} horizontal={true}>
 					{contactHTML}
 				</ScrollView>
-			</View>
-			<View style={styles.emptyMessagesList}>
-				<Text style={styles.title}>Messages</Text>
-			</View>
+			</View>}
+			<Text style={styles.title}>Messages</Text>
 			{user.user.conversationList.length === 0 && <EmptyState />}
 			<ScrollView contentContainerStyle={styles.conversationList}>{conversationHTML}</ScrollView>
 		</View>
@@ -149,7 +147,6 @@ const styles = StyleSheet.create({
 		fontSize: 10,
 	},
 	title: {
-		bottom: "65%",
 		color: "#965A51",
 		fontWeight: "bold",
 		fontSize: 18,
@@ -189,7 +186,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	emptyState: {
-		top: "-10%",
+    marginTop: '50%',
 		width: width * 0.9,
 		alignItems: "center",
 		justifyContent: "center",
