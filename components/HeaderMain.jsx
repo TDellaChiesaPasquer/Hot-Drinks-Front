@@ -26,7 +26,6 @@ export default function ({ route }) {
     <View style={styles.header}>
       {/* {icon} */}
       <Text style={styles.text}>Hot Drinks</Text>
-      <View style={styles.icon}></View>
     </View>
   );
 }
