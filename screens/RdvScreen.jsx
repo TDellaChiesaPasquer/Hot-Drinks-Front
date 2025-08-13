@@ -106,9 +106,11 @@ export default function RdvScreen({ navigation, route }) {
 		statusBloc = (
 			<>
 				<Text style={styles.statusText}>Confirmé</Text>
-				<TouchableOpacity style={styles.demandeButton} disabled={Boolean(statusCancel)} onPress={() => cancelRdv()}>
-					<Text style={styles.demandeButtonText}>Annuler</Text>
-				</TouchableOpacity>
+				<View style={styles.demandeContainer}>
+					<TouchableOpacity style={styles.demandeButton} disabled={Boolean(statusCancel)} onPress={() => cancelRdv()}>
+						<Text style={styles.demandeButtonText}>Annuler</Text>
+					</TouchableOpacity>
+				</View>
 			</>
 		);
 	} else if (rdv.status === "cancel") {
@@ -237,7 +239,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 25,
 	},
 	textTitle: {
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: "bold",
 		marginRight: 5,
 		color: "#965A51",
@@ -245,14 +247,22 @@ const styles = StyleSheet.create({
 	rdv: {
 		flex: "column",
 		width: "90%",
+		marginTop: 15,
+		marginBottom: 20,
 	},
-	textRdv: {
-		fontSize: 14,
+	textDay: {
+		fontSize: 16,
 		fontWeight: "bold",
 		justifyContent: "flex-start",
 		color: "#965A51",
 		marginLeft: 5,
-		marginBottom: 10,
+	},
+	textRdv: {
+		fontSize: 15,
+		fontWeight: "normal",
+		justifyContent: "flex-start",
+		color: "#965A51",
+		marginLeft: 5,
 	},
 	containerRadius: {
 		height: "55%",
