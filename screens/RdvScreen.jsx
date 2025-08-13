@@ -161,8 +161,10 @@ export default function RdvScreen({ navigation, route }) {
           </View>
           <Text style={styles.username}>{rdv ? otherUser.username : null}</Text>
         </View>
+        <View style={styles.headerRight}>
+          <Text style={styles.textTitle}>RENDEZ-VOUS</Text>
+        </View>
       </View>
-      <Text style={styles.textTitle}>RENDEZ-VOUS</Text>
       <View style={styles.rdv}>
         <Text style={styles.textRdv}>
           {
@@ -209,17 +211,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
-  },
   conversationHeader: {
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
     flexDirection: "row",
     paddingBottom: 10,
+  },
+  headerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+    justifyContent: "flex-start",
   },
   username: {
     color: "#965A51",
@@ -238,14 +241,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#965A51",
     overflow: "hidden",
   },
+  headerRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
+    justifyContent: "flex-end",
+  },
   goBack: {
     marginHorizontal: 25,
   },
   textTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: -5,
-    marginBottom: 10,
+    marginRight: 5,
     color: "#965A51",
   },
   rdv: {
@@ -257,7 +265,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     justifyContent: "flex-start",
     color: "#965A51",
-    // alignItems: "center",
     marginLeft: 5,
     marginBottom: 10,
   },
