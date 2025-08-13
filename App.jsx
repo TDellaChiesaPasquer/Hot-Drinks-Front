@@ -270,6 +270,7 @@ const RdvNav = () => {
 		<Stack.Navigator screenOptions={{ headerShown: false }}>
 			<Stack.Screen name="ListRdvScreen" component={ListRdvScreen} />
 			<Stack.Screen name="RdvScreen" component={RdvScreen} />
+			<StackSwipe.Screen name="ProfileInformationsScreen" component={ProfileInformationsScreen} />
 		</Stack.Navigator>
 	);
 };

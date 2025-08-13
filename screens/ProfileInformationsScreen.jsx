@@ -2,7 +2,6 @@ import React from "react";
 import { ScrollView, View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-import Swiper from "react-native-swiper";
 import { Image } from "expo-image";
 import { capitalize } from "../Utils/utils.js";
 
@@ -11,13 +10,12 @@ const height = Dimensions.get("window").height;
 const SURFACE_BG = "#F5EBE6";
 const CARD_BG = "#BC8D85";
 
-function TasteItem(props) {
+// Nouveau composant InfoItem générique
+function InfoItem({ label, value }) {
 	return (
-		<View style={styles.item}>
-			<Text style={styles.label}>{props.label}</Text>
-			<View style={styles.valueBox}>
-				<Text style={styles.value}>{props.value}</Text>
-			</View>
+		<View style={styles.infoItem}>
+			<Text style={styles.infoLabel}>{label}</Text>
+			<Text style={styles.infoValue}>{value}</Text>
 		</View>
 	);
 }
@@ -60,15 +58,6 @@ export default function SwipeProfileInformations() {
 	// Récupération de la première image
 	const firstImageFromRoute = route?.params?.firstImage || null;
 
-	// Construction des données de goûts à afficher
-	const dataToDisplay = tastesList.map((t) => ({
-		label: t?.category || "Goût",
-		value: t?.value || "",
-	}));
-
-	// Générer les éléments JSX pour chaque goût
-	const itemsJSX = dataToDisplay.map((item, i) => <TasteItem key={i} label={capitalize(item.label)} value={capitalize(item.value)} />);
-
 	// Utiliser l'image passée en paramètre
 	const imageSource = firstImageFromRoute || {
 		uri: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1080&h=607&q=80",
@@ -92,44 +81,24 @@ export default function SwipeProfileInformations() {
 				<View style={styles.infoSection}>
 					<Text style={styles.sectionTitle}>Informations</Text>
 
-					<View style={styles.infoItem}>
-						<Text style={styles.infoLabel}>Nom</Text>
-						<Text style={styles.infoValue}>{username}</Text>
-					</View>
+					<InfoItem label="Nom" value={username} />
+					<InfoItem label="Âge" value={`${age} ans`} />
+					<InfoItem label="Genre" value={gender} />
+					<InfoItem label="Recherche" value={orientation} />
+					<InfoItem label="Type de relation" value={relationship} />
 
-					<View style={styles.infoItem}>
-						<Text style={styles.infoLabel}>Âge</Text>
-						<Text style={styles.infoValue}>{age} ans</Text>
-					</View>
-
-					<View style={styles.infoItem}>
-						<Text style={styles.infoLabel}>Genre</Text>
-						<Text style={styles.infoValue}>{gender}</Text>
-					</View>
-
-					<View style={styles.infoItem}>
-						<Text style={styles.infoLabel}>Recherche</Text>
-						<Text style={styles.infoValue}>{orientation}</Text>
-					</View>
-
-					<View style={styles.infoItem}>
-						<Text style={styles.infoLabel}>Type de relation</Text>
-						<Text style={styles.infoValue}>{relationship}</Text>
-					</View>
-
-					{/* Afficher la distance seulement si elle existe et est valide */}
-					{isValidDistance(profileData.distance) && (
-						<View style={styles.infoItem}>
-							<Text style={styles.infoLabel}>Distance</Text>
-							<Text style={styles.infoValue}>{profileData.distance}</Text>
-						</View>
-					)}
+					{isValidDistance(profileData.distance) && <InfoItem label="Distance" value={profileData.distance} />}
 				</View>
 
 				{/* Goûts et préférences */}
 				<View style={styles.infoSection}>
 					<Text style={styles.sectionTitle}>Goûts et préférences</Text>
-					{itemsJSX.length === 0 ? <EmptyItems username={username} /> : itemsJSX}
+
+					{tastesList.length === 0 ? (
+						<EmptyItems username={username} />
+					) : (
+						tastesList.map((taste, index) => <InfoItem key={index} label={capitalize(taste?.category || "Goût")} value={capitalize(taste?.value || "")} />)
+					)}
 				</View>
 			</ScrollView>
 		</View>
@@ -157,35 +126,6 @@ const styles = StyleSheet.create({
 		paddingRight: 24,
 		paddingBottom: 40,
 	},
-	item: {
-		width: "100%",
-		minHeight: 56,
-		marginBottom: 16,
-		borderRadius: 40,
-		backgroundColor: CARD_BG,
-		paddingVertical: 10,
-		paddingHorizontal: 24,
-		justifyContent: "center",
-	},
-	label: {
-		fontWeight: "bold",
-		fontSize: 13,
-		color: SURFACE_BG,
-		marginBottom: 4,
-	},
-	valueBox: {
-		width: "100%",
-		borderRadius: 8,
-		backgroundColor: SURFACE_BG,
-		paddingVertical: 12,
-		paddingHorizontal: 14,
-		justifyContent: "center",
-	},
-	value: {
-		fontWeight: "600",
-		fontSize: 16,
-		color: "#000",
-	},
 	backButtonWrapper: {
 		position: "absolute",
 		top: 16,
@@ -212,7 +152,7 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		borderRadius: 12,
 	},
-	// Nouveaux styles
+	// Styles pour les sections et items
 	infoSection: {
 		marginTop: 20,
 		marginBottom: 30,
