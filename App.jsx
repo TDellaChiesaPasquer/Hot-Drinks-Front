@@ -8,6 +8,9 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faCoffee, faUser, faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -58,6 +61,9 @@ const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }),
 });
 const persistor = persistStore(store);
+
+// Initialiser la bibliothèque FontAwesome avec les icônes nécessaires
+library.add(faCoffee, faUser, faCalendar);
 
 const Stack = createNativeStackNavigator();
 const StackSwipe = createNativeStackNavigator();
@@ -153,49 +159,41 @@ const MainTabNav = () => {
     }
   }, [userId]);
   return (
-    <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarStyle: styles.tabBar,
-          header: ({ route }) => {
-            return <HeaderMain route={route} />;
-          },
-          tabBarIcon: ({ color, size }) => {
-            let icon;
-            if (route.name === "MessagerieNav") {
-              icon = (
-                <MaterialCommunityIcons
-                  name="message-outline"
-                  size={30}
-                  color={color}
-                />
-              );
-            } else if (route.name === "MyProfileNav") {
-              icon = <Feather name="user" size={30} color={color} />;
-            } else if (route.name === "SwipeNav") {
-              icon = <Feather name="coffee" size={30} color={color} />;
-            } else {
-              icon = <Feather name="calendar" size={28} color={color} />;
-            }
-            return icon;
-          },
-          tabBarActiveTintColor: "#965A51",
-          tabBarInactiveTintColor: "#BC8D85",
-          tabBarShowLabel: false,
-          tabBarIconStyle: styles.tabBarIcon,
-          tabBarStyle: styles.tabBarMain,
-        })}
-      >
-        <Tab.Screen name="MyProfileNav" component={MyProfileNav} />
-        <Tab.Screen name="SwipeNav" component={SwipeNav} />
-        <Tab.Screen
-          name="MessagerieNav"
-          component={MessagerieNav}
-          options={messagerieNotif && { tabBarBadge: "" }}
-        />
-        <Tab.Screen name="RdvNav" component={RdvNav} />
-      </Tab.Navigator>
-    </SafeAreaView>
+		<SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
+			<Tab.Navigator
+				screenOptions={({ route }) => ({
+					tabBarStyle: styles.tabBar,
+					header: ({ route }) => {
+						return <HeaderMain route={route} />;
+					},
+					tabBarIcon: ({ color }) => {
+						let icon;
+						if (route.name === "MessagerieNav") {
+							icon = <MaterialCommunityIcons name="message" size={30} color={color} />;
+						} else if (route.name === "MyProfileNav") {
+							icon = <FontAwesomeIcon icon={faUser} size={30} color={color} />;
+						} else if (route.name === "SwipeNav") {
+							icon = <FontAwesomeIcon icon={faCoffee} size={30} color={color} />;
+						} else {
+							icon = <FontAwesomeIcon icon={faCalendar} size={28} color={color} />;
+						}
+						return icon;
+					},
+					tabBarActiveTintColor: "#965A51",
+					tabBarInactiveTintColor: "#BC8D85",
+					tabBarActiveTintColor: "#965A51",
+					tabBarInactiveTintColor: "#BC8D85",
+					tabBarShowLabel: false,
+					tabBarIconStyle: styles.tabBarIcon,
+					tabBarStyle: styles.tabBarMain,
+				})}
+			>
+				<Tab.Screen name="MyProfileNav" component={MyProfileNav} />
+				<Tab.Screen name="SwipeNav" component={SwipeNav} />
+				<Tab.Screen name="MessagerieNav" component={MessagerieNav} options={messagerieNotif && { tabBarBadge: "" }} />
+				<Tab.Screen name="RdvNav" component={RdvNav} />
+			</Tab.Navigator>
+		</SafeAreaView>
   );
 };
 

@@ -67,22 +67,24 @@ export default function AddRdvScreen({ navigation, route }) {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <MapView
-        zoomEnabled={true}
-        initialRegion={{
-          latitude: 48.88,
-          longitude: 2.3,
-          latitudeDelta: 0.0222,
-          longitudeDelta: 0.0222,
-        }}
-        style={styles.map}
-        onLongPress={(action) => getMarker(action.nativeEvent.coordinate)}
-        // disabled={disabled}
-      >
-        {choicePositionRdv && (
-          <Marker coordinate={choicePositionRdv} pinColor="#78010bff" />
-        )}
-      </MapView>
+      <View style={styles.containerRadius}>
+        <MapView
+          zoomEnabled={true}
+          initialRegion={{
+            latitude: 48.88,
+            longitude: 2.3,
+            latitudeDelta: 0.0222,
+            longitudeDelta: 0.0222,
+          }}
+          style={styles.map}
+          onLongPress={(action) => getMarker(action.nativeEvent.coordinate)}
+          // disabled={disabled}
+        >
+          {choicePositionRdv && (
+            <Marker coordinate={choicePositionRdv} pinColor="#78010bff" />
+          )}
+        </MapView>
+      </View>
       {/* <MobileDateTimePicker /> */}
       <View style={styles.containerCalendar}>
         <Text style={styles.text} onPress={showDate}>
@@ -95,9 +97,9 @@ export default function AddRdvScreen({ navigation, route }) {
             "0" + date.getMinutes()
           ).slice(-2)}`}
         </Text>
-        {/* {visible && ( */}
-        {/* <DateTimePicker value={date} mode={mode} onChange={dateChange} /> */}
-        {/* )} */}
+        {visible && (
+          <DateTimePicker value={date} mode={mode} onChange={dateChange} />
+        )}
       </View>
       <TouchableOpacity
         style={styles.button}
@@ -117,14 +119,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5EBE6",
     alignItems: "center",
   },
+  containerRadius: {
+    height: "65%",
+    width: "80%",
+    backgroundcolor: "red",
+    borderRadius: 25,
+  },
   map: {
-    height: "75%",
-    width: "90%",
-    marginHorizontal: 20,
-    marginTop: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0 2px 3px #896761",
+    // height: "65%",
+    // width: "80%",
+    // marginHorizontal: 20,
+    // marginTop: 5,
+    // alignItems: "center",
+    // justifyContent: "center",
+    // boxShadow: "0 2px 3px #896761",
   },
   button: {
     alignItems: "center",
@@ -135,7 +143,7 @@ const styles = StyleSheet.create({
     // width: width * 0.7,
     backgroundColor: "#965a51c0",
     marginHorizontal: 70,
-    marginTop: 50,
+    marginTop: 30,
     width: "70%",
   },
   boutonText: {
@@ -146,19 +154,19 @@ const styles = StyleSheet.create({
   containerCalendar: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     // backgroundColor: "#fc5400ff",
     padding: 3,
-    marginTop: 50,
-    width: "90%",
+    marginTop: 20,
+    width: "80%",
     height: "11%",
   },
   text: {
     fontSize: 16,
     fontWeight: "bold",
     borderColor: "#965a51c0",
-    backgroundColor: "#965a51c0",
-    color: "#F5EBE6",
+    boxShadow: "0 2px 3px #896761",
+    color: "#965a51c0",
     borderWidth: 2,
     borderRadius: 15,
     padding: 20,

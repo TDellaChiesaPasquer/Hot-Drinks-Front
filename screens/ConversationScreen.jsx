@@ -225,6 +225,7 @@ export default function ({ navigation, route }) {
             disabled={modalBlockVisible}
           />
           <View style={styles.avatarContainer}>
+            {/* Ajouter un lien vers le profil de la personne, sur l'image */}
             <Image
               style={styles.avatar}
               source={
