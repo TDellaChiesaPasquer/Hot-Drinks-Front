@@ -31,6 +31,7 @@ import ConversationScreen from "./screens/ConversationScreen";
 import HeaderMain from "./components/HeaderMain";
 import PhotoScreen from "./screens/PhotoScreen";
 import MapScreen from "./screens/MapScreen";
+import CompleteInfosScreen from "./screens/CompleteInfosScreen";
 import AddRdvScreen from "./screens/AddRdvScreen";
 import ListRdvScreen from "./screens/ListRdvScreen";
 import RdvScreen from "./screens/RdvScreen";
@@ -85,6 +86,10 @@ const SignUpNav = () => {
       <Stack.Screen name="RelationScreen" component={RelationScreen} />
       <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
       <Stack.Screen name="MapScreen" component={MapScreen} />
+      <Stack.Screen
+        name="CompleteInfosScreen"
+        component={CompleteInfosScreen}
+      />
     </Stack.Navigator>
   );
 };
@@ -379,20 +384,21 @@ const styles = StyleSheet.create({
 
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#fd80c9ff",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    borderColor: "#FF4D80",
+    // boxShadow: "0px 0px 12px 12px #f8a3bbff",
+  },
 
-    modalText: {
-      marginBottom: 15,
-      textAlign: "center",
-      fontWeight: "900",
-    },
+  modalText: {
+    textAlign: "center",
+    fontWeight: "600",
+  },
+
+  modal: {
+    borderColor: "red",
+    boxShadow: "5 5 5 0 rgba(255, 0, 0, 0.5)",
   },
 });

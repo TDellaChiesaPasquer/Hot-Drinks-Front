@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
   title: {
     color: "#965A51",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 20,
     marginVertical: 10,
   },
   inputTitle: {

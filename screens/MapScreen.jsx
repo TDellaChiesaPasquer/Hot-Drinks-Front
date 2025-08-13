@@ -257,7 +257,7 @@ export default function App({ navigation }) {
     });
     const data2 = await response2.json();
     dispatch(addInfos(data2.user));
-    setDisabled(false), navigation.navigate("MainTabNav");
+    setDisabled(false), navigation.navigate("CompleteInfosScreen");
   };
   // ____________________________________RAJOUTER UNE VILLE AU TOUCHÉ_______________________________
   const addCityByTouch = async (touch_coordinates) => {
