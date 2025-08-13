@@ -43,6 +43,7 @@ export default function MyProfile({ navigation }) {
 
   const todaysDate = new Date();
   const ageMili =
+    dataPhoto.user &&
     todaysDate.valueOf() - new Date(dataPhoto.user.birthdate).valueOf();
   const age = Math.floor(ageMili / (1000 * 60 * 60 * 24 * 365.25));
 
