@@ -8,11 +8,11 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import HeaderBeginning from "../components/HeaderBeginning";
 export default function CompleteInfosScreen({ navigation }) {
-  handleCompleteInfos = () => {
+  const handleCompleteInfos = () => {
     navigation.navigate("MainTabNav", { screen: "MyProfileNav" });
   };
 
-  handleNotNow = () => {
+  const handleNotNow = () => {
     navigation.navigate("MainTabNav", { screen: "SwipeNav" });
   };
 
@@ -23,7 +23,7 @@ export default function CompleteInfosScreen({ navigation }) {
         <View style={styles.container}>
           <View style={styles.textContainer}>
             <Text style={styles.textTitle}>
-              Souhaites-tu compléter ton profil {"\n"}maintenant?
+              Souhaites-tu compléter ton profil maintenant?
             </Text>
           </View>
           <View style={styles.buttonContainer}>
@@ -31,13 +31,13 @@ export default function CompleteInfosScreen({ navigation }) {
               style={styles.button}
               onPress={() => handleCompleteInfos()}
             >
-              <Text>C'est parti!</Text>
+              <Text style={styles.textButton}>C'est parti!</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={() => handleNotNow()}
             >
-              <Text>Plus tard</Text>
+              <Text style={styles.textButton}>Plus tard</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -89,5 +89,10 @@ const styles = StyleSheet.create({
     width: "35%",
     backgroundColor: "#965a51c0",
     margin: 10,
+  },
+
+  textButton: {
+    color: "#F5EBE6",
+    fontWeight: "bold",
   },
 });

@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal, TextInput, Pressable, ActivityIndicator } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
+import { Image } from "expo-image";
 import HeaderBeginning from "../components/HeaderBeginning";
 import { addTempInfo } from "../reducers/user";
 import { useFocusEffect } from "@react-navigation/native";
@@ -12,15 +13,24 @@ const { width, height } = Dimensions.get("window");
 // Anciens imports avec require() - commentés car ne fonctionnent pas avec expo-image pour SVG
 // const boat = require("../assets/images/boat.png");
 
+// Commentaire des imports SVG
+// import ChocolatChaudIcon from "../assets/images/relationImages/chocolat-chaud.svg";
+// import AllongeIcon from "../assets/images/relationImages/allonge.svg";
+// import TheIcon from "../assets/images/relationImages/the.svg";
+// import EspressoIcon from "../assets/images/relationImages/espresso.svg";
+// import RistrettoIcon from "../assets/images/relationImages/ristretto.svg";
+// import MatchaIcon from "../assets/images/relationImages/matcha.svg";
 
-// imports SVG comme composants React
-import BoatIcon from "../assets/images/boat.png"; // Gardé en require car c'est un PNG
-import ChocolatChaudIcon from "../assets/images/relationImages/chocolat-chaud.svg";
-import AllongeIcon from "../assets/images/relationImages/allonge.svg";
-import TheIcon from "../assets/images/relationImages/the.svg";
-import EspressoIcon from "../assets/images/relationImages/espresso.svg";
-import RistrettoIcon from "../assets/images/relationImages/ristretto.svg";
-import MatchaIcon from "../assets/images/relationImages/matcha.svg";
+// Import des images PNG
+const relationIcons = {
+	boat: require("../assets/images/boat.png"),
+	allonge: require("../assets/images/IconsRelations/allonge.png"),
+	espresso: require("../assets/images/IconsRelations/espresso.png"),
+	hotChocolate: require("../assets/images/IconsRelations/hotChocolate.png"),
+	matcha: require("../assets/images/IconsRelations/matcha.png"),
+	ristretto: require("../assets/images/IconsRelations/ristretto.png"),
+	the: require("../assets/images/IconsRelations/the.png"),
+};
 
 export default function ({ navigation }) {
 	const user = useSelector((state) => state.user.value);
@@ -84,8 +94,10 @@ export default function ({ navigation }) {
 						]}
 						onPress={() => setRelation("Chocolat chaud")}
 					>
-						{/* <Image source={chocolatChaud} style={styles.image} /> */}
-						<ChocolatChaudIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
+						{/* Remplacer l'icône SVG par une image PNG dans un cercle */}
+						<View style={styles.iconContainer}>
+							<Image source={relationIcons.hotChocolate} style={styles.image} contentFit="contain" />
+						</View>
 						<Text
 							style={[
 								styles.boutonChoixMultipleText,
@@ -116,14 +128,16 @@ export default function ({ navigation }) {
 						]}
 						onPress={() => setRelation("Allongé")}
 					>
-						{/* <Image source={allonge} style={styles.image} /> */}
-						<AllongeIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
+						<View style={styles.iconContainer}>
+							<Image source={relationIcons.allonge} style={styles.image} contentFit="contain" />
+						</View>
 						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Allongé" ? "#F5EBE6" : "#965A51" }]}>Allongé</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Allongé" ? "#F5EBE6" : "#965A51" }]}>Relation sérieuse</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={[styles.boutonChoixMultiple, { backgroundColor: relation === "Thé" ? "#E69B5C" : "#FFF5F0" }]} onPress={() => setRelation("Thé")}>
-						{/* <Image source={the} style={styles.image} /> */}
-						<TheIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
+						<View style={styles.iconContainer}>
+							<Image source={relationIcons.the} style={styles.image} contentFit="contain" />
+						</View>
 						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Thé" ? "#F5EBE6" : "#965A51" }]}>Thé</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Thé" ? "#F5EBE6" : "#965A51" }]}>Plus si affinités</Text>
 					</TouchableOpacity>
@@ -138,8 +152,9 @@ export default function ({ navigation }) {
 						]}
 						onPress={() => setRelation("Expresso")}
 					>
-						{/* <Image source={espresso} style={styles.image} /> */}
-						<EspressoIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
+						<View style={styles.iconContainer}>
+							<Image source={relationIcons.espresso} style={styles.image} contentFit="contain" />
+						</View>
 						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Expresso" ? "#F5EBE6" : "#965A51" }]}>Expresso</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Expresso" ? "#F5EBE6" : "#965A51" }]}>Sans prise de tête</Text>
 					</TouchableOpacity>
@@ -152,8 +167,9 @@ export default function ({ navigation }) {
 						]}
 						onPress={() => setRelation("Ristretto")}
 					>
-						{/* <Image source={ristretto} style={styles.image} /> */}
-						<RistrettoIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
+						<View style={styles.iconContainer}>
+							<Image source={relationIcons.ristretto} style={styles.image} contentFit="contain" />
+						</View>
 						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Ristretto" ? "#F5EBE6" : "#965A51" }]}>Ristretto</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Ristretto" ? "#F5EBE6" : "#965A51" }]}>Un shot de plaisir</Text>
 					</TouchableOpacity>
@@ -161,20 +177,18 @@ export default function ({ navigation }) {
 						style={[
 							styles.boutonChoixMultiple,
 							{
-								backgroundColor: relation === "Matcha" ? "#C4E1B8" : "#FFF5F0",
+								backgroundColor: relation === "Matcha" ? "#6CBF44" : "#FFF5F0",
 							},
 						]}
 						onPress={() => setRelation("Matcha")}
 					>
-						{/* <Image source={matcha} style={styles.image} /> */}
-						<MatchaIcon width={0.18 * width} height={0.18 * width} style={styles.svgIcon} />
+						<View style={styles.iconContainer}>
+							<Image source={relationIcons.matcha} style={styles.image} contentFit="contain" />
+						</View>
 						<Text style={[styles.boutonChoixMultipleText, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Matcha</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Relation amicale</Text>
 					</TouchableOpacity>
 				</View>
-
-				{/* Test avec boat.png si besoin */}
-				{/* <BoatIcon width={50} height={50} /> */}
 
 				<View style={styles.bottom}>
 					<Text style={styles.error}>{error}</Text>
@@ -275,16 +289,19 @@ const styles = StyleSheet.create({
 		width: "90%",
 		alignItems: "center",
 	},
-	// Ancien style pour Image - gardé en commentaire
-	// image: {
-	// 	objectFit: "cover",
-	// 	width: 0.18 * width,
-	// 	height: 0.18 * width,
-	// 	marginVertical: 8,
-	// },
-	// Style pour les SVG
-	svgIcon: {
+	iconContainer: {
+		width: 0.18 * width,
+		height: 0.18 * width,
+		borderRadius: (0.18 * width) / 2,
+		// backgroundColor: "#E8D5C4", // Marron clair
+		alignItems: "center",
+		justifyContent: "center",
 		marginVertical: 8,
+		overflow: "hidden",
+	},
+	image: {
+		width: "80%",
+		height: "80%",
 	},
 	boutonChoixMultipleTextLegend: {
 		fontSize: 8,
