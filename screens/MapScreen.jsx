@@ -55,14 +55,12 @@ export default function App({ navigation }) {
 
   function checkLocationServices() {
     // Étape 1 : Démarrage de la vérification périodique
-    console.log("Vérification des services de localisation...");
 
     // Étape 2 : Vérification si les services de localisation sont maintenant activés
     Location.hasServicesEnabledAsync()
       .then(function (locationEnabled) {
         if (locationEnabled) {
           // Étape 3 : Les services sont activés, on peut continuer
-          console.log("Services de localisation activés");
 
           // Étape 4 : Nettoyage de l'intervalle puisqu'on a détecté l'activation
           clearInterval(locationCheckIntervalRef.current);
@@ -77,7 +75,6 @@ export default function App({ navigation }) {
       })
       .then(function (location) {
         // Étape 7 : Position récupérée avec succès
-        console.log("location retrieved");
 
         // Étape 8 : Stockage de la position
         const { latitude, longitude } = location.coords;
@@ -109,20 +106,17 @@ export default function App({ navigation }) {
   useEffect(() => {
     (async () => {
       // Étape 0 : Log au montage du composant
-      console.log("map charged");
 
       // Étape 1 : Demande de permission à l'utilisateur
       const { status } = await Location.requestForegroundPermissionsAsync();
 
       if (status === "granted") {
-        console.log("permission granted");
 
         // Étape 2 : Vérifier si les services de localisation sont activés
         const locationEnabled = await Location.hasServicesEnabledAsync();
 
         if (!locationEnabled) {
           // Étape 3 : Log et affichage d'une alerte si localisation désactivée
-          console.log("Géolocalisation désactivée");
           Alert.alert(
             "Localisation désactivée",
             "Nous avons besoin de la localisation. Souhaitez-vous l'activer ? Sinon, indiquez votre position manuellement.",
@@ -186,7 +180,6 @@ export default function App({ navigation }) {
         // Étape 10 : Essayer de récupérer la position actuelle
         try {
           const location = await Location.getCurrentPositionAsync({});
-          console.log("location retrieved");
 
           // Étape 11 : Stockage de la position
           const { latitude, longitude } = location.coords;
@@ -224,7 +217,6 @@ export default function App({ navigation }) {
   // ____________________________________FETCH GEOLOC_______________________________
   const getGeolocalisation = async () => {
     setDisabled(true);
-    console.log(myLocation);
     if (!myLocationRef.current.latitude) {
       setError("Ajouter une position !");
       setDisabled(false);
@@ -245,7 +237,6 @@ export default function App({ navigation }) {
       }
     );
     const data = await response.json();
-    console.log(data);
     if (!data.result) {
       setError(false), setDisabled(false);
       return;

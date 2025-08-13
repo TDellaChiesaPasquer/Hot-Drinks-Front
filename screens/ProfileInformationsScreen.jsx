@@ -2,8 +2,6 @@ import React from "react";
 import { ScrollView, View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-
-// tmp pour le test
 import Swiper from "react-native-swiper";
 import { Image } from "expo-image";
 import { capitalize } from "../Utils/utils.js";
@@ -12,25 +10,6 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const SURFACE_BG = "#F5EBE6";
 const CARD_BG = "#BC8D85";
-
-// Liste fallback si aucun goût n'est passé via la navigation
-const infoList = [
-	{ label: "Goût", value: "Jazz" },
-	{ label: "Goût", value: "Cuisine italienne" },
-	{ label: "Goût", value: "Randonnée" },
-	{ label: "Goût", value: "Lecture" },
-	{ label: "Goût", value: "Photographie" },
-	{ label: "Goût", value: "Films d'action" },
-	{ label: "Goût", value: "Chocolat noir" },
-	{ label: "Goût", value: "Voyages urbains" },
-	{ label: "Goût", value: "Natation" },
-	{ label: "Goût", value: "Thé vert" },
-	{ label: "Goût", value: "Musées" },
-	{ label: "Goût", value: "Séries policières" },
-	{ label: "Goût", value: "Vélo" },
-	{ label: "Goût", value: "Peinture" },
-	{ label: "Goût", value: "Animaux" },
-];
 
 function TasteItem(props) {
 	return (
@@ -43,29 +22,52 @@ function TasteItem(props) {
 	);
 }
 
-export default function SwipeProfileInformations(props) {
+const EmptyItems = ({ username }) => (
+	<View style={styles.emptyState}>
+		<Text style={styles.emptyText}>{username || "Ce profil"} n'a pas encore indiqué ses préférences...</Text>
+	</View>
+);
+
+// Fonction pour calculer l'âge à partir de la date de naissance
+function calculateAge(birthdate) {
+	if (!birthdate) return null;
+
+	const today = new Date();
+	const birthDate = new Date(birthdate);
+	let age = today.getFullYear() - birthDate.getFullYear();
+	const m = today.getMonth() - birthDate.getMonth();
+	if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+		age--;
+	}
+	return age;
+}
+
+const isValidDistance = (distance) => {
+	return distance !== undefined && distance !== null && distance.trim().toLowerCase() !== "nan";
+};
+
+export default function SwipeProfileInformations() {
 	const navigation = useNavigation();
 	const route = useRoute();
 
-	// Récupération des goûts passés depuis la page de swipe
-	const tastesFromRoute = Array.isArray(route?.params?.tastesList) ? route.params.tastesList : null;
+	// Récupération de TOUTES les données du profil
+	const profileData = route?.params?.profileData || {};
+	const { username = "Anonyme", birthdate, gender = "Non spécifié", orientation = "Non spécifié", relationship = "Non spécifié", distance = "Distance inconnue", tastesList = [] } = profileData;
 
-	// Récupération de la première image passée depuis la page de swipe
+	// Calcul de l'âge
+	const age = calculateAge(birthdate) || "?";
+
+	// Récupération de la première image
 	const firstImageFromRoute = route?.params?.firstImage || null;
 
-	// Construction des données à afficher au format "type de goût -> goût"
-	const dataToDisplay = tastesFromRoute
-		? tastesFromRoute.map((t) => ({
-				label: t?.category || "Goût",
-				value: t?.value || "",
-		  }))
-		: infoList;
+	// Construction des données de goûts à afficher
+	const dataToDisplay = tastesList.map((t) => ({
+		label: t?.category || "Goût",
+		value: t?.value || "",
+	}));
 
-	const itemsJSX = [];
-	for (var i = 0; i < dataToDisplay.length; i++) {
-		var item = dataToDisplay[i];
-		itemsJSX.push(<TasteItem key={i} label={capitalize(item.label)} value={capitalize(item.value)} />);
-	}
+	// Générer les éléments JSX pour chaque goût
+	const itemsJSX = dataToDisplay.map((item, i) => <TasteItem key={i} label={capitalize(item.label)} value={capitalize(item.value)} />);
 
 	// Utiliser l'image passée en paramètre
 	const imageSource = firstImageFromRoute || {
@@ -73,7 +75,9 @@ export default function SwipeProfileInformations(props) {
 	};
 
 	return (
-		<View style={{ flex: 1, backgroundColor: "#F5EBE6" }}>
+		<View style={styles.container}>
+			<Text style={styles.title}>Informations du profil</Text>
+
 			{/* Bouton de retour (flèche gauche) */}
 			<View style={styles.backButtonWrapper}>
 				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton} activeOpacity={0.8}>
@@ -83,56 +87,105 @@ export default function SwipeProfileInformations(props) {
 
 			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper} alwaysBounceVertical={true}>
 				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" />
-				{itemsJSX}
+
+				{/* Informations de base */}
+				<View style={styles.infoSection}>
+					<Text style={styles.sectionTitle}>Informations</Text>
+
+					<View style={styles.infoItem}>
+						<Text style={styles.infoLabel}>Nom</Text>
+						<Text style={styles.infoValue}>{username}</Text>
+					</View>
+
+					<View style={styles.infoItem}>
+						<Text style={styles.infoLabel}>Âge</Text>
+						<Text style={styles.infoValue}>{age} ans</Text>
+					</View>
+
+					<View style={styles.infoItem}>
+						<Text style={styles.infoLabel}>Genre</Text>
+						<Text style={styles.infoValue}>{gender}</Text>
+					</View>
+
+					<View style={styles.infoItem}>
+						<Text style={styles.infoLabel}>Recherche</Text>
+						<Text style={styles.infoValue}>{orientation}</Text>
+					</View>
+
+					<View style={styles.infoItem}>
+						<Text style={styles.infoLabel}>Type de relation</Text>
+						<Text style={styles.infoValue}>{relationship}</Text>
+					</View>
+
+					{/* Afficher la distance seulement si elle existe et est valide */}
+					{isValidDistance(profileData.distance) && (
+						<View style={styles.infoItem}>
+							<Text style={styles.infoLabel}>Distance</Text>
+							<Text style={styles.infoValue}>{profileData.distance}</Text>
+						</View>
+					)}
+				</View>
+
+				{/* Goûts et préférences */}
+				<View style={styles.infoSection}>
+					<Text style={styles.sectionTitle}>Goûts et préférences</Text>
+					{itemsJSX.length === 0 ? <EmptyItems username={username} /> : itemsJSX}
+				</View>
 			</ScrollView>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	wrapper: {
-		width: width, // largeur = largeur de l'écran en pixels
-		minHeight: height * 0.5, // min height pour bien scroller sur mobile
-		paddingLeft: 24, // 24px
-		paddingRight: 24,
-		paddingBottom: 40, // 40px
-		backgroundColor: "#FFF", // Pour debug visuel
+	container: {
+		flex: 1,
+		backgroundColor: "#F5EBE6",
+		alignItems: "center",
 	},
-
+	title: {
+		fontSize: 20,
+		alignItems: "center",
+		color: "#965A51",
+		fontWeight: "bold",
+		fontSize: 18,
+		marginVertical: 10,
+	},
+	wrapper: {
+		width: width,
+		minHeight: height * 0.5,
+		paddingLeft: 24,
+		paddingRight: 24,
+		paddingBottom: 40,
+	},
 	item: {
 		width: "100%",
-		minHeight: 56, // hauteur mini pilule
-		marginBottom: 16, // 16px d’espace entre les éléments
-		borderRadius: 40, // pilule arrondie
+		minHeight: 56,
+		marginBottom: 16,
+		borderRadius: 40,
 		backgroundColor: CARD_BG,
-		paddingVertical: 10, // 10px haut/bas
-		paddingHorizontal: 24, // 24px gauche/droite
+		paddingVertical: 10,
+		paddingHorizontal: 24,
 		justifyContent: "center",
 	},
-
 	label: {
 		fontWeight: "bold",
-		fontSize: 13, // 13px
+		fontSize: 13,
 		color: SURFACE_BG,
-		marginBottom: 4, // 4px
+		marginBottom: 4,
 	},
-
 	valueBox: {
 		width: "100%",
-		borderRadius: 8, // 8px
+		borderRadius: 8,
 		backgroundColor: SURFACE_BG,
-		paddingVertical: 12, // 12px
-		paddingHorizontal: 14, // 14px
+		paddingVertical: 12,
+		paddingHorizontal: 14,
 		justifyContent: "center",
 	},
-
 	value: {
 		fontWeight: "600",
-		fontSize: 16, // 16px
+		fontSize: 16,
 		color: "#000",
 	},
-
-	// Nouveau: bouton retour (flèche gauche)
 	backButtonWrapper: {
 		position: "absolute",
 		top: 16,
@@ -152,11 +205,56 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 3,
 	},
-	// tmp pour le test
 	image: {
 		justifyContent: "center",
 		height: height * 0.6,
 		marginBottom: 20,
 		marginTop: 20,
+		borderRadius: 12,
+	},
+	// Nouveaux styles
+	infoSection: {
+		marginTop: 20,
+		marginBottom: 30,
+		width: "100%",
+	},
+	sectionTitle: {
+		fontSize: 18,
+		fontWeight: "bold",
+		color: "#965A51",
+		marginBottom: 15,
+	},
+	infoItem: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		backgroundColor: CARD_BG,
+		borderRadius: 15,
+		padding: 15,
+		marginBottom: 10,
+	},
+	infoLabel: {
+		fontSize: 14,
+		fontWeight: "bold",
+		color: SURFACE_BG,
+	},
+	infoValue: {
+		fontSize: 14,
+		color: SURFACE_BG,
+		fontWeight: "500",
+	},
+	emptyState: {
+		padding: 20,
+		alignItems: "center",
+		backgroundColor: "#FFF5F0",
+		borderRadius: 16,
+		borderWidth: 1,
+		borderColor: "rgba(188, 141, 133, 0.25)",
+	},
+	emptyText: {
+		color: "#965A51",
+		textAlign: "center",
+		fontSize: 16,
+		fontWeight: "600",
 	},
 });

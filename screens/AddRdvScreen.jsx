@@ -42,11 +42,9 @@ export default function AddRdvScreen({ navigation, route }) {
   };
 
   const addRdv = async () => {
-    console.log("hello");
     if (!Marker && !date) {
       return;
     }
-    console.log(route.params.conversationId);
     const response = await fetch(process.env.EXPO_PUBLIC_IP + "/rdv/ask", {
       method: "PUT",
       headers: {
@@ -60,9 +58,7 @@ export default function AddRdvScreen({ navigation, route }) {
         date: dayjs(date).format("YYYY-MM-DDTHH:mm"),
       }),
     });
-    console.log("ici");
     const data = await response.json();
-    console.log(data);
     navigation.goBack();
   };
   return (
