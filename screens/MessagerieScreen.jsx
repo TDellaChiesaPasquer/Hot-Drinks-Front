@@ -7,7 +7,7 @@ const { width, height } = Dimensions.get("window");
 
 const EmptyState = () => (
 	<View style={styles.emptyState}>
-		<Text style={styles.emptyText}>Les messages de vos match s'afficheront ici...</Text>
+		<Text style={styles.emptyText}>Les messages de tes match s'afficheront ici...</Text>
 	</View>
 );
 
@@ -76,11 +76,13 @@ export default function ({ navigation }) {
 	});
 	return (
 		<View style={styles.container}>
-			{contactHTML.length !== 0 && <View style={styles.scrollHeight}>
-				<ScrollView style={styles.contactScroll} contentContainerStyle={styles.contactList} horizontal={true}>
-					{contactHTML}
-				</ScrollView>
-			</View>}
+			{contactHTML.length !== 0 && (
+				<View style={styles.scrollHeight}>
+					<ScrollView style={styles.contactScroll} contentContainerStyle={styles.contactList} horizontal={true}>
+						{contactHTML}
+					</ScrollView>
+				</View>
+			)}
 			<Text style={styles.title}>Messages</Text>
 			{user.user.conversationList.length === 0 && <EmptyState />}
 			<ScrollView contentContainerStyle={styles.conversationList}>{conversationHTML}</ScrollView>
@@ -180,13 +182,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFF5F0",
 		right: 25,
 	},
-	emptyMessagesList: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-	},
 	emptyState: {
-    marginTop: '50%',
+		marginTop: "50%",
 		width: width * 0.9,
 		alignItems: "center",
 		justifyContent: "center",
@@ -196,10 +193,6 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 18,
 		borderWidth: 1,
 		borderColor: "rgba(188, 141, 133, 0.25)",
-	},
-	emptyEmojiLine: {
-		fontSize: 30,
-		marginBottom: 8,
 	},
 	emptyText: {
 		color: "#965A51",
