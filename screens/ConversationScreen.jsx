@@ -12,219 +12,204 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Keyboard } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback } from "react";
+
 
 const { width, height } = Dimensions.get("window");
 
 export default function ({ navigation, route }) {
-  const user = useSelector((state) => state.user.value);
-  const insets = useSafeAreaInsets();
-  const dispatch = useDispatch();
-  const keyboard = useAnimatedKeyboard();
-  const keyboardStyleScroll = useAnimatedStyle(() => ({
-    height: keyboard.state.value === 1 ? 250 : 0,
-    opacity: 0
-  }));
-  const keyboardStyleBottom = useAnimatedStyle(() => ({
-    height: keyboard.state.value === 0 ? 66 : Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66,
-  }));
-  const [newMessage, setNewMessage] = useState("");
-  const [sendDisabled, setSendDisabled] = useState(false);
-  const [modalBlockVisible, setModalBlockVisible] = useState(false);
-  const [blockDisabled, setBlockDisabled] = useState(false);
-  const conversation = user.user
-    ? user.user.conversationList.find(
-        (x) => String(x._id) === String(route.params._id)
-      )
-    : null;
-  const messageList = conversation?.messageList || [];
-  const otherUserNumber = route.params?.otherUserNumber || 1;
-  useEffect(() => {
-    const lastMessage =
-      messageList.length !== 0 ? messageList[messageList.length - 1] : null;
-    if (
-      lastMessage &&
-      lastMessage.creator === otherUserNumber &&
-      !lastMessage.seen
-    ) {
-      (async () => {
-        await fetch(
-          process.env.EXPO_PUBLIC_IP + "/conversation/" + conversation._id,
-          {
-            method: "PUT",
-            headers: {
-              authorization: user.token,
-            },
-          }
-        );
-      })();
-      dispatch(readConv(conversation._id));
-    }
-  }, [messageList]);
-  const scrollViewRef = useRef();
-  const otherUser =
-    otherUserNumber === 2 ? route.params.user2 : route.params.user1;
-  const currentDate = dayjs();
-  const lastOwnSeenMessageIndex = messageList.findLastIndex(
-    (x) => x.creator !== otherUserNumber && x.seen === true
-  );
-  const currentRdv =
-    user.user &&
-    user.user.rdvList.find(
-      (x) =>
-        (String(otherUser._id) === String(x.creator._id) ||
-          String(otherUser._id) === String(x.receiver._id)) &&
-        new Date(x.date).valueOf() > new Date().valueOf() &&
-        (x.status === "demande" || x.status === "confirm")
-    );
-  let currentRdvText;
-  if (currentRdv) {
-    if (currentRdv.status === "demande") {
-      if (String(currentRdv.creator._id) !== String(user.user._id)) {
-        currentRdvText = <Text style={styles.currentRdvText}>Vous avez une demande de rendez-vous</Text>
-      } else {
-        currentRdvText = <Text style={styles.currentRdvText}>En attente de la réponse</Text>
-      }
-    } else {
-      currentRdvText = <Text style={styles.currentRdvText}>Vous avez un rendez-vous</Text>
-    }
-  }
-  const currentRdvHTML = (
-        <TouchableOpacity style={styles.currentRdvContainer} onPress={() => {
-          navigation.navigate("RdvScreen",  currentRdv)
-        }}
-          disabled={modalBlockVisible}
-        >
-          <View style={styles.rightIcon}>
+	const user = useSelector((state) => state.user.value);
+	const insets = useSafeAreaInsets();
+	const dispatch = useDispatch();
+	const keyboard = useAnimatedKeyboard();
+	const keyboardStyleScroll = useAnimatedStyle(() => ({
+		height: keyboard.state.value === 1 ? 250 : 0,
+		opacity: 0,
+	}));
+	const keyboardStyleBottom = useAnimatedStyle(() => ({
+		height: keyboard.state.value === 0 ? 66 : Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66,
+	}));
+	const [newMessage, setNewMessage] = useState("");
+	const [sendDisabled, setSendDisabled] = useState(false);
+	const [modalBlockVisible, setModalBlockVisible] = useState(false);
+	const [blockDisabled, setBlockDisabled] = useState(false);
 
-          </View>
-          {currentRdvText}
-          <AntDesign
-            name="right"
-            size={24}
-            color="#F5EBE6"
-            style={styles.rightIcon}
-          />
-        </TouchableOpacity>
-      );
-  const messagesHTML = messageList.map((message, index) => {
-    let date;
-    const messageDate = dayjs(message.date);
-    if (
-      index === 0 ||
-      messageDate.valueOf() - new Date(messageList[index - 1].date).valueOf() >=
-        5 * 60 * 1000
-    ) {
-      if (
-        currentDate.format("DD/MM/YYYY") === messageDate.format("DD/MM/YYYY")
-      ) {
-        date = messageDate.format("HH:mm");
-      } else {
-        date = `le ${messageDate.format("DD/MM/YYYY")} à ${messageDate.format(
-          "HH:mm"
-        )}`;
-      }
-    }
-    return (
-      <View
-        key={message.date}
-        style={[
-          styles.messageDiv,
-          {
-            alignItems:
-              otherUserNumber === message.creator ? "flex-start" : "flex-end",
-          },
-        ]}
-      >
-        {date && <Text style={styles.messageDate}>{date}</Text>}
-        <View
-          style={[
-            styles.messageContentContainer,
-            {
-              backgroundColor:
-                otherUserNumber === message.creator ? "#BC8D85" : "#965A51",
-            },
-          ]}
-        >
-          <Text style={styles.messageContent}>{message.content}</Text>
-        </View>
-        {index === lastOwnSeenMessageIndex && <Text style={styles.vu}>Vu</Text>}
-      </View>
-    );
-  });
-  const sendMessage = async () => {
-    setSendDisabled(true);
-    if (newMessage === "") {
-      setSendDisabled(false);
-      return;
-    }
-    const newMessageContent = newMessage;
-    setNewMessage("");
-    await fetch(process.env.EXPO_PUBLIC_IP + "/conversation/message", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: user.token,
-      },
-      body: JSON.stringify({
-        content: newMessageContent,
-        conversationId: route.params._id,
-      }),
-    });
-    setSendDisabled(false);
-  };
-  const modalBlock = (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalBlockVisible}
-      onRequestClose={() => {
-        setModalBlockVisible(false);
-      }}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalBlock}>
-          <Pressable
-            style={styles.crossModalDiv}
-            onPress={() => setModalBlockVisible(false)}
-          >
-            <FontAwesome6 name="xmark" size={24} style={styles.crossModal} />
-          </Pressable>
-          <Text style={styles.modalTitle}>Bloquer l'utilisateur</Text>
-          <Text style={styles.modalText}>Cette action est irreversible.</Text>
-          <TouchableOpacity
-            style={styles.buttonModal}
-            disabled={blockDisabled}
-            onPress={() => blockUser()}
-          >
-            <Text style={styles.buttonText}>Confirmer</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
-  );
-  const blockUser = async () => {
-    setBlockDisabled(true);
-    const response = await fetch(
-      process.env.EXPO_PUBLIC_IP + "/conversation/" + route.params._id,
-      {
-        method: "DELETE",
-        headers: {
-          authorization: user.token,
-        },
-      }
-    );
-    const data = await response.json();
-    setBlockDisabled(false);
-    setModalBlockVisible(false);
-  };
-  return (
+	// Ferme le clavier quand l'écran perd le focus
+	useFocusEffect(
+		useCallback(() => {
+			// Quand l'écran reçoit le focus, pas besoin d'action spéciale
+
+			// Quand l'écran perd le focus, fermer le clavier
+			return () => {
+				Keyboard.dismiss();
+			};
+		}, [])
+	);
+
+	// Ferme le clavier avant la navigation
+	useEffect(() => {
+		const unsubscribe = navigation.addListener("beforeRemove", () => {
+			Keyboard.dismiss();
+		});
+
+		return unsubscribe;
+	}, [navigation]);
+
+	const conversation = user.user ? user.user.conversationList.find((x) => String(x._id) === String(route.params._id)) : null;
+	const messageList = conversation?.messageList || [];
+	const otherUserNumber = route.params?.otherUserNumber || 1;
+	useEffect(() => {
+		const lastMessage = messageList.length !== 0 ? messageList[messageList.length - 1] : null;
+		if (lastMessage && lastMessage.creator === otherUserNumber && !lastMessage.seen) {
+			(async () => {
+				await fetch(process.env.EXPO_PUBLIC_IP + "/conversation/" + conversation._id, {
+					method: "PUT",
+					headers: {
+						authorization: user.token,
+					},
+				});
+			})();
+			dispatch(readConv(conversation._id));
+		}
+	}, [messageList]);
+	const scrollViewRef = useRef();
+	const otherUser = otherUserNumber === 2 ? route.params.user2 : route.params.user1;
+	const currentDate = dayjs();
+	const lastOwnSeenMessageIndex = messageList.findLastIndex((x) => x.creator !== otherUserNumber && x.seen === true);
+	const currentRdv =
+		user.user &&
+		user.user.rdvList.find(
+			(x) =>
+				(String(otherUser._id) === String(x.creator._id) || String(otherUser._id) === String(x.receiver._id)) &&
+				new Date(x.date).valueOf() > new Date().valueOf() &&
+				(x.status === "demande" || x.status === "confirm")
+		);
+	let currentRdvText;
+	if (currentRdv) {
+		if (currentRdv.status === "demande") {
+			if (String(currentRdv.creator._id) !== String(user.user._id)) {
+				currentRdvText = <Text style={styles.currentRdvText}>Vous avez une demande de rendez-vous</Text>;
+			} else {
+				currentRdvText = <Text style={styles.currentRdvText}>En attente de la réponse</Text>;
+			}
+		} else {
+			currentRdvText = <Text style={styles.currentRdvText}>Vous avez un rendez-vous</Text>;
+		}
+	}
+	const currentRdvHTML = (
+		<TouchableOpacity
+			style={styles.currentRdvContainer}
+			onPress={() => {
+				navigation.navigate("RdvScreen", currentRdv);
+			}}
+			disabled={modalBlockVisible}
+		>
+			<View style={styles.rightIcon}></View>
+			{currentRdvText}
+			<AntDesign name="right" size={24} color="#F5EBE6" style={styles.rightIcon} />
+		</TouchableOpacity>
+	);
+	const messagesHTML = messageList.map((message, index) => {
+		let date;
+		const messageDate = dayjs(message.date);
+		if (index === 0 || messageDate.valueOf() - new Date(messageList[index - 1].date).valueOf() >= 5 * 60 * 1000) {
+			if (currentDate.format("DD/MM/YYYY") === messageDate.format("DD/MM/YYYY")) {
+				date = messageDate.format("HH:mm");
+			} else {
+				date = `le ${messageDate.format("DD/MM/YYYY")} à ${messageDate.format("HH:mm")}`;
+			}
+		}
+		return (
+			<View
+				key={message.date}
+				style={[
+					styles.messageDiv,
+					{
+						alignItems: otherUserNumber === message.creator ? "flex-start" : "flex-end",
+					},
+				]}
+			>
+				{date && <Text style={styles.messageDate}>{date}</Text>}
+				<View
+					style={[
+						styles.messageContentContainer,
+						{
+							backgroundColor: otherUserNumber === message.creator ? "#BC8D85" : "#965A51",
+						},
+					]}
+				>
+					<Text style={styles.messageContent}>{message.content}</Text>
+				</View>
+				{index === lastOwnSeenMessageIndex && <Text style={styles.vu}>Vu</Text>}
+			</View>
+		);
+	});
+	const sendMessage = async () => {
+		setSendDisabled(true);
+		if (newMessage === "") {
+			setSendDisabled(false);
+			return;
+		}
+		const newMessageContent = newMessage;
+		setNewMessage("");
+		await fetch(process.env.EXPO_PUBLIC_IP + "/conversation/message", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				authorization: user.token,
+			},
+			body: JSON.stringify({
+				content: newMessageContent,
+				conversationId: route.params._id,
+			}),
+		});
+		setSendDisabled(false);
+	};
+	const modalBlock = (
+		<Modal
+			animationType="slide"
+			transparent={true}
+			visible={modalBlockVisible}
+			onRequestClose={() => {
+				setModalBlockVisible(false);
+			}}
+		>
+			<View style={styles.modalContainer}>
+				<View style={styles.modalBlock}>
+					<Pressable style={styles.crossModalDiv} onPress={() => setModalBlockVisible(false)}>
+						<FontAwesome6 name="xmark" size={24} style={styles.crossModal} />
+					</Pressable>
+					<Text style={styles.modalTitle}>Bloquer l'utilisateur</Text>
+					<Text style={styles.modalText}>Cette action est irreversible.</Text>
+					<TouchableOpacity style={styles.buttonModal} disabled={blockDisabled} onPress={() => blockUser()}>
+						<Text style={styles.buttonText}>Confirmer</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+	const blockUser = async () => {
+		setBlockDisabled(true);
+		const response = await fetch(process.env.EXPO_PUBLIC_IP + "/conversation/" + route.params._id, {
+			method: "DELETE",
+			headers: {
+				authorization: user.token,
+			},
+		});
+		const data = await response.json();
+		setBlockDisabled(false);
+		setModalBlockVisible(false);
+	};
+	return (
 		<View style={styles.container}>
 			{modalBlock}
 			<View style={styles.conversationHeader}>
 				<View style={styles.headerLeft}>
-          <TouchableOpacity onPress={() => navigation.goBack()} disabled={modalBlockVisible} style={styles.buttonLeft}>
-            <AntDesign name="left" size={24} color="#965A51"/>
-          </TouchableOpacity>
+					<TouchableOpacity onPress={() => navigation.goBack()} disabled={modalBlockVisible} style={styles.buttonLeft}>
+						<AntDesign name="left" size={24} color="#965A51" />
+					</TouchableOpacity>
 					<View style={styles.avatarContainer}>
 						<TouchableOpacity
 							style={styles.avatarContainer}
@@ -305,7 +290,7 @@ export default function ({ navigation, route }) {
 				)}
 			</Animated.View>
 		</View>
-  );
+	);
 }
 
 const styles = StyleSheet.create({

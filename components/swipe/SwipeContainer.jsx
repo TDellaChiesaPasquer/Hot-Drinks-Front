@@ -14,13 +14,23 @@ import ProfileInformationsScreen from "../../screens/ProfileInformationsScreen";
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
 
-// Icônes de relation
-import ChocolatChaudIcon from "../../assets/images/relationImages/chocolat-chaud.svg";
-import AllongeIcon from "../../assets/images/relationImages/allonge.svg";
-import TheIcon from "../../assets/images/relationImages/the.svg";
-import EspressoIcon from "../../assets/images/relationImages/espresso.svg";
-import RistrettoIcon from "../../assets/images/relationImages/ristretto.svg";
-import MatchaIcon from "../../assets/images/relationImages/matcha.svg";
+// Commentaire des imports d'icônes SVG
+// import ChocolatChaudIcon from "../../assets/images/relationImages/chocolat-chaud.svg";
+// import AllongeIcon from "../../assets/images/relationImages/allonge.svg";
+// import TheIcon from "../../assets/images/relationImages/the.svg";
+// import EspressoIcon from "../../assets/images/relationImages/espresso.svg";
+// import RistrettoIcon from "../../assets/images/relationImages/ristretto.svg";
+// import MatchaIcon from "../../assets/images/relationImages/matcha.svg";
+
+// Import des images PNG
+const relationIcons = {
+	allonge: require("../../assets/images/IconsRelations/allonge.png"),
+	espresso: require("../../assets/images/IconsRelations/espresso.png"),
+	hotChocolate: require("../../assets/images/IconsRelations/hotChocolate.png"),
+	matcha: require("../../assets/images/IconsRelations/matcha.png"),
+	ristretto: require("../../assets/images/IconsRelations/ristretto.png"),
+	the: require("../../assets/images/IconsRelations/the.png"),
+};
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -154,7 +164,7 @@ function formatProfileData(profileData, placeholderSrc) {
 
 				// Assignation de l'âge formaté seulement si c'est un nombre positif valide
 				if (age >= 0) {
-					informationArray[1] = age.toString() + " an" + ((age > 1) ? "s" : "");
+					informationArray[1] = age.toString() + " an" + (age > 1 ? "s" : "");
 				}
 			}
 		} catch (error) {
@@ -193,7 +203,7 @@ function formatProfileData(profileData, placeholderSrc) {
 	return formattedData;
 }
 
-// Normalisation et mapping de l’icône relation
+// Normalisation et mapping de l'icône relation
 function normalizeRelation(value) {
 	return String(value || "")
 		.normalize("NFD")
@@ -202,18 +212,34 @@ function normalizeRelation(value) {
 		.trim();
 }
 
-function getRelationIconComponent(relationship) {
+// Nouvelle fonction pour obtenir l'image PNG selon la relation
+function getRelationIconSource(relationship) {
 	const key = normalizeRelation(relationship);
 	if (!key) return null;
-	// Quelques alias courants (accents/casse déjà gérés par normalize)
-	if (key === "chocolat chaud") return ChocolatChaudIcon;
-	if (key === "allonge") return AllongeIcon;
-	if (key === "the") return TheIcon;
-	if (key === "expresso") return EspressoIcon;
-	if (key === "ristretto") return RistrettoIcon;
-	if (key === "matcha") return MatchaIcon;
+
+	// Mapping des types de relation vers les fichiers PNG
+	if (key === "chocolat chaud") return relationIcons.hotChocolate;
+	if (key === "allonge") return relationIcons.allonge;
+	if (key === "the") return relationIcons.the;
+	if (key === "expresso") return relationIcons.espresso;
+	if (key === "ristretto") return relationIcons.ristretto;
+	if (key === "matcha") return relationIcons.matcha;
 	return null;
 }
+
+// Commentaire de la fonction des SVG
+// function getRelationIconComponent(relationship) {
+// 	const key = normalizeRelation(relationship);
+// 	if (!key) return null;
+// 	// Quelques alias courants (accents/casse déjà gérés par normalize)
+// 	if (key === "chocolat chaud") return ChocolatChaudIcon;
+// 	if (key === "allonge") return AllongeIcon;
+// 	if (key === "the") return TheIcon;
+// 	if (key === "expresso") return EspressoIcon;
+// 	if (key === "ristretto") return RistrettoIcon;
+// 	if (key === "matcha") return MatchaIcon;
+// 	return null;
+// }
 
 export default function SwipeContainer(props) {
 	const navigation = useNavigation();
@@ -230,8 +256,8 @@ export default function SwipeContainer(props) {
 	// Déterminer la couleur du texte en fonction de isPlaceholder
 	const textColor = isPlaceholder ? "black" : "white";
 
-	// Icône relation
-	const RelationIcon = getRelationIconComponent(profileData?.relationship);
+	// Obtenir la source de l'icône relation
+	const relationIconSource = getRelationIconSource(profileData?.relationship);
 
 	// Navigation vers la page d'infos avec passage des goûts
 	function goToProfileInformations() {
@@ -280,11 +306,17 @@ export default function SwipeContainer(props) {
 				</View>
 			</View>
 
-			{/* Icône de relation – juste au-dessus du bouton flottant */}
-			{RelationIcon && (
+			{/* Commentaire de l'ancienne utilisation des icônes SVG */}
+			{/* {RelationIcon && (
 				<View style={styles.relationIconContainer} pointerEvents="box-none">
-					{/* Icône seule, sans texte */}
 					<RelationIcon width={56} height={56} />
+				</View>
+			)} */}
+
+			{/* Utilisation des images PNG pour les icônes de relation */}
+			{relationIconSource && (
+				<View style={styles.relationIconContainer} pointerEvents="box-none">
+					<Image source={relationIconSource} style={{ width: 56, height: 56 }} contentFit="contain" />
 				</View>
 			)}
 
