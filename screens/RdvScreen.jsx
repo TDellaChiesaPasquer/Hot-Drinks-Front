@@ -110,16 +110,16 @@ export default function RdvScreen({ navigation, route }) {
             <TouchableOpacity
               style={styles.demandeButton}
               disabled={Boolean(statusDemande)}
-              onPress={() => acceptDemande()}
+              onPress={() => refuseDemande()}
             >
-              <Text style={styles.demandeButtonText}>Accepter</Text>
+              <Text style={styles.demandeButtonText}>Refuser</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.demandeButton}
               disabled={Boolean(statusDemande)}
-              onPress={() => refuseDemande()}
+              onPress={() => acceptDemande()}
             >
-              <Text style={styles.demandeButtonText}>Refuser</Text>
+              <Text style={styles.demandeButtonText}>Accepter</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -141,9 +141,9 @@ export default function RdvScreen({ navigation, route }) {
       </>
     );
   } else if (rdv.status === "cancel") {
-    statusBloc = <Text style={styles.statusText}>Refusé</Text>;
-  } else {
     statusBloc = <Text style={styles.statusText}>Annulé</Text>;
+  } else {
+    statusBloc = <Text style={styles.statusText}>Refusé</Text>;
   }
   return (
     <View style={styles.container}>
@@ -226,7 +226,7 @@ export default function RdvScreen({ navigation, route }) {
         </View>
       </View>
       <View style={styles.rdv}>
-        <Text style={styles.textRdv}>
+        <Text style={styles.textDay}>
           {
             [
               "Dimanche",
