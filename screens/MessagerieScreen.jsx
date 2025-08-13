@@ -160,14 +160,15 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		paddingHorizontal: width * 0.05,
 		gap: 10,
-		height: 82,
+    paddingTop: 8,
+		height: 90,
 	},
 	contactScroll: {
 		width: "100%",
 	},
 	scrollHeight: {
 		width: width,
-		height: 82,
+		height: 90,
 		marginTop: 5,
 	},
 	conversationList: {

@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { capitalize } from "../Utils/utils.js";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -11,20 +12,29 @@ const SURFACE_BG = "#F5EBE6";
 const CARD_BG = "#BC8D85";
 
 
-function InfoItem({ label, value }) {
-	return (
-		<View style={styles.infoItem}>
-			<Text style={styles.infoLabel}>{label}</Text>
-			<Text style={styles.infoValue}>{value}</Text>
-		</View>
-	);
-}
+const PrefRow = ({ icon, label, value }) => (
+	<View style={styles.prefRow}>
+		{icon ? <FontAwesome name={icon} size={14} color="#965A51" style={styles.prefIcon} /> : null}
+		<Text style={styles.prefLabel}>{label}</Text>
+		<Text style={styles.prefValue}>{value}</Text>
+	</View>
+);
 
 const EmptyItems = ({ username }) => (
 	<View style={styles.emptyState}>
 		<Text style={styles.emptyText}>{username || "Ce profil"} n'a pas encore indiqué ses préférences...</Text>
 	</View>
 );
+
+function InfoItem({ label, value }) {
+	// return (
+	// 	<View style={styles.infoItem}>
+	// 		<Text style={styles.infoLabel}>{label}</Text>
+	// 		<Text style={styles.infoValue}>{value}</Text>
+	// 	</View>
+	// );
+	return <PrefRow icon="heart" label={label} value={value} />;
+}
 
 // Fonction pour calculer l'âge à partir de la date de naissance
 function calculateAge(birthdate) {
@@ -41,7 +51,30 @@ function calculateAge(birthdate) {
 }
 
 const isValidDistance = (distance) => {
-	return distance !== undefined && distance !== null && distance.trim().toLowerCase() !== "nan";
+	return distance !== undefined && distance !== null && String(distance).trim().toLowerCase() !== "nan";
+};
+
+// Sous-composant: username + age (âge un peu plus grand) + distance à droite
+const HeaderBasics = ({ username, age, distance }) => {
+	const ageIsNumber = typeof age === "number" && !isNaN(age);
+	const ageText = ageIsNumber ? `${age} an${age > 1 ? "s" : ""}` : "?";
+	return (
+		<View style={styles.headerBasics}>
+			<View style={styles.headerTopRow}>
+				<View style={styles.nameAgeRow}>
+					<Text style={styles.nameText}>{username.trim()+", "}</Text>
+					<Text style={styles.ageText}>{ageText}</Text>
+				</View>
+
+				{isValidDistance(distance) && (
+					<View style={styles.distanceRight}>
+						<FontAwesome name="map-marker" size={14} color="#965A51" style={styles.distanceIcon} />
+						<Text style={styles.distanceText}>{distance}</Text>
+					</View>
+				)}
+			</View>
+		</View>
+	);
 };
 
 export default function SwipeProfileInformations() {
@@ -50,7 +83,7 @@ export default function SwipeProfileInformations() {
 
 	// Récupération de TOUTES les données du profil
 	const profileData = route?.params?.profileData || {};
-	const { username = "Anonyme", birthdate, gender = "Non spécifié", orientation = "Non spécifié", relationship = "Non spécifié", distance = "Distance inconnue", tastesList = [] } = profileData;
+	const { username = "Anonyme", birthdate, gender = "Non spécifié", orientation = "Non spécifié", relationship = "Non spécifié", distance, tastesList = [] } = profileData;
 
 	// Calcul de l'âge
 	const age = calculateAge(birthdate) || "?";
@@ -65,34 +98,29 @@ export default function SwipeProfileInformations() {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Informations du profil</Text>
-
-			{/* Bouton de retour (flèche gauche) */}
-			<View style={styles.backButtonWrapper}>
-				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton} activeOpacity={0.8}>
-					<FontAwesome name="arrow-left" size={20} color="#000" />
-				</TouchableOpacity>
-			</View>
+      <View style={styles.top}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
+          <AntDesign name="left" size={24} color="#965A51"/>
+        </TouchableOpacity>
+			  <Text style={styles.title}>Informations du profil</Text>
+        <View style={styles.buttonLeft}></View>
+      </View>
 
 			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper} alwaysBounceVertical={true}>
 				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" />
 
-				{/* Informations de base */}
+				{/* Infos basiques et préférences (sans cadre) */}
 				<View style={styles.infoSection}>
-					<Text style={styles.sectionTitle}>Informations</Text>
+					<HeaderBasics username={username} age={age} distance={distance} />
 
-					<InfoItem label="Nom" value={username} />
-					<InfoItem label="Âge" value={`${age} ans`} />
-					<InfoItem label="Genre" value={gender} />
-					<InfoItem label="Recherche" value={orientation} />
-					<InfoItem label="Type de relation" value={relationship} />
-
-					{isValidDistance(profileData.distance) && <InfoItem label="Distance" value={profileData.distance} />}
+					<PrefRow icon="venus-mars" label="Genre" value={capitalize(gender)} />
+					<PrefRow icon="search" label="Recherche" value={capitalize(orientation)} />
+					<PrefRow icon="heart" label="Type de relation" value={capitalize(relationship)} />
 				</View>
 
-				{/* Goûts et préférences */}
+				{/* Goûts */}
 				<View style={styles.infoSection}>
-					<Text style={styles.sectionTitle}>Goûts et préférences</Text>
+					<Text style={styles.sectionTitle}>Goûts</Text>
 
 					{tastesList.length === 0 ? (
 						<EmptyItems username={username} />
@@ -112,11 +140,10 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	title: {
-		fontSize: 20,
 		alignItems: "center",
 		color: "#965A51",
 		fontWeight: "bold",
-		fontSize: 18,
+		fontSize: 20,
 		marginVertical: 10,
 	},
 	wrapper: {
@@ -151,19 +178,97 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		marginTop: 20,
 		borderRadius: 12,
+		boxShadow: "0 2px 3px #896761",
 	},
-	// Styles pour les sections et items
+
+	// Sections
 	infoSection: {
 		marginTop: 20,
 		marginBottom: 30,
 		width: "100%",
 	},
 	sectionTitle: {
-		fontSize: 18,
+		fontSize: 20,
 		fontWeight: "bold",
 		color: "#965A51",
-		marginBottom: 15,
+		marginBottom: 12,
 	},
+
+	// Header (username + âge + distance à droite)
+	headerBasics: {
+		marginBottom: 10,
+	},
+	headerTopRow: {
+		flexDirection: "row",
+		alignItems: "flex-end",
+		justifyContent: "space-between",
+	},
+	nameAgeRow: {
+		flexDirection: "row",
+		alignItems: "flex-end",
+		flexWrap: "wrap",
+		flexShrink: 1,
+	},
+	nameText: {
+		color: "#965A51",
+		fontSize: 26,
+		fontWeight: "800",
+		lineHeight: 28,
+	},
+	ageText: {
+		color: "#965A51",
+		opacity: 0.8,
+		fontSize: 18,
+		fontWeight: "700",
+		lineHeight: 26,
+		marginLeft: 6,
+	},
+
+	// Distance alignée à droite
+	distanceRight: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginLeft: 16,
+	},
+	distanceIcon: {
+		marginRight: 6,
+	},
+	distanceText: {
+		color: "#965A51",
+		fontSize: 16,
+		fontWeight: "800",
+		opacity: 0.9,
+		textAlign: "right",
+	},
+
+	// Lignes d'infos (préférences)
+	prefRow: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		marginTop: 10,
+		paddingVertical: 4,
+	},
+	prefIcon: {
+		marginRight: 10,
+	},
+	prefLabel: {
+		color: "#965A51",
+		opacity: 0.7,
+		fontSize: 15,
+		fontWeight: "600",
+		flexShrink: 0,
+		marginRight: 8,
+	},
+	prefValue: {
+		color: "#965A51",
+		fontSize: 17,
+		fontWeight: "800",
+		flex: 1,
+		textAlign: "right",
+	},
+
+	// Goûts
 	infoItem: {
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -172,17 +277,20 @@ const styles = StyleSheet.create({
 		borderRadius: 15,
 		padding: 15,
 		marginBottom: 10,
+		boxShadow: "0 2px 3px #896761",
 	},
 	infoLabel: {
-		fontSize: 14,
+		fontSize: 16,
 		fontWeight: "bold",
 		color: SURFACE_BG,
 	},
 	infoValue: {
-		fontSize: 14,
+		fontSize: 16,
 		color: SURFACE_BG,
 		fontWeight: "500",
 	},
+
+	// Empty state
 	emptyState: {
 		padding: 20,
 		alignItems: "center",
@@ -194,7 +302,22 @@ const styles = StyleSheet.create({
 	emptyText: {
 		color: "#965A51",
 		textAlign: "center",
-		fontSize: 16,
+		fontSize: 18,
 		fontWeight: "600",
 	},
+  buttonLeft: {
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  top: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%'
+  }
 });
+
+
