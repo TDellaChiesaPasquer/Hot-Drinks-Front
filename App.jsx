@@ -8,6 +8,13 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faCoffee,
+  faUser,
+  faCalendar,
+} from "@fortawesome/free-solid-svg-icons";
 
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -58,6 +65,9 @@ const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }),
 });
 const persistor = persistStore(store);
+
+// Initialiser la bibliothèque FontAwesome avec les icônes nécessaires
+library.add(faCoffee, faUser, faCalendar);
 
 const Stack = createNativeStackNavigator();
 const StackSwipe = createNativeStackNavigator();
@@ -149,12 +159,14 @@ const MainTabNav = () => {
         receiveMatch(e, token, dispatch);
       });
       channel.bind("newRdv", (e) => receiveNewRdv(e, token, dispatch));
+      channel.bind("rdv", (e) => receiveNewRdv(e, token, dispatch));
 
       return () => {
         channel.unbind("newMessage");
         channel.unbind("block");
         channel.unbind("match");
         channel.unbind("newRdv");
+        channel.unbind("rdv");
       };
     }
   }, [userId]);
@@ -181,32 +193,37 @@ const MainTabNav = () => {
 
   return (
     <SafeAreaView style={styles.tabBarNavContainer} edges={["top"]}>
-      {modalModificationCheck}
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarStyle: styles.tabBar,
           header: ({ route }) => {
             return <HeaderMain route={route} />;
           },
-          tabBarIcon: ({ color, size }) => {
+          tabBarIcon: ({ color }) => {
             let icon;
             if (route.name === "MessagerieNav") {
               icon = (
                 <MaterialCommunityIcons
-                  name="message-outline"
+                  name="message"
                   size={30}
                   color={color}
                 />
               );
             } else if (route.name === "MyProfileNav") {
-              icon = <Feather name="user" size={30} color={color} />;
+              icon = <FontAwesomeIcon icon={faUser} size={30} color={color} />;
             } else if (route.name === "SwipeNav") {
-              icon = <Feather name="coffee" size={30} color={color} />;
+              icon = (
+                <FontAwesomeIcon icon={faCoffee} size={30} color={color} />
+              );
             } else {
-              icon = <Feather name="calendar" size={28} color={color} />;
+              icon = (
+                <FontAwesomeIcon icon={faCalendar} size={28} color={color} />
+              );
             }
             return icon;
           },
+          tabBarActiveTintColor: "#965A51",
+          tabBarInactiveTintColor: "#BC8D85",
           tabBarActiveTintColor: "#965A51",
           tabBarInactiveTintColor: "#BC8D85",
           tabBarShowLabel: false,
