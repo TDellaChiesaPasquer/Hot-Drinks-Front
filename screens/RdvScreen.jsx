@@ -141,13 +141,12 @@ export default function RdvScreen({ navigation, route }) {
     <View style={styles.container}>
       <View style={styles.conversationHeader}>
         <View style={styles.headerLeft}>
-          <AntDesign
-            name="left"
-            size={24}
-            color="#965A51"
-            style={styles.goBack}
+          <TouchableOpacity
             onPress={() => navigation.goBack()}
-          />
+            style={styles.buttonLeft}
+          >
+            <AntDesign name="left" size={24} color="#965A51" />
+          </TouchableOpacity>
           <View style={styles.avatarContainer}>
             <Image
               style={styles.avatar}
@@ -299,5 +298,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     color: "#F5EBE6",
+  },
+  buttonLeft: {
+    height: 50,
+    width: 50,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -131,23 +131,36 @@ function formatProfileData(profileData, placeholderSrc) {
 	}
 
 	// === ÉTAPE 6: Calcul et formatage de l'âge ===
-	// Fonctionne pour vraies données ET mock data avec birthdate
+	// Initialisation de l'âge avec "?" par défaut
+	informationArray[1] = "?";
+
+	// Calcul de l'âge si la date de naissance est disponible
 	if (profileData.birthdate) {
-		// Création des objets Date pour le calcul
-		const birthDate = new Date(profileData.birthdate);
-		const today = new Date();
+		try {
+			// Création des objets Date pour le calcul
+			const birthDate = new Date(profileData.birthdate);
+			const today = new Date();
 
-		// Calcul de l'âge de base (différence d'années)
-		let age = today.getFullYear() - birthDate.getFullYear();
+			// Validation simple de la date (pour éviter les dates futures ou trop anciennes)
+			if (birthDate <= today && birthDate.getFullYear() > 1900) {
+				// Calcul de l'âge de base (différence d'années)
+				let age = today.getFullYear() - birthDate.getFullYear();
 
-		// Ajustement si l'anniversaire n'a pas encore eu lieu cette année
-		const monthDiff = today.getMonth() - birthDate.getMonth();
-		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-			age = age - 1;
+				// Ajustement si l'anniversaire n'a pas encore eu lieu cette année
+				const monthDiff = today.getMonth() - birthDate.getMonth();
+				if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+					age = age - 1;
+				}
+
+				// Assignation de l'âge formaté seulement si c'est un nombre positif valide
+				if (age >= 0) {
+					informationArray[1] = age.toString() + " an" + ((age > 1) ? "s" : "");
+				}
+			}
+		} catch (error) {
+			console.log("Erreur lors du calcul de l'âge:", error);
+			// En cas d'erreur, l'âge reste "?"
 		}
-
-		// Assignation de l'âge formaté
-		informationArray[1] = age.toString();
 	}
 
 	// === ÉTAPE 7: Traitement de la distance ===
