@@ -20,12 +20,12 @@ export default function ({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const keyboard = useAnimatedKeyboard();
-  const keyboardStyleBottom = useAnimatedStyle(() => ({
-    height: Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66,
-  }));
   const keyboardStyleScroll = useAnimatedStyle(() => ({
     height: keyboard.state.value === 1 ? 250 : 0,
     opacity: 0
+  }));
+  const keyboardStyleBottom = useAnimatedStyle(() => ({
+    height: keyboard.state.value === 0 ? 66 : Math.max(0, keyboard.height.value - (49 + insets.bottom)) + 66,
   }));
   const [newMessage, setNewMessage] = useState("");
   const [sendDisabled, setSendDisabled] = useState(false);

@@ -99,7 +99,7 @@ export default function ({ navigation }) {
       setDisabled(false);
       return;
     }
-    if (username.length > 40) {
+    if (username.length > 20) {
       setError("Votre username ne peut pas faire plus de 40 caractères");
       setDisabled(false);
       return;
@@ -158,7 +158,7 @@ export default function ({ navigation }) {
             placeholderTextColor={"#965A51"}
             value={username}
             onChangeText={(value) => setUsername(value)}
-            maxLength={40}
+            maxLength={20}
           />
           <View style={styles.bottom}>
             <Text style={styles.error}>{error}</Text>

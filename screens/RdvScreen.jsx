@@ -95,6 +95,7 @@ export default function RdvScreen({ navigation, route }) {
     }
   };
 
+<<<<<<< HEAD
   if (rdv.status === "demande") {
     if (isCreator) {
       statusBloc = (
@@ -257,6 +258,115 @@ export default function RdvScreen({ navigation, route }) {
       {statusBloc}
     </View>
   );
+=======
+	if (rdv.status === "demande") {
+		if (isCreator) {
+			statusBloc = <Text style={styles.statusText}>En attente d'une réponse</Text>;
+		} else {
+			statusBloc = (
+				<>
+					<Text style={styles.statusText}>Veuillez répondre à la demande :</Text>
+					<View style={styles.demandeContainer}>
+						<TouchableOpacity style={styles.demandeButton} disabled={Boolean(statusDemande)} onPress={() => acceptDemande()}>
+							<Text style={styles.demandeButtonText}>Accepter</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.demandeButton} disabled={Boolean(statusDemande)} onPress={() => refuseDemande()}>
+							<Text style={styles.demandeButtonText}>Refuser</Text>
+						</TouchableOpacity>
+					</View>
+				</>
+			);
+		}
+	} else if (rdv.status === "confirm") {
+		statusBloc = (
+			<>
+				<Text style={styles.statusText}>Confirmé</Text>
+				<View style={styles.demandeContainer}>
+					<TouchableOpacity style={styles.demandeButton} disabled={Boolean(statusCancel)} onPress={() => cancelRdv()}>
+						<Text style={styles.demandeButtonText}>Annuler</Text>
+					</TouchableOpacity>
+				</View>
+			</>
+		);
+	} else if (rdv.status === "cancel") {
+		statusBloc = <Text style={styles.statusText}>Annulé</Text>;
+	} else {
+		statusBloc = <Text style={styles.statusText}>Refusé</Text>;
+	}
+	return (
+		<View style={styles.container}>
+			<Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
+				<View style={styles.centeredView}>
+					<View style={styles.modalView}>
+						<Text style={styles.modalText}>Es-tu sûr(e) de vouloir annuler ce rendez-vous ?</Text>
+						<View style={styles.modalButtons}>
+							<TouchableOpacity style={[styles.modalButton, styles.buttonCancel]} onPress={() => setModalVisible(false)}>
+								<Text style={styles.textStyle}>Non</Text>
+							</TouchableOpacity>
+							<TouchableOpacity style={[styles.modalButton, styles.buttonConfirm]} onPress={confirmCancel}>
+								<Text style={styles.textStyle}>Oui</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+			</Modal>
+			<View style={styles.conversationHeader}>
+				<View style={styles.headerLeft}>
+					<TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
+						<AntDesign name="left" size={24} color="#965A51" />
+					</TouchableOpacity>
+					<View style={styles.avatarContainer}>
+						<TouchableOpacity
+							style={styles.avatarContainer}
+							onPress={() => {
+								// Navigation vers ProfileInformationsScreen avec les données du profil sans la distance
+								if (rdv && otherUser) {
+									const profileData = { ...otherUser };
+									// S'assurer que la distance n'est pas incluse
+									navigation.navigate("ProfileInformationsScreen", {
+										profileData: profileData,
+										firstImage: otherUser.photoList.length === 0 ? null : otherUser.photoList[0],
+									});
+								}
+							}}
+						>
+							<Image style={styles.avatar} source={rdv ? (otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]) : null} />
+						</TouchableOpacity>
+					</View>
+					<Text style={styles.username}>{rdv ? otherUser.username.length > 12 ? otherUser.username.slice(0, 9) + '...' : otherUser.username : null}</Text>
+				</View>
+				<View style={styles.headerRight}>
+					<Text style={styles.textTitle}>RENDEZ-VOUS</Text>
+				</View>
+			</View>
+			<View style={styles.rdv}>
+				<Text style={styles.textRdv}>
+					{["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"][rdvDate.get("day")]} {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
+				</Text>
+				<Text style={styles.textRdv}>{rdv.address}</Text>
+			</View>
+			<View style={styles.containerRadius}>
+				<MapView
+					initialRegion={{
+						latitude: rdv.latitude,
+						longitude: rdv.longitude,
+						latitudeDelta: 0.05,
+						longitudeDelta: 0.05,
+					}}
+					style={styles.map}
+				>
+					<Marker
+						coordinate={{
+							latitude: rdv.latitude,
+							longitude: rdv.longitude,
+						}}
+					/>
+				</MapView>
+			</View>
+			{statusBloc}
+		</View>
+	);
+>>>>>>> 1079f10bb48ea263cdda9be40647a8d3ec18eca7
 }
 const styles = StyleSheet.create({
   container: {
