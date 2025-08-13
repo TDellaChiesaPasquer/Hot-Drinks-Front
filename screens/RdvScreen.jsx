@@ -145,16 +145,6 @@ export default function RdvScreen({ navigation, route }) {
             <AntDesign name="left" size={24} color="#965A51"/>
           </TouchableOpacity>
           <View style={styles.avatarContainer}>
-            <Image
-              style={styles.avatar}
-              source={
-                rdv
-                  ? otherUser.photoList.length === 0
-                    ? ""
-                    : otherUser.photoList[0]
-                  : null
-              }
-            />
 						<TouchableOpacity
 							style={styles.avatarContainer}
 							onPress={() => {
