@@ -10,25 +10,24 @@ import {
   ScrollView,
 } from "react-native";
 import { Image } from "expo-image";
-import MapView from "react-native-maps";
-import { Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useRef, useCallback } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 const { width, height } = Dimensions.get("window");
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from '@expo/vector-icons/Feather';
+
 
 export default function ListRdvScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
-  const rdvList = (user.user && user.user.rdvList) || [];
+  const rdvList = [...(user.user && user.user.rdvList) || []];
+  rdvList.sort((a, b) => (new Date(b.date)).valueOf() - (new Date(a.date)).valueOf());
   const rdvHTML = rdvList.map((rdv) => {
     const otherUser =
       String(rdv.creator._id) === String(user.user._id)
         ? rdv.receiver
         : rdv.creator;
     const rdvDate = dayjs(rdv.date);
+    const notif = rdv.status === 'demande' && String(rdv.creator._id) !== String(user.user._id);
     return (
       <TouchableOpacity
         key={rdv._id}
@@ -73,6 +72,9 @@ export default function ListRdvScreen({ navigation }) {
             {rdvDate.format("DD/MM/YYYY")} à {rdvDate.format("HH:mm")}
           </Text>
         </View>
+        {notif && <View style={styles.notif}></View>}
+        {rdv.status === 'confirm' && <AntDesign name="check" size={24} color="lightgreen" style={styles.iconStatus}/>}
+        {(rdv.status === 'cancel' || rdv.status === 'refused') && <Feather name="x" size={24} color="red" style={styles.iconStatus}/>}
       </TouchableOpacity>
     );
   });
@@ -142,4 +144,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 12,
   },
+  notif: {
+    position: "absolute",
+    width: 10,
+    height: 10,
+    borderRadius: 10,
+    backgroundColor: "#FFF5F0",
+    right: 25,
+  },
+  iconStatus: {
+    position: "absolute",
+    right: 25,
+  }
 });
