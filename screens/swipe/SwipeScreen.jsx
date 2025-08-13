@@ -14,6 +14,7 @@ import { newSuperlike } from "../../reducers/user";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const maxNumberOfCards = 10;
+const enTest = false;
 
 export default function SwipeScreen(props) {
 	const swiperReference = useRef(null);
@@ -56,7 +57,9 @@ export default function SwipeScreen(props) {
 	}, []);
 
 	function fetchProfilesFromAPI() {
-		fetch(process.env.EXPO_PUBLIC_IP + "/profils/profil", {
+		let profil = "profil";
+		if (enTest) profil = "profilTMP";
+		fetch(process.env.EXPO_PUBLIC_IP + "/profils/" + profil, {
 			headers: {
 				"Content-Type": "application/json",
 				authorization: userToken,
