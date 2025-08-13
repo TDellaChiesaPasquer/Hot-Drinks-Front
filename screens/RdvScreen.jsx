@@ -20,6 +20,7 @@ const { width, height } = Dimensions.get("window");
 export default function RdvScreen({ navigation, route }) {
   const [statusDemande, setStatusDemande] = useState("");
   const [statusCancel, setStatusCancel] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
   const user = useSelector((state) => state.user.value);
   const rdv = user.user
     ? user.user.rdvList.find((x) => String(x._id) === String(route.params._id))
@@ -70,7 +71,12 @@ export default function RdvScreen({ navigation, route }) {
     }
   };
 
-  const cancelRdv = async () => {
+  const cancelRdv = () => {
+    setModalVisible(true);
+  };
+
+  const confirmCancel = async () => {
+    setModalVisible(false);
     setStatusCancel("cancel");
     const response = await fetch(process.env.EXPO_PUBLIC_IP + "/rdv/cancel", {
       method: "PUT",
@@ -141,6 +147,34 @@ export default function RdvScreen({ navigation, route }) {
   }
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Es-tu sûr(e) de vouloir annuler ce rendez-vous ?
+            </Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.buttonCancel]}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.textStyle}>Non</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.buttonConfirm]}
+                onPress={confirmCancel}
+              >
+                <Text style={styles.textStyle}>Oui</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.conversationHeader}>
         <View style={styles.headerLeft}>
           <TouchableOpacity
@@ -339,5 +373,59 @@ const styles = StyleSheet.create({
     width: 50,
     alignItems: "center",
     justifyContent: "center",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#F5EBE6",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: "80%",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    color: "#965A51",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  modalButton: {
+    borderRadius: 15,
+    padding: 10,
+    elevation: 2,
+    width: "45%",
+    alignItems: "center",
+  },
+  buttonCancel: {
+    backgroundColor: "#965A51",
+    opacity: 0.7,
+  },
+  buttonConfirm: {
+    backgroundColor: "#965A51",
+  },
+  textStyle: {
+    color: "#F5EBE6",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 16,
   },
 });
