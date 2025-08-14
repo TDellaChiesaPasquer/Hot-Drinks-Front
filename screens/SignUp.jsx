@@ -46,17 +46,17 @@ export default function ({ navigation }) {
         email === "" ||
         !/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim.test(email)
       ) {
-        setError("Remplissez une email valide");
+        setError("Remplis un email valide");
         setValidateDisabled(false);
         return;
       }
       if (password.length < 8) {
-        setError("Votre mot de passe doit faire au moins 8 caractères");
+        setError("Ton mot de passe doit faire au moins 8 caractères");
         setValidateDisabled(false);
         return;
       }
       if (password.length > 32) {
-        setError("Votre mot de passe doit faire au plus 32 caractères");
+        setError("Ton mot de passe doit faire au plus 32 caractères");
         setValidateDisabled(false);
         return;
       }
