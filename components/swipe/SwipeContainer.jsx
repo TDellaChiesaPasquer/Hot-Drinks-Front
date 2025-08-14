@@ -251,6 +251,7 @@ export default function SwipeContainer(props) {
 				style={styles.caroussel}
 				loop={true}
 				showsButtons
+				paginationStyle={{ bottom: "93%" }}
 				nextButton={<Text style={styles.arrow}>›</Text>}
 				prevButton={<Text style={styles.arrow}>‹</Text>}
 				activeDotColor="white"
@@ -377,7 +378,7 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		backgroundColor: "rgba(150, 90, 81, 0.4)",
 		borderRadius: 10,
-		padding: 5,
+		padding: 3,
 	},
 
 	relationIconContainer: {
@@ -400,7 +401,6 @@ const styles = StyleSheet.create({
 		height: "70%",
 		marginBottom: 8,
 		zIndex: 70,
-
 		width: 50,
 	},
 	fabButton: {
