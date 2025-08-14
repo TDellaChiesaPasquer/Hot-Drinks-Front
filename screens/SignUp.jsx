@@ -167,6 +167,7 @@ export default function ({ navigation }) {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <Text style={styles.hotDrinks}>Hot Drinks</Text>
         {modalEmail}
         <TouchableOpacity
           style={styles.boutonGoogle}
@@ -185,6 +186,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#DFC9B4",
     alignItems: "center",
     justifyContent: "center",
+  },
+  hotDrinks: {
+    fontSize: 60,
+    fontFamily: "Air Travelers Personal Use",
+    fontWeight: "bold",
+    color: "#6A3931",
+    paddingHorizontal: 20,
   },
   bouton: {
     alignItems: "center",
