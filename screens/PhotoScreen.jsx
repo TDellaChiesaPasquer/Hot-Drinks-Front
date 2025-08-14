@@ -87,7 +87,11 @@ export default function ImagePickerScreen({ navigation, route }) {
 		});
 		const data = await response.json();
 		if (data.result) {
-			navigation.navigate("MapScreen");
+      if (route.params && route.params.photoList) {
+        navigation.navigate('MainTabNav', {screen: 'MyProfilNav'});
+      } else {
+			  navigation.navigate("MapScreen");
+      }
 			setDisabled(false);
 			return;
 		}
