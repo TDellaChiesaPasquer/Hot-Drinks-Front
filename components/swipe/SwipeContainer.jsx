@@ -376,6 +376,8 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		fontWeight: "bold",
 		backgroundColor: "rgba(150, 90, 81, 0.4)",
+		borderRadius: 10,
+		padding: 5,
 	},
 
 	relationIconContainer: {
