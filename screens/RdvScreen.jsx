@@ -103,9 +103,7 @@ export default function RdvScreen({ navigation, route }) {
     } else {
       statusBloc = (
         <>
-          <Text style={styles.statusText}>
-            Veuillez répondre à la demande :
-          </Text>
+          <Text style={styles.statusText}>Réponds à la demande :</Text>
           <View style={styles.demandeContainer}>
             <TouchableOpacity
               style={styles.demandeButton}

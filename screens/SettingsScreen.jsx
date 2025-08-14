@@ -150,7 +150,7 @@ export default function ReglagesScreen() {
   const submitChangePassword = async () => {
     if (!guardNetwork()) return;
     if (!currentPassword || !newPassword) {
-      Alert.alert("Champs requis", "Veuillez remplir les deux champs.");
+      Alert.alert("Champs requis", "Merci de remplir les deux champs.");
       return;
     }
     if (
@@ -372,7 +372,7 @@ export default function ReglagesScreen() {
       >
         <Text style={styles.modalWarn}>
           Ton compte sera désactivé et ton profil ne sera plus présenté aux
-          autres utilisateurs. Continuer ?
+          autres utilisateurs. Souhaites-tu continuer ?
         </Text>
         <View style={styles.modalRow}>
           <SecondaryButton

@@ -96,9 +96,7 @@ export default function App({ navigation }) {
 
         // Étape 13 : Erreur lors de la récupération de la position
         console.log("Erreur localisation:", error);
-        setError(
-          "Impossible d'obtenir votre position. Choisissez sur la carte."
-        );
+        setError("Impossible d'obtenir ta position. Choisis sur la carte.");
         setPermission(true);
       });
   }
@@ -118,7 +116,7 @@ export default function App({ navigation }) {
           // Étape 3 : Log et affichage d'une alerte si localisation désactivée
           Alert.alert(
             "Localisation désactivée",
-            "Nous avons besoin de la localisation. Souhaitez-vous l'activer ? Sinon, indiquez votre position manuellement.",
+            "Nous avons besoin de la localisation. Souhaites-tu l'activer ? Sinon, indique ta position manuellement.",
             [
               {
                 text: "Réglages",
@@ -169,7 +167,7 @@ export default function App({ navigation }) {
 
           // Étape 8 : Message d'erreur dans l'UI
           setError(
-            "Veuillez activer la localisation dans les paramètres ou saisir votre position manuellement"
+            "Active ta localisation dans les paramètres ou saisis ta position manuellement"
           );
 
           // Étape 9 : On arrête ici, pas de tentative de récupération de position
@@ -193,9 +191,7 @@ export default function App({ navigation }) {
         } catch (error) {
           // Étape 14 : Gestion des erreurs de récupération
           console.log("Erreur localisation:", error);
-          setError(
-            "Impossible d'obtenir votre position. Choisissez sur la carte."
-          );
+          setError("Impossible d'obtenir ta position. Choisis sur la carte.");
           setPermission(true);
         }
       } else {

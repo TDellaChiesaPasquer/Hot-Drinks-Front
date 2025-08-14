@@ -1,5 +1,13 @@
 import { useState, useCallback, useEffect } from "react";
-import { Button, View, StyleSheet, Dimensions, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  Button,
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -9,243 +17,284 @@ import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
 import HeaderBeginning from "../components/HeaderBeginning";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { updatePhotoList } from "../reducers/user";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ImagePickerScreen({ navigation, route }) {
-	const [photoUriList, setPhotoUriList] = useState([]);
-	const [disabled, setDisabled] = useState(false);
+  const [photoUriList, setPhotoUriList] = useState([]);
+  const [disabled, setDisabled] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
 
-	const user = useSelector((state) => state.user.value);
-	useFocusEffect(
-		useCallback(() => {
-			const onBackPress = () => {
-				return true;
-			};
-			const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => subscription.remove();
+    }, [])
+  );
 
-			return () => subscription.remove();
-		}, [])
-	);
-
-	useFocusEffect(
-		useCallback(() => {
-			if (!route.params || route.params.photoList === undefined) {
-				return;
-			} else {
-				setPhotoUriList(route.params.photoList);
-			}
-		}, [])
-	);
-
-	const addUriToList = (uri) => {
-		const orderedPhotos = [...photoUriList.filter((uri) => uri !== null)];
-		setPhotoUriList([...orderedPhotos, uri]);
-	};
-
-	const removeUriToList = (index) => {
-		setPhotoUriList(photoUriList.filter((e, i) => i !== index));
-	};
-
-	const replaceUriInList = (index, uri) => {
-		setPhotoUriList(photoUriList.map((e, i) => (i === index ? uri : e)));
-	};
-
-	const addedPhoto = [];
-	for (let i = 0; i < 3; i++) {
-		addedPhoto.push(
-			<View key={i} style={styles.containerLine}>
-				<ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i] || ""} index={3 * i} />
-				<ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i + 1] || ""} index={3 * i + 1} />
-				<ImagePickerComponent addUriToList={addUriToList} removeUriToList={removeUriToList} replaceUriInList={replaceUriInList} source={photoUriList[3 * i + 2] || ""} index={3 * i + 2} />
-			</View>
-		);
-	}
-
-	const handleSubmitPhotos = async () => {
-		setDisabled(true);
-		const formData = new FormData();
-		// console.log("click", photo);
-		if (photoUriList.length === 0) {
-			setDisabled(false);
-			return;
-		}
-		for (let i = 0; i < photoUriList.length; i++) {
-			formData.append("photoFromFront" + i, {
-				uri: photoUriList[i],
-				name: "photo.jpg",
-				type: "image/jpeg",
-			});
-		}
-
-		const response = await fetch(process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length, {
-			method: "POST",
-			headers: {
-				authorization: user.token,
-			},
-			body: formData,
-		});
-		const data = await response.json();
-		if (data.result) {
-      if (route.params && route.params.photoList) {
-        navigation.navigate('MainTabNav', {screen: 'MyProfilNav'});
+  useFocusEffect(
+    useCallback(() => {
+      if (!route.params || route.params.photoList === undefined) {
+        return;
       } else {
-			  navigation.navigate("MapScreen");
+        setPhotoUriList(route.params.photoList);
       }
-			setDisabled(false);
-			return;
-		}
-		setDisabled(false);
-	};
+    }, [])
+  );
 
-	return (
-		<SafeAreaProvider>
-			<SafeAreaView style={styles.container}>
-				<HeaderBeginning />
-				{route.params && route.params.photoList && (
-					<TouchableOpacity
-						style={styles.conditionalButton}
-						onPress={() => {
-							navigation.goBack();
-						}}
-					>
-						<AntDesign name="leftcircleo" size={30} color="#965a51c0" style={styles.gobackIcon} />
-					</TouchableOpacity>
-				)}
-				<Text style={styles.inputTitle}>Ajoute au moins une photo</Text>
-				<View>
-					<View style={styles.containerPhoto}>{addedPhoto}</View>
-				</View>
-				<View style={styles.bottomButtons}>
-					<TouchableOpacity style={[styles.validationButton, disabled && styles.boutonDisabled]} onPress={() => handleSubmitPhotos()} disabled={disabled}>
-						<Text style={styles.textValidateButton}>Valider</Text>
-						{disabled && <ActivityIndicator size="small" color="#FFFFFF" style={styles.loader} />}
-					</TouchableOpacity>
-				</View>
-			</SafeAreaView>
-		</SafeAreaProvider>
-	);
+  const addUriToList = (uri) => {
+    const orderedPhotos = [...photoUriList.filter((uri) => uri !== null)];
+    setPhotoUriList([...orderedPhotos, uri]);
+  };
+
+  const removeUriToList = (index) => {
+    setPhotoUriList(photoUriList.filter((e, i) => i !== index));
+  };
+
+  const replaceUriInList = (index, uri) => {
+    setPhotoUriList(photoUriList.map((e, i) => (i === index ? uri : e)));
+  };
+
+  const addedPhoto = [];
+  for (let i = 0; i < 3; i++) {
+    addedPhoto.push(
+      <View key={i} style={styles.containerLine}>
+        <ImagePickerComponent
+          addUriToList={addUriToList}
+          removeUriToList={removeUriToList}
+          replaceUriInList={replaceUriInList}
+          source={photoUriList[3 * i] || ""}
+          index={3 * i}
+        />
+        <ImagePickerComponent
+          addUriToList={addUriToList}
+          removeUriToList={removeUriToList}
+          replaceUriInList={replaceUriInList}
+          source={photoUriList[3 * i + 1] || ""}
+          index={3 * i + 1}
+        />
+        <ImagePickerComponent
+          addUriToList={addUriToList}
+          removeUriToList={removeUriToList}
+          replaceUriInList={replaceUriInList}
+          source={photoUriList[3 * i + 2] || ""}
+          index={3 * i + 2}
+        />
+      </View>
+    );
+  }
+
+  const handleSubmitPhotos = async () => {
+    setDisabled(true);
+    const formData = new FormData();
+    // console.log("click", photo);
+    if (photoUriList.length === 0) {
+      setDisabled(false);
+      return;
+    }
+    for (let i = 0; i < photoUriList.length; i++) {
+      formData.append("photoFromFront" + i, {
+        uri: photoUriList[i],
+        name: "photo.jpg",
+        type: "image/jpeg",
+      });
+    }
+
+    const response = await fetch(
+      process.env.EXPO_PUBLIC_IP + "/users/addPhoto/" + photoUriList.length,
+      {
+        method: "POST",
+        headers: {
+          authorization: user.token,
+        },
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    if (data.result) {
+      if (route.params && route.params.photoList) {
+        dispatch(updatePhotoList(data.photoURLList));
+        navigation.navigate("MainTabNav", { screen: "MyProfilNav" });
+      } else {
+        navigation.navigate("MapScreen");
+      }
+      setDisabled(false);
+      return;
+    }
+    setDisabled(false);
+  };
+
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <HeaderBeginning />
+        {route.params && route.params.photoList && (
+          <TouchableOpacity
+            style={styles.conditionalButton}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <AntDesign
+              name="leftcircleo"
+              size={30}
+              color="#965a51c0"
+              style={styles.gobackIcon}
+            />
+          </TouchableOpacity>
+        )}
+        <Text style={styles.inputTitle}>Ajoute au moins une photo</Text>
+        <View>
+          <View style={styles.containerPhoto}>{addedPhoto}</View>
+        </View>
+        <View style={styles.bottomButtons}>
+          <TouchableOpacity
+            style={[styles.validationButton, disabled && styles.boutonDisabled]}
+            onPress={() => handleSubmitPhotos()}
+            disabled={disabled}
+          >
+            <Text style={styles.textValidateButton}>Valider</Text>
+            {disabled && (
+              <ActivityIndicator
+                size="small"
+                color="#FFFFFF"
+                style={styles.loader}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#DFC9B4",
-		alignItems: "center",
-	},
+  container: {
+    flex: 1,
+    backgroundColor: "#DFC9B4",
+    alignItems: "center",
+  },
 
-	conditionalButton: {
-		// backgroundColor: "red",
-		width: "10%",
-		height: "5%",
-		// flexDirection: "row",
-		// justifyContent: "flex-start",
-		alignSelf: "flex-start",
-		marginLeft: 25,
-	},
-	gobackIcon: {
-		alignSelf: "center",
-		alignContent: "center",
-		marginTop: 4,
-	},
+  conditionalButton: {
+    // backgroundColor: "red",
+    width: "10%",
+    height: "5%",
+    // flexDirection: "row",
+    // justifyContent: "flex-start",
+    alignSelf: "flex-start",
+    marginLeft: 25,
+  },
+  gobackIcon: {
+    alignSelf: "center",
+    alignContent: "center",
+    marginTop: 4,
+  },
 
-	containerPhoto: {
-		width: width * 0.85,
-		height: width * 0.85,
-		alignItems: "center",
-		justifyContent: "space-between",
-		marginTop: 40,
-	},
-	containerLine: {
-		width: "100%",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-	},
+  containerPhoto: {
+    width: width * 0.85,
+    height: width * 0.85,
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 40,
+  },
+  containerLine: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
 
-	addPhotoButton: {
-		backgroundColor: "white",
-		width: 100,
-		height: 100,
-		borderRadius: 10,
-		marginTop: 25,
-	},
+  addPhotoButton: {
+    backgroundColor: "white",
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    marginTop: 25,
+  },
 
-	textButton: {
-		textAlign: "center",
-		paddingTop: 35,
-		fontSize: 30,
-		fontWeight: "light",
-	},
+  textButton: {
+    textAlign: "center",
+    paddingTop: 35,
+    fontSize: 30,
+    fontWeight: "light",
+  },
 
-	addedPhoto: {
-		backgroundColor: "transparent",
-		borderRadius: 10,
-		width: "100%",
-		height: "100%",
-	},
+  addedPhoto: {
+    backgroundColor: "transparent",
+    borderRadius: 10,
+    width: "100%",
+    height: "100%",
+  },
 
-	inputTitle: {
-		color: "#965A51",
-		fontWeight: "bold",
-		marginTop: 100,
-	},
-	bottomButtons: {
-		flex: 1,
-		flexDirection: "row",
-		flexWrap: "wrap",
-		padding: 20,
-		alignItems: "center",
-		justifyContent: "space-evenly",
-		marginBottom: 80,
-	},
-	validationButton: {
-		alignItems: "center",
-		justifyContent: "center",
-		height: 36,
-		borderRadius: 15,
-		boxShadow: "0 2px 3px #896761",
-		width: width * 0.7,
-		backgroundColor: "#965a51c0",
-		margin: 10,
-	},
+  inputTitle: {
+    color: "#965A51",
+    fontWeight: "bold",
+    marginTop: 100,
+  },
+  bottomButtons: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    marginBottom: 80,
+  },
+  validationButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 36,
+    borderRadius: 15,
+    boxShadow: "0 2px 3px #896761",
+    width: width * 0.7,
+    backgroundColor: "#965a51c0",
+    margin: 10,
+  },
 
-	textValidateButton: {
-		textAlign: "center",
-		alignItems: "center",
-		justifyContent: "center",
-		fontWeight: "bold",
-		fontSize: 18,
-		color: "#F5EBE6",
-	},
+  textValidateButton: {
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    fontSize: 18,
+    color: "#F5EBE6",
+  },
 
-	prevButton: {
-		alignItems: "center",
-		justifyContent: "center",
-		height: 36,
-		borderRadius: 15,
-		boxShadow: "0 2px 3px #896761",
-		width: width * 0.1,
-		backgroundColor: "#965a51c0",
-		margin: 10,
-	},
+  prevButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 36,
+    borderRadius: 15,
+    boxShadow: "0 2px 3px #896761",
+    width: width * 0.1,
+    backgroundColor: "#965a51c0",
+    margin: 10,
+  },
 
-	prevTextButton: {
-		textAlign: "center",
-		alignItems: "center",
-		justifyContent: "center",
-		paddingTop: 9,
-		fontWeight: "bold",
-		fontSize: 18,
-		color: "#F5EBE6",
-		paddingBottom: 15,
-	},
-	boutonDisabled: {
-		backgroundColor: "#8b6762c0",
-		boxShadow: "0 1px 2px #976f68c0",
-	},
-	loader: {
-		position: "absolute",
-		left: 10,
-	},
+  prevTextButton: {
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 9,
+    fontWeight: "bold",
+    fontSize: 18,
+    color: "#F5EBE6",
+    paddingBottom: 15,
+  },
+  boutonDisabled: {
+    backgroundColor: "#8b6762c0",
+    boxShadow: "0 1px 2px #976f68c0",
+  },
+  loader: {
+    position: "absolute",
+    left: 10,
+  },
 });

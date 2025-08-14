@@ -90,17 +90,17 @@ export default function ({ navigation }) {
       currentDate.valueOf() - date.valueOf() <
       18 * 365 * 24 * 60 * 60 * 1000
     ) {
-      setError("Vous devez avoir 18 ans ou plus");
+      setError("Tu dois avoir 18 ans ou plus");
       setDisabled(false);
       return;
     }
     if (username === "") {
-      setError("Remplissez un username");
+      setError("Remplis un username");
       setDisabled(false);
       return;
     }
     if (username.length > 20) {
-      setError("Votre username ne peut pas faire plus de 40 caractères");
+      setError("Ton username ne peut pas faire plus de 40 caractères");
       setDisabled(false);
       return;
     }
