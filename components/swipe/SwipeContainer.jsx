@@ -312,7 +312,7 @@ export default function SwipeContainer(props) {
 			</View>
 
 			{relationIconSource && (
-				<View style={styles.relationIconContainer}>
+				<View style={styles.relationIconContainer} pointerEvents="box-none">
 					<Image source={relationIconSource} style={styles.icon} contentFit="contain" />
 				</View>
 			)}
