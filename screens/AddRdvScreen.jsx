@@ -65,7 +65,10 @@ export default function AddRdvScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
       <View style={styles.goLeftContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.buttonLeft}
+        >
           <AntDesign
             name="left"
             size={24}
@@ -128,12 +131,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5EBE6",
     alignItems: "center",
-    justifyContent: 'flex-start'
+    justifyContent: "flex-start",
   },
   containerRadius: {
     height: "70%",
     width: "90%",
-    backgroundColor: "red",
     borderRadius: 30,
     overflow: "hidden",
     boxShadow: "0 2px 3px #896761",
@@ -141,8 +143,6 @@ const styles = StyleSheet.create({
   map: {
     height: "100%",
     width: "100%",
-    // marginHorizontal: 20,
-    // marginTop: 5,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -190,17 +190,17 @@ const styles = StyleSheet.create({
     color: "#965a51c0",
   },
   goLeftContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    width: '90%',
-    height: 50
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    width: "90%",
+    height: 50,
   },
   buttonLeft: {
     height: 50,
     width: 50,
     marginLeft: (24 - 50) / 2,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });

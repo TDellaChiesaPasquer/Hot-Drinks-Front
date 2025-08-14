@@ -111,7 +111,6 @@ export default function App({ navigation }) {
       const { status } = await Location.requestForegroundPermissionsAsync();
 
       if (status === "granted") {
-
         // Étape 2 : Vérifier si les services de localisation sont activés
         const locationEnabled = await Location.hasServicesEnabledAsync();
 
@@ -265,33 +264,37 @@ export default function App({ navigation }) {
     //---------------------------------LOCALISATION INITIALE------------------------------------
     <SafeAreaView style={styles.container}>
       <HeaderBeginning />
-      <Text style={styles.textStyle}>AJOUTE TA POSITION</Text>
-      {permission && (
-        <MapView
-          zoomEnabled={true}
-          // scrollEnabled={true}
-          // showsScale={true}
-          initialRegion={{
-            latitude: 48.88,
-            longitude: 2.3,
-            latitudeDelta: 0.0222,
-            longitudeDelta: 0.0222,
-          }}
-          style={styles.map}
-          onLongPress={(event) => addCityByTouch(event.nativeEvent.coordinate)}
-          disabled={disabled}
-        >
-          {givenPosition && (
-            <Marker
-              coordinate={{
-                latitude: givenPosition.latitude,
-                longitude: givenPosition.longitude,
-              }}
-              pinColor="#78010bff"
-            />
-          )}
-        </MapView>
-      )}
+      <Text style={styles.textStyle}>Ajoute ta position</Text>
+      <View style={styles.containerRadius}>
+        {permission && (
+          <MapView
+            zoomEnabled={true}
+            // scrollEnabled={true}
+            // showsScale={true}
+            initialRegion={{
+              latitude: 48.88,
+              longitude: 2.3,
+              latitudeDelta: 0.0222,
+              longitudeDelta: 0.0222,
+            }}
+            style={styles.map}
+            onLongPress={(event) =>
+              addCityByTouch(event.nativeEvent.coordinate)
+            }
+            disabled={disabled}
+          >
+            {givenPosition && (
+              <Marker
+                coordinate={{
+                  latitude: givenPosition.latitude,
+                  longitude: givenPosition.longitude,
+                }}
+                pinColor="#78010bff"
+              />
+            )}
+          </MapView>
+        )}
+      </View>
       <TouchableOpacity
         style={[styles.button, disabled && styles.boutonDisabled]}
         onPress={() => getGeolocalisation()}
@@ -321,25 +324,30 @@ const styles = StyleSheet.create({
     // width: ,
     alignItems: "center",
     justifyContent: "center",
-    color: "#896761",
+    color: "#965A51",
     fontWeight: "800",
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: "bold",
     textAlign: "center",
-    backgroundColor: "#ffffff39",
     marginHorizontal: 20,
     marginTop: 20,
-    // boxShadow: "0 2px 3px #499a76c0",
     paddingTop: 7,
+  },
+  containerRadius: {
+    height: "70%",
+    width: "90%",
+    borderRadius: 30,
+    overflow: "hidden",
+    boxShadow: "0 2px 3px #896761",
+    marginHorizontal: 20,
+    marginTop: 20,
   },
   map: {
     // width: '75%',
-    height: "70%",
-    marginHorizontal: 20,
-    marginTop: 5,
+    height: "100%",
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0 2px 3px #896761",
-    borderRadius: 15,
   },
   button: {
     alignItems: "center",
@@ -350,7 +358,7 @@ const styles = StyleSheet.create({
     // width: width * 0.7,
     backgroundColor: "#965a51c0",
     marginHorizontal: 70,
-    marginTop: 50,
+    marginTop: 40,
   },
   boutonText: {
     fontWeight: "bold",
