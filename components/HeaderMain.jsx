@@ -43,12 +43,14 @@ const styles = StyleSheet.create({
     boxShadow: "0 1px 2px #965a51c0",
   },
   text: {
-    fontSize: 30,
+    fontSize: 40,
+    fontFamily: "Air Travelers Personal Use",
     fontWeight: "bold",
     color: "#6A3931",
+    paddingHorizontal: 20,
   },
   icon: {
-    width: 30,
-    height: 30,
+    width: 20,
+    height: 20,
   },
 });
