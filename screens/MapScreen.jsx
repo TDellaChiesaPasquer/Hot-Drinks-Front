@@ -289,7 +289,7 @@ export default function App({ navigation }) {
                   latitude: givenPosition.latitude,
                   longitude: givenPosition.longitude,
                 }}
-                pinColor="#78010bff"
+                pinColor="#f7779bff"
               />
             )}
           </MapView>

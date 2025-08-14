@@ -257,6 +257,7 @@ export default function RdvScreen({ navigation, route }) {
               latitude: rdv.latitude,
               longitude: rdv.longitude,
             }}
+            pinColor="#f7779bff"
           />
         </MapView>
       </View>

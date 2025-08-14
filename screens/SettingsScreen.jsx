@@ -560,18 +560,18 @@ function DangerButton({ label, onPress, disabled, children }) {
 /* =============== Styles =============== */
 
 const colors = {
-	bg: "#F5EBE6",
-	bgSecondary: "#F5EBE6",
-	bgTertiary: "#F5EBE6",
-	title: "#965A51",
-	text: "#2F3437",
-	textSecondary: "#6F4A42",
-	white: "#FFFFFF",
-	smallBtn: "#B4877C",
-	smallBtnDark: "#965A51",
-	primary: "#8B5E55",
-	danger: "#D45248",
-	overlay: "rgba(0,0,0,0.35)",
+  bg: "#F5EBE6",
+  bgSecondary: "#F5EBE6",
+  bgTertiary: "#F5EBE6",
+  title: "#965A51",
+  text: "#2F3437",
+  textSecondary: "#6F4A42",
+  white: "#FFFFFF",
+  smallBtn: "#B4877C",
+  smallBtnDark: "#965151ff",
+  primary: "#8B5E55",
+  danger: "#c73939ff",
+  overlay: "rgba(0,0,0,0.35)",
 };
 
 const buttonBase = {

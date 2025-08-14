@@ -91,7 +91,7 @@ export default function AddRdvScreen({ navigation, route }) {
           // disabled={disabled}
         >
           {choicePositionRdv && (
-            <Marker coordinate={choicePositionRdv} pinColor="#78010bff" />
+            <Marker coordinate={choicePositionRdv} pinColor="#f7779bff" />
           )}
         </MapView>
       </View>
