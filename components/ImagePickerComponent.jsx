@@ -21,7 +21,7 @@ export default function ImagePickerScreen(props) {
       mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [5, 3],
-      quality: 0.4,
+      quality: 0.3,
     });
     if (!result.canceled) {
       const uri = result.assets[0].uri;
