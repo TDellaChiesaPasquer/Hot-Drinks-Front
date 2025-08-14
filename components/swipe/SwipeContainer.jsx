@@ -286,10 +286,27 @@ export default function SwipeContainer(props) {
 			<View style={styles.overlay}>
 				<View style={styles.infos}>
 					{informationList.map(function (infoText, infoIndex) {
+						// Styles conditionnels selon le type d'information
+						let infoStyle;
+						let displayText = infoText;
+
+						if (infoIndex === 0) {
+							// Username - plus grand
+							infoStyle = [styles.info, { color: textColor, fontSize: 24, fontWeight: "700", marginTop:"-8" }];
+						} else if (infoIndex === 1) {
+							// Âge - plus petit
+							infoStyle = [styles.info, { color: textColor, fontSize: 16 }];
+						} else if (infoIndex === 2) {
+							// Distance - entre parenthèses
+							infoStyle = [styles.info, { color: textColor, fontSize: 16 }];
+							displayText = ` (${infoText})`;
+						}
+
 						return (
-							<Text key={infoIndex} style={[styles.info, { color: textColor }]}>
-								{infoText}
-								{infoIndex < informationList.length - 1 ? ", " : ""}
+							<Text key={infoIndex} style={infoStyle}>
+								{displayText}
+								{/* Virgule seulement après le username (index 0) */}
+								{infoIndex === 0 ? ", " : ""}
 							</Text>
 						);
 					})}
