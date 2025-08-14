@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   emptyText: {
     color: "#965A51",
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "800",
     lineHeight: 32,
   },

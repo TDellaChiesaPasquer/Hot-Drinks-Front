@@ -101,7 +101,7 @@ export default function MyProfile({ navigation }) {
       options: [
         { label: "Matinal·e", value: "Matinal·e" },
         { label: "Couche-tard", value: "Couche-tard" },
-        { label: "Les deux", value: "Les deux" },
+        { label: "Les deux", value: "Toujours en forme" },
       ],
     },
     {
