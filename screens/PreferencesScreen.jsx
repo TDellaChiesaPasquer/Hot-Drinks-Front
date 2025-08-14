@@ -174,11 +174,9 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Chocolat chaud")}
 					>
-						{/* Cercle marron clair sous l'image */}
-						<View style={styles.iconContainer} />
-
-						{/* Image PNG */}
-						<Image source={relationIcons.hotChocolate} style={styles.image} contentFit="contain" />
+						<View style={styles.iconContainer} >
+						  <Image source={relationIcons.hotChocolate} style={styles.image} contentFit="contain" />
+            </View>
 
 						<Text
 							style={[
@@ -210,14 +208,16 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Allongé")}
 					>
-						<View style={styles.iconContainer} />
-						<Image source={relationIcons.allonge} style={styles.image} contentFit="contain" />
+						<View style={styles.iconContainer} >
+						  <Image source={relationIcons.allonge} style={styles.image} contentFit="contain" />
+            </View>
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Allongé" ? "#F5EBE6" : "#965A51" }]}>Allongé</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Allongé" ? "#F5EBE6" : "#965A51" }]}>Relation sérieuse</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={[styles.boutonChoixMultipleBoat, { backgroundColor: relation === "Thé" ? "#E69B5C" : "#FFF5F0" }]} onPress={() => setRelation("Thé")}>
-						<View style={styles.iconContainer} />
-						<Image source={relationIcons.the} style={styles.image} contentFit="contain" />
+						<View style={styles.iconContainer} >
+						  <Image source={relationIcons.the} style={styles.image} contentFit="contain" />
+            </View>
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Thé" ? "#F5EBE6" : "#965A51" }]}>Thé</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Thé" ? "#F5EBE6" : "#965A51" }]}>Plus si affinités</Text>
 					</TouchableOpacity>
@@ -232,8 +232,9 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Expresso")}
 					>
-						<View style={styles.iconContainer} />
-						<Image source={relationIcons.espresso} style={styles.image} contentFit="contain" />
+						<View style={styles.iconContainer} >
+						  <Image source={relationIcons.espresso} style={styles.image} contentFit="contain" />
+            </View>
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Expresso" ? "#F5EBE6" : "#965A51" }]}>Expresso</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Expresso" ? "#F5EBE6" : "#965A51" }]}>Sans prise de tête</Text>
 					</TouchableOpacity>
@@ -246,8 +247,9 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Ristretto")}
 					>
-						<View style={styles.iconContainer} />
-						<Image source={relationIcons.ristretto} style={styles.image} contentFit="contain" />
+						<View style={styles.iconContainer} >
+						  <Image source={relationIcons.ristretto} style={styles.image} contentFit="contain" />
+            </View>
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Ristretto" ? "#F5EBE6" : "#965A51" }]}>Ristretto</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Ristretto" ? "#F5EBE6" : "#965A51" }]}>Un shot de plaisir</Text>
 					</TouchableOpacity>
@@ -260,8 +262,9 @@ export default function PreferencesScreen({ navigation }) {
 						]}
 						onPress={() => setRelation("Matcha")}
 					>
-						<View style={styles.iconContainer} />
-						<Image source={relationIcons.matcha} style={styles.image} contentFit="contain" />
+						<View style={styles.iconContainer}>
+						  <Image source={relationIcons.matcha} style={styles.imageMatcha} contentFit="contain" />
+            </View>
 						<Text style={[styles.boutonChoixMultipleTextBoat, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Matcha</Text>
 						<Text style={[styles.boutonChoixMultipleTextLegend, { color: relation === "Matcha" ? "#F5EBE6" : "#965A51" }]}>Relation amicale</Text>
 					</TouchableOpacity>
@@ -393,11 +396,25 @@ const styles = StyleSheet.create({
 	},
 	// Style mis à jour pour l'image
 	image: {
-		width: 0.18 * width,
-		height: 0.18 * width,
-		marginVertical: 8,
-		zIndex: 2, // Pour être au-dessus du cercle
+		width: '80%',
+    height: '80%'
 	},
+  imageMatcha: {
+    marginTop: '10%',
+    width: "80%",
+    height: "70%",
+  },
+  
+  iconContainer: {
+    width: 0.18 * width,
+    height: 0.18 * width,
+    borderRadius: (0.18 * width) / 2,
+    // backgroundColor: "#E8D5C4", // Marron clair
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 8,
+    overflow: "hidden",
+  },
 	boutonChoixMultipleTextLegend: {
 		fontSize: 8,
 	},
