@@ -8,6 +8,7 @@ import {
   Modal,
   TextInput,
   Pressable,
+  Image,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -167,7 +168,14 @@ export default function ({ navigation }) {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <Text style={styles.hotDrinks}>Hot Drinks</Text>
+        <View style={styles.logoContainer}>
+          <Image
+            source={require("../assets/logo.gif")}
+            style={styles.logo}
+            autoplay
+          />
+          <Text style={styles.hotDrinks}>Hot Drinks</Text>
+        </View>
         {modalEmail}
         <TouchableOpacity
           style={styles.boutonGoogle}
@@ -187,12 +195,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  logoContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: "blue",
+    width: "70vw",
+    height: "250vh",
+    marginBottom: 170,
+    marginTop: -30,
+  },
   hotDrinks: {
-    fontSize: 60,
+    fontSize: 45,
     fontFamily: "Air Travelers Personal Use",
     fontWeight: "bold",
     color: "#6A3931",
     paddingHorizontal: 20,
+    marginTop: -85,
+    marginRight: 20,
+  },
+  logo: {
+    height: 320,
+    width: 290,
+    marginLeft: 20,
+    // backgroundColor: "yellow",
   },
   bouton: {
     alignItems: "center",
