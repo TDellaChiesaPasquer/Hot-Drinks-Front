@@ -267,7 +267,8 @@ export default function ({ navigation }) {
             style={[
               styles.boutonChoixMultiple,
               {
-                backgroundColor: relation === "Matcha" ? "#6CBF44" : "#FFF5F0",
+                backgroundColor:
+                  relation === "Matcha" ? "#9ece83ff" : "#FFF5F0",
               },
             ]}
             onPress={() => setRelation("Matcha")}
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
   },
   inputSub: {
     color: "#BC8D85",
-    fontSize: 10,
+    fontSize: 1,
     fontStyle: "italic",
   },
   dateContainer: {
@@ -399,7 +400,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     width: "90%",
     textAlign: "center",
-    fontSize: 10,
+    fontSize: 11,
   },
   multipleContainer: {
     flexDirection: "row",
@@ -415,6 +416,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 8,
+    marginBottom: -0.5,
     overflow: "hidden",
   },
   image: {
@@ -422,7 +424,7 @@ const styles = StyleSheet.create({
     height: "80%",
   },
   boutonChoixMultipleTextLegend: {
-    fontSize: 8,
+    fontSize: 10.5,
   },
   bottom: {
     position: "absolute",
