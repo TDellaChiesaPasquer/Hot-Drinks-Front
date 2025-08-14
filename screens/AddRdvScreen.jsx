@@ -197,7 +197,9 @@ const styles = StyleSheet.create({
     color: "#965a51c0",
     borderWidth: 1,
     borderRadius: 15,
-    padding: 10,
+    paddingHorizontal: 10,
+    height: 40,
+    lineHeight: 40
   },
   textRdv: {
     fontSize: 17,
