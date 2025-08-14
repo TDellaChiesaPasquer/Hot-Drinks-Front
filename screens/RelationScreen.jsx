@@ -276,7 +276,7 @@ export default function ({ navigation }) {
             <View style={styles.iconContainer}>
               <Image
                 source={relationIcons.matcha}
-                style={styles.image}
+                style={styles.imageMatcha}
                 contentFit="contain"
               />
             </View>
@@ -422,6 +422,11 @@ const styles = StyleSheet.create({
   image: {
     width: "80%",
     height: "80%",
+  },
+  imageMatcha: {
+    marginTop: '10%',
+    width: "80%",
+    height: "70%",
   },
   boutonChoixMultipleTextLegend: {
     fontSize: 10.5,

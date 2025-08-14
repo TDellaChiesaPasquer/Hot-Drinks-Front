@@ -3,10 +3,24 @@ import { StyleSheet, View, Text } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
 import { addInfos } from "../reducers/user";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function ({ navigation }) {
+  const [loaded, error] = useFonts({
+    airTravelers: require("../assets/air_travelers/Air Travelers Personal Use.otf"),
+  });
+
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
   useEffect(() => {
     (async () => {
       if (!user.token) {
