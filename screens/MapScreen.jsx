@@ -11,7 +11,7 @@ import {
   Platform,
   Linking,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
 import { Dimensions } from "react-native";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
