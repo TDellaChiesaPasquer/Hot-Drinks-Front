@@ -14,14 +14,6 @@ import ProfileInformationsScreen from "../../screens/ProfileInformationsScreen";
 const PLACEHOLDER_SRC = require("../../assets/IllustrationPorfileBase.jpg");
 const NB_PLACEHOLDERS = 10;
 
-// Commentaire des imports d'icônes SVG
-// import ChocolatChaudIcon from "../../assets/images/relationImages/chocolat-chaud.svg";
-// import AllongeIcon from "../../assets/images/relationImages/allonge.svg";
-// import TheIcon from "../../assets/images/relationImages/the.svg";
-// import EspressoIcon from "../../assets/images/relationImages/espresso.svg";
-// import RistrettoIcon from "../../assets/images/relationImages/ristretto.svg";
-// import MatchaIcon from "../../assets/images/relationImages/matcha.svg";
-
 // Import des images PNG
 const relationIcons = {
 	allonge: require("../../assets/images/IconsRelations/allonge.png"),
@@ -203,13 +195,13 @@ function formatProfileData(profileData, placeholderSrc) {
 	return formattedData;
 }
 
-// Normalisation et mapping de l'icône relation
+// Normalisation d'une chaîne de caractères pour faciliter la comparaison/mapping
 function normalizeRelation(value) {
-	return String(value || "")
-		.normalize("NFD")
-		.replace(/[\u0300-\u036f]/g, "")
-		.toLowerCase()
-		.trim();
+	return String(value || "") // Convertit la valeur en chaîne (vide si null/undefined)
+		.normalize("NFD") // Sépare les caractères accentués en lettre + diacritique
+		.replace(/[\u0300-\u036f]/g, "") // Supprime les signes diacritiques (accents, trémas, etc.)
+		.toLowerCase() // Met tout en minuscules
+		.trim(); // Supprime les espaces en début et fin
 }
 
 // Nouvelle fonction pour obtenir l'image PNG selon la relation
@@ -226,20 +218,6 @@ function getRelationIconSource(relationship) {
 	if (key === "matcha") return relationIcons.matcha;
 	return null;
 }
-
-// Commentaire de la fonction des SVG
-// function getRelationIconComponent(relationship) {
-// 	const key = normalizeRelation(relationship);
-// 	if (!key) return null;
-// 	// Quelques alias courants (accents/casse déjà gérés par normalize)
-// 	if (key === "chocolat chaud") return ChocolatChaudIcon;
-// 	if (key === "allonge") return AllongeIcon;
-// 	if (key === "the") return TheIcon;
-// 	if (key === "expresso") return EspressoIcon;
-// 	if (key === "ristretto") return RistrettoIcon;
-// 	if (key === "matcha") return MatchaIcon;
-// 	return null;
-// }
 
 export default function SwipeContainer(props) {
 	const navigation = useNavigation();
@@ -292,13 +270,21 @@ export default function SwipeContainer(props) {
 
 						if (infoIndex === 0) {
 							// Username - plus grand
-							infoStyle = [styles.info, { color: textColor, fontSize: 24, fontWeight: "700", marginTop:"-8" }];
+							infoStyle = [
+								styles.info,
+								{
+									color: "#F5EBE6",
+									fontSize: 20,
+									fontWeight: "bold",
+									marginTop: "-8",
+								},
+							];
 						} else if (infoIndex === 1) {
 							// Âge - plus petit
-							infoStyle = [styles.info, { color: textColor, fontSize: 16 }];
+							infoStyle = [styles.info, { color: "#F5EBE6", fontSize: 17 }];
 						} else if (infoIndex === 2) {
 							// Distance - entre parenthèses
-							infoStyle = [styles.info, { color: textColor, fontSize: 16 }];
+							infoStyle = [styles.info, { color: "#F5EBE6", fontSize: 16, marginLeft: 15 }];
 							displayText = ` (${infoText})`;
 						}
 
@@ -313,34 +299,28 @@ export default function SwipeContainer(props) {
 				</View>
 
 				<View style={styles.hashtags}>
-					{hashtagsList.map(function (hashtag, hashtagIndex) {
-						return (
-							<Text key={hashtagIndex} style={[styles.hashtag, { color: textColor }]}>
-								#{capitalize(hashtag)}{" "}
-							</Text>
-						);
-					})}
+					{hashtagsList
+						.map(function (hashtag, hashtagIndex) {
+							return (
+								<Text key={hashtagIndex} style={[styles.hashtag, { color: "#F5EBE6" }]}>
+									#{capitalize(hashtag)}{" "}
+								</Text>
+							);
+						})
+						.slice(0, 3)}
 				</View>
 			</View>
 
-			{/* Commentaire de l'ancienne utilisation des icônes SVG */}
-			{/* {RelationIcon && (
-				<View style={styles.relationIconContainer} pointerEvents="box-none">
-					<RelationIcon width={56} height={56} />
-				</View>
-			)} */}
-
-			{/* Utilisation des images PNG pour les icônes de relation */}
 			{relationIconSource && (
 				<View style={styles.relationIconContainer} pointerEvents="box-none">
-					<Image source={relationIconSource} style={{ width: 56, height: 56 }} contentFit="contain" />
+					<Image source={relationIconSource} style={styles.icon} contentFit="contain" />
 				</View>
 			)}
 
 			{/* Bouton flèche vers le haut (en bas à droite) */}
 			<View style={styles.fabContainer}>
 				<TouchableOpacity onPress={goToProfileInformations} style={styles.fabButton} activeOpacity={0.8}>
-					<FontAwesome name="arrow-up" size={20} color="#000" />
+					<FontAwesome name="arrow-up" size={20} color="#f7779bff" />
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -354,69 +334,87 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		overflow: "hidden",
 	},
-
-	arrow: {
-		color: "white",
-		fontSize: 100,
-	},
-
-	image: {
-		width: "100%",
-		height: "100%",
-	},
-
-	overlay: {
-		position: "absolute",
-		left: screenWidth / 10,
-		right: screenWidth / 10,
-		bottom: screenHeight / 6.5,
-	},
-
-	infos: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		bottom: -screenHeight / 20,
-	},
-
-	info: {
-		fontWeight: "600",
-		fontSize: 18,
-	},
-
-	hashtags: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		marginTop: 4,
-		bottom: -screenHeight / 15,
-	},
-
-	hashtag: {
-		fontSize: 16,
-	},
-
-	relationIconContainer: {
-		position: "absolute",
-		right: 11,
-		bottom: 110,
-		zIndex: 60,
-	},
-
 	fabContainer: {
 		position: "absolute",
 		right: 16,
 		bottom: 50,
 		zIndex: 50,
 	},
+	image: {
+		width: "100%",
+		height: "100%",
+	},
+	arrow: {
+		color: "#FFF5F0",
+		fontSize: 100,
+	},
+	overlay: {
+		position: "absolute",
+		height: "25%",
+		width: "70%",
+		// left: screenWidth / 10,
+		left: 15,
+		// right: 150,
+		bottom: screenHeight / 6.5,
+	},
+
+	infos: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		alignItems: "center",
+		bottom: -screenHeight / 6,
+	},
+	hashtags: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		marginTop: 4,
+		bottom: -screenHeight / 6,
+		gap: 4,
+	},
+
+	hashtag: {
+		fontSize: 15,
+		fontWeight: "bold",
+		backgroundColor: "rgba(150, 90, 81, 0.4)",
+		borderRadius: 10,
+		padding: 5,
+	},
+
+	relationIconContainer: {
+		position: "absolute",
+		right: 11,
+		bottom: 60,
+		zIndex: 60,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "#FFF5F0",
+		boxShadow: "0 2px 3px #896761",
+		height: 73,
+		width: 73,
+		borderRadius: 75,
+		borderWidth: 5,
+		borderColor: "#91a7daff",
+	},
+	icon: {
+		width: "70%",
+		height: "70%",
+		marginBottom: 8,
+		zIndex: 70,
+
+		width: 50,
+	},
 	fabButton: {
 		width: 48,
 		height: 48,
 		borderRadius: 24,
+		left: -6,
+		bottom: 100,
 		backgroundColor: "#FFF5F0",
 		justifyContent: "center",
 		alignItems: "center",
-		shadowColor: "#000",
+		boxShadow: "0 2px 3px #896761",
 		shadowOpacity: 0.15,
-		shadowOffset: { width: 0, height: 2 },
+		// shadowOffset: { width: 0, height: 2 },
 		shadowRadius: 4,
 		elevation: 6,
 	},

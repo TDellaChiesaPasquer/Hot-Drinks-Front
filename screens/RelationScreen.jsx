@@ -20,17 +20,6 @@ import { BackHandler } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
-// Anciens imports avec require() - commentés car ne fonctionnent pas avec expo-image pour SVG
-// const boat = require("../assets/images/boat.png");
-
-// Commentaire des imports SVG
-// import ChocolatChaudIcon from "../assets/images/relationImages/chocolat-chaud.svg";
-// import AllongeIcon from "../assets/images/relationImages/allonge.svg";
-// import TheIcon from "../assets/images/relationImages/the.svg";
-// import EspressoIcon from "../assets/images/relationImages/espresso.svg";
-// import RistrettoIcon from "../assets/images/relationImages/ristretto.svg";
-// import MatchaIcon from "../assets/images/relationImages/matcha.svg";
-
 // Import des images PNG
 const relationIcons = {
   boat: require("../assets/images/boat.png"),

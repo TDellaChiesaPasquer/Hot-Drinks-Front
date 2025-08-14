@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 import AntDesign from "@expo/vector-icons/AntDesign";
+const {width, height} = Dimensions.get('window');
 
 export default function AddRdvScreen({ navigation, route }) {
   const token = useSelector((state) => state.user.value.token);
@@ -13,6 +14,7 @@ export default function AddRdvScreen({ navigation, route }) {
   const [date, setDate] = useState(new Date());
   const [visible, setVisible] = useState(false);
   const [mode, setMode] = useState("");
+  const [error, setError] = useState('');
 
   const showPicker = () => {
     setVisible(true);
@@ -43,7 +45,16 @@ export default function AddRdvScreen({ navigation, route }) {
   };
 
   const addRdv = async () => {
-    if (!Marker && !date) {
+    if (!Marker) {
+      setError('Choisi un lieu');
+      return;
+    }
+    if (!date) {
+      setError('Choisi une date');
+      return;
+    }
+    if (date.valueOf() - (new Date()).valueOf() < 3600 * 1000) {
+      setError('Choisi une date au moins 1 h dans le futur');
       return;
     }
     const response = await fetch(process.env.EXPO_PUBLIC_IP + "/rdv/ask", {
@@ -64,62 +75,71 @@ export default function AddRdvScreen({ navigation, route }) {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.goLeftContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
-          <AntDesign
-            name="left"
-            size={24}
-            color="#965A51"
-            style={styles.goBack}
-          />
-        </TouchableOpacity>
+      <View style={styles.top}>
+        <View style={styles.goLeftContainer}>
+          <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.buttonLeft}
+        >
+            <AntDesign
+              name="left"
+              size={24}
+              color="#965A51"
+              style={styles.goBack}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.containerRadius}>
+          <MapView
+            zoomEnabled={true}
+            initialRegion={{
+              latitude: 48.88,
+              longitude: 2.3,
+              latitudeDelta: 0.0222,
+              longitudeDelta: 0.0222,
+            }}
+            style={styles.map}
+            onLongPress={(action) => getMarker(action.nativeEvent.coordinate)}
+            // disabled={disabled}
+          >
+            {choicePositionRdv && (
+              <Marker coordinate={choicePositionRdv} pinColor="#f7779bff" />
+            )}
+          </MapView>
+        </View>
+        {/* <MobileDateTimePicker /> */}
+        <View style={styles.containerCalendar}>
+          <Text style={styles.textRdv}> Rendez-vous le</Text>
+
+          <Text style={styles.text} onPress={showDate}>
+            {`${("0" + date.getDate()).slice(-2)}/${(
+              "0" + Number(date.getMonth() + 1)
+            ).slice(-2)}/${date.getFullYear()}`}
+          </Text>
+          <Text style={styles.textRdv}>à</Text>
+          <Text style={styles.text} onPress={showTime}>
+            {`${("0" + date.getHours()).slice(-2)}:${(
+              "0" + date.getMinutes()
+            ).slice(-2)}`}
+          </Text>
+        </View>
+        {visible && (
+          <DateTimePicker value={date} mode={mode} onChange={dateChange} />
+        )}
+        
       </View>
-      <View style={styles.containerRadius}>
-        <MapView
-          zoomEnabled={true}
-          initialRegion={{
-            latitude: 48.88,
-            longitude: 2.3,
-            latitudeDelta: 0.0222,
-            longitudeDelta: 0.0222,
+      <View style={styles.bottom}>
+        {error && <Text style={styles.error}>{error}</Text>}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            addRdv();
           }}
-          style={styles.map}
-          onLongPress={(action) => getMarker(action.nativeEvent.coordinate)}
           // disabled={disabled}
         >
-          {choicePositionRdv && (
-            <Marker coordinate={choicePositionRdv} pinColor="#78010bff" />
-          )}
-        </MapView>
+          <Text style={styles.boutonText}>VALIDER</Text>
+        </TouchableOpacity>
       </View>
-      {/* <MobileDateTimePicker /> */}
-      <View style={styles.containerCalendar}>
-        <Text style={styles.textRdv}> Rendez-vous le</Text>
-
-        <Text style={styles.text} onPress={showDate}>
-          {`${("0" + date.getDate()).slice(-2)}/${(
-            "0" + Number(date.getMonth() + 1)
-          ).slice(-2)}/${date.getFullYear()}`}
-        </Text>
-        <Text style={styles.textRdv}>à</Text>
-        <Text style={styles.text} onPress={showTime}>
-          {`${("0" + date.getHours()).slice(-2)}:${(
-            "0" + date.getMinutes()
-          ).slice(-2)}`}
-        </Text>
-      </View>
-      {visible && (
-        <DateTimePicker value={date} mode={mode} onChange={dateChange} />
-      )}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          addRdv();
-        }}
-        // disabled={disabled}
-      >
-        <Text style={styles.boutonText}>VALIDER</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -128,12 +148,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5EBE6",
     alignItems: "center",
-    justifyContent: 'flex-start'
+    justifyContent: 'space-between'
   },
   containerRadius: {
-    height: "70%",
+    height: height * 0.45,
     width: "90%",
-    backgroundColor: "red",
     borderRadius: 30,
     overflow: "hidden",
     boxShadow: "0 2px 3px #896761",
@@ -141,8 +160,6 @@ const styles = StyleSheet.create({
   map: {
     height: "100%",
     width: "100%",
-    // marginHorizontal: 20,
-    // marginTop: 5,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -154,8 +171,6 @@ const styles = StyleSheet.create({
     boxShadow: "0 2px 3px #896761",
     // width: width * 0.7,
     backgroundColor: "#965a51c0",
-    marginHorizontal: 70,
-    marginTop: 40,
     width: "70%",
   },
   boutonText: {
@@ -190,11 +205,11 @@ const styles = StyleSheet.create({
     color: "#965a51c0",
   },
   goLeftContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    width: '90%',
-    height: 50
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    width: "90%",
+    height: 50,
   },
   buttonLeft: {
     height: 50,
@@ -202,5 +217,18 @@ const styles = StyleSheet.create({
     marginLeft: (24 - 50) / 2,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
+  },
+  bottom: {
+    width: '100%',
+    alignItems: 'center',
+    paddingBottom: 60
+  },
+  top: {
+    width: '100%',
+    alignItems: 'center',
   }
 });

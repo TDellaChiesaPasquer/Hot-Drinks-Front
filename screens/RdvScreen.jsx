@@ -255,6 +255,7 @@ export default function RdvScreen({ navigation, route }) {
               latitude: rdv.latitude,
               longitude: rdv.longitude,
             }}
+            pinColor="#f7779bff"
           />
         </MapView>
       </View>
@@ -337,7 +338,6 @@ const styles = StyleSheet.create({
   containerRadius: {
     height: "55%",
     width: "90%",
-    backgroundColor: "red",
     borderRadius: 30,
     overflow: "hidden",
     boxShadow: "0 2px 3px #896761",

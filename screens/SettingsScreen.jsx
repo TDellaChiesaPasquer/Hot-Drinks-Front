@@ -568,9 +568,9 @@ const colors = {
   textSecondary: "#6F4A42",
   white: "#FFFFFF",
   smallBtn: "#B4877C",
-  smallBtnDark: "#965A51",
+  smallBtnDark: "#965151ff",
   primary: "#8B5E55",
-  danger: "#D45248",
+  danger: "#c73939ff",
   overlay: "rgba(0,0,0,0.35)",
 };
 
