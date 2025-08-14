@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
 import AntDesign from "@expo/vector-icons/AntDesign";
+const {width, height} = Dimensions.get('window');
 
 export default function AddRdvScreen({ navigation, route }) {
   const token = useSelector((state) => state.user.value.token);
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   containerRadius: {
-    height: "70%",
+    height: height * 0.45,
     width: "90%",
     borderRadius: 30,
     overflow: "hidden",
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
   bottom: {
     width: '100%',
     alignItems: 'center',
-    paddingBottom: 10
+    paddingBottom: 60
   },
   top: {
     width: '100%',
