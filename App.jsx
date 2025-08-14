@@ -239,6 +239,7 @@ const MainTabNav = () => {
           tabBarShowLabel: false,
           tabBarIconStyle: styles.tabBarIcon,
           tabBarStyle: styles.tabBarMain,
+          tabBarBadgeStyle: { backgroundColor: "#f7779bff" },
         })}
       >
         <Tab.Screen name="MyProfileNav" component={MyProfileNav} />

@@ -310,20 +310,17 @@ const styles = StyleSheet.create({
   },
   titleUsername: {
     fontSize: 20,
-    color: "#965a51c0",
-    // backgroundColor: "#F5EBE6",
+    color: "#965A51",
     justifyContent: "center",
     textAlign: "center",
     fontWeight: "bold",
     paddingTop: 10,
   },
   titleAge: {
-    fontSize: 13,
-    color: "#965a51c0",
-    // backgroundColor: "#F5EBE6",
+    fontSize: 17,
+    color: "#965A51",
     justifyContent: "center",
     textAlign: "center",
-    // paddingTop: 7,
     marginTop: 15,
   },
 
@@ -467,7 +464,7 @@ const styles = StyleSheet.create({
   },
 
   tagText: {
-    color: "white",
+    color: "#F5EBE6",
     fontWeight: "bold",
   },
 });

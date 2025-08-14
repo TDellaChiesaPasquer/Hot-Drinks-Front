@@ -46,17 +46,17 @@ export default function ({ navigation }) {
         email === "" ||
         !/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim.test(email)
       ) {
-        setError("Remplissez une email valide");
+        setError("Remplis un email valide");
         setValidateDisabled(false);
         return;
       }
       if (password.length < 8) {
-        setError("Votre mot de passe doit faire au moins 8 caractères");
+        setError("Ton mot de passe doit faire au moins 8 caractères");
         setValidateDisabled(false);
         return;
       }
       if (password.length > 32) {
-        setError("Votre mot de passe doit faire au plus 32 caractères");
+        setError("Ton mot de passe doit faire au plus 32 caractères");
         setValidateDisabled(false);
         return;
       }
@@ -172,7 +172,7 @@ export default function ({ navigation }) {
           style={styles.boutonGoogle}
           onPress={() => setEmailVisible(true)}
         >
-          <Text style={styles.boutonText}>CONNECTION PAR EMAIL</Text>
+          <Text style={styles.boutonText}>CONNEXION PAR EMAIL</Text>
         </TouchableOpacity>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     boxShadow: "0 2px 3px #896761",
     width: width * 0.7,
     margin: 10,
-    backgroundColor: "#DE4F24",
+    backgroundColor: "#91a7daff",
   },
   modalContainer: {
     flex: 1,

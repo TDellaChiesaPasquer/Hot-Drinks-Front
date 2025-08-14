@@ -18,88 +18,96 @@ const isFromSVG = false;
 const iconSize = 34;
 
 export default function SwipeButton(props) {
-	const [buttonType] = useState(props.type);
-  const user = useSelector(state => state.user.value.user);
-  const lastSuperlike = user && user.lastSuperlike || new Date();
-  const today = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0);
+  const [buttonType] = useState(props.type);
+  const user = useSelector((state) => state.user.value.user);
+  const lastSuperlike = (user && user.lastSuperlike) || new Date();
+  const today = dayjs()
+    .set("hour", 0)
+    .set("minute", 0)
+    .set("second", 0)
+    .set("millisecond", 0);
   let superlikeNumber = user && user.superlikeNumber;
   if (today.valueOf() - lastSuperlike.valueOf() > 0 || !superlikeNumber) {
     superlikeNumber = 0;
   }
 
-	// Choix du composant graphique principal
-	function getMainComponent(type) {
-		if (isFromSVG) return getSVGComponent(type);
-		return getExpoIconComponent(type);
-	}
+  // Choix du composant graphique principal
+  function getMainComponent(type) {
+    if (isFromSVG) return getSVGComponent(type);
+    return getExpoIconComponent(type);
+  }
 
-	// Sous-fonction pour les SVG (non utilisée ici)
-	function getSVGComponent(type) {
-		if (type === "Like") {
-			return <HeartIcon width={iconSize} height={iconSize} />;
-		}
-		if (type === "Dislike") {
-			return <CrossIcon width={iconSize} height={iconSize} />;
-		}
-		if (type === "Superlike") {
-			return <StarIcon width={iconSize} height={iconSize} />;
-		}
-		return null;
-	}
+  // Sous-fonction pour les SVG (non utilisée ici)
+  function getSVGComponent(type) {
+    if (type === "Like") {
+      return <HeartIcon width={iconSize} height={iconSize} />;
+    }
+    if (type === "Dislike") {
+      return <CrossIcon width={iconSize} height={iconSize} />;
+    }
+    if (type === "Superlike") {
+      return <StarIcon width={iconSize} height={iconSize} />;
+    }
+    return null;
+  }
 
-	// Sous-fonction pour les icônes Expo
-	function getExpoIconComponent(type) {
-		if (type === "Like") {
-			return <FontAwesome name="heart" size={iconSize} color="#FF4D80" />;
-		}
-		if (type === "Dislike") {
-			return <FontAwesome name="times" size={iconSize} color="#8A2BE2" />;
-		}
-		if (type === "Superlike") {
-			return <FontAwesome name="star" size={iconSize} color="#75c7feff" />;
-		}
-		return null;
-	}
+  // Sous-fonction pour les icônes Expo
+  function getExpoIconComponent(type) {
+    if (type === "Like") {
+      return <FontAwesome name="heart" size={iconSize} color="#FF4D80" />;
+    }
+    if (type === "Dislike") {
+      return <FontAwesome name="times" size={iconSize} color="#8A2BE2" />;
+    }
+    if (type === "Superlike") {
+      return <FontAwesome name="star" size={iconSize} color="#75c7feff" />;
+    }
+    return null;
+  }
 
-	// Gestion du clic sur le bouton
-	function handlePress() {
-		if (props.onChoice) {
-			props.onChoice(buttonType);
-		}
-	}
-  const disabled = buttonType === 'Superlike' && superlikeNumber >= 3;
-	// Affichage final
-	return (
-		<View style={styles.container}>
-			<TouchableOpacity onPress={handlePress} style={[styles.button, props.style, disabled && styles.buttonDisabled]} disabled={disabled}>
-				{getMainComponent(buttonType)}
-			</TouchableOpacity>
-		</View>
-	);
+  // Gestion du clic sur le bouton
+  function handlePress() {
+    if (props.onChoice) {
+      props.onChoice(buttonType);
+    }
+  }
+  const disabled = buttonType === "Superlike" && superlikeNumber >= 3;
+  // Affichage final
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={[styles.button, props.style, disabled && styles.buttonDisabled]}
+        disabled={disabled}
+      >
+        {getMainComponent(buttonType)}
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	containerBouton: {
-		height: "100%",
-		width: "100%",
-	},
-	button: {
-		justifyContent: "center",
-		alignItems: "center",
-		width: 60,
-		height: 60,
-		borderRadius: 45,
-		backgroundColor: "#FFF5F0",
-		elevation: 3,
+  container: {
+    flex: 1,
+  },
+  containerBouton: {
+    height: "100%",
+    width: "100%",
+  },
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 45,
+    backgroundColor: "#FFF5F0",
+    elevation: 3,
     boxShadow: "0 2px 3px #896761",
-	},
-	buttonLike: { backgroundColor: "#FF4D80" },
-	buttonDislike: { backgroundColor: "#8A2BE2" },
-	buttonSuperLike: { backgroundColor: "#FFA500" },
+  },
+  buttonLike: { backgroundColor: "#FF4D80" },
+  buttonDislike: { backgroundColor: "#8A2BE2" },
+  buttonSuperLike: { backgroundColor: "#FFA500" },
   buttonDisabled: {
-    backgroundColor: 'lightgray'
-  }
+    backgroundColor: "#FFF5F0",
+  },
 });

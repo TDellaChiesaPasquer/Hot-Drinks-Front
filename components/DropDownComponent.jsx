@@ -30,7 +30,7 @@ export default functionDropdownComponent = (props) => {
   const handleImportanceClick = () => {
     const next = !isImportant;
     setIsImportant(next);
-    dispatch(toggleStar({category: props.questionId, star: next}));
+    dispatch(toggleStar({ category: props.questionId, star: next }));
   };
   //_____________________________________ affiche la question au dessus du dropdown quand reponse selectionnée
   const renderLabel = () => {
@@ -60,7 +60,13 @@ export default functionDropdownComponent = (props) => {
             onBlur={() => setIsOpen(false)}
             onChange={(item) => {
               setValue(item.value);
-              dispatch(setAnswer({category: props.questionId, label: props.question, value: item.value}));
+              dispatch(
+                setAnswer({
+                  category: props.questionId,
+                  label: props.question,
+                  value: item.value,
+                })
+              );
               setIsOpen(false);
             }}
             renderRightIcon={() => (
@@ -87,7 +93,7 @@ export default functionDropdownComponent = (props) => {
             // style={styles.stars}
             name="star"
             size={20}
-            color={isImportant ? "#f1c40f" : "black"}
+            color={isImportant ? "#FFA500" : "black"}
             // onPress={() => handleImportanceClick()}
           />
         </TouchableOpacity>
