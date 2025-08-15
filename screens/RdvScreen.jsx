@@ -208,6 +208,7 @@ export default function RdvScreen({ navigation, route }) {
                       : otherUser.photoList[0]
                     : null
                 }
+                accessibilityLabel="Photo de la personne"
               />
             </TouchableOpacity>
           </View>

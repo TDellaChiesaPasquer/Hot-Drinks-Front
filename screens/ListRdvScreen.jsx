@@ -53,6 +53,7 @@ export default function ListRdvScreen({ navigation }) {
             source={
               otherUser.photoList.length === 0 ? "" : otherUser.photoList[0]
             }
+            accessibilityLabel="Photo de la personne"
           />
         </View>
         <View style={styles.message}>

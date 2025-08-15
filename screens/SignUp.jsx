@@ -173,6 +173,7 @@ export default function ({ navigation }) {
             source={require("../assets/logo.gif")}
             style={styles.logo}
             autoplay
+            accessibilityLabel="Logo"
           />
           <Text style={styles.hotDrinks}>Hot Drinks</Text>
         </View>

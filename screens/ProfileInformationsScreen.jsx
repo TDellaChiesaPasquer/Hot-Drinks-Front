@@ -107,7 +107,7 @@ export default function SwipeProfileInformations() {
       </View>
 
 			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper} alwaysBounceVertical={true}>
-				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" />
+				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" accessibilityLabel="Photo de la personne"/>
 
 				{/* Infos basiques et préférences (sans cadre) */}
 				<View style={styles.infoSection}>

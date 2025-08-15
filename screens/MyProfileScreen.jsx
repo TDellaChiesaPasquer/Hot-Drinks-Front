@@ -267,6 +267,7 @@ export default function MyProfile({ navigation }) {
                   source={url}
                   style={styles.image}
                   contentFit="cover"
+                  accessibilityLabel="Photo de l'utilisateur"
                 />
               );
             })}

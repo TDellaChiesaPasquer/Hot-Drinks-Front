@@ -44,7 +44,7 @@ export default function ImagePickerScreen(props) {
     <TouchableOpacity onPress={pickImage} style={styles.addPhotoButton}>
       {props.source ? (
         <>
-          <Image source={props.source} style={styles.addedPhoto} />
+          <Image source={props.source} style={styles.addedPhoto} accessibilityLabel="Photo choisie"/>
           <TouchableOpacity
             onPress={() => handleDelete()}
             style={styles.deletePhotoDiv}

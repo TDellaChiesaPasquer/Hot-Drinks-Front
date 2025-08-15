@@ -301,6 +301,7 @@ export default function SwipeContainer(props) {
               source={imageSource}
               style={styles.image}
               contentFit="cover"
+              accessibilityLabel="Photo de la personne"
             />
           );
         })}
@@ -371,6 +372,7 @@ export default function SwipeContainer(props) {
               profileData?.relationship === "Matcha" && styles.matcha,
             ]}
             contentFit="contain"
+            accessibilityLabel="Photo de la relation"
           />
         </View>
       )}

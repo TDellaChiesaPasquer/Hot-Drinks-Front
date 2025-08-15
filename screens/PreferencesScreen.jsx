@@ -266,6 +266,7 @@ export default function PreferencesScreen({ navigation }) {
                 source={relationIcons.hotChocolate}
                 style={styles.image}
                 contentFit="contain"
+                accessibilityLabel="Chocolat chaud"
               />
             </View>
 
@@ -304,6 +305,7 @@ export default function PreferencesScreen({ navigation }) {
                 source={relationIcons.allonge}
                 style={styles.image}
                 contentFit="contain"
+                accessibilityLabel="Café allongé"
               />
             </View>
             <Text
@@ -335,6 +337,7 @@ export default function PreferencesScreen({ navigation }) {
                 source={relationIcons.the}
                 style={styles.image}
                 contentFit="contain"
+                accessibilityLabel="Thé"
               />
             </View>
             <Text
@@ -371,6 +374,7 @@ export default function PreferencesScreen({ navigation }) {
                 source={relationIcons.espresso}
                 style={styles.image}
                 contentFit="contain"
+                accessibilityLabel="Expresso"
               />
             </View>
             <Text
@@ -405,6 +409,7 @@ export default function PreferencesScreen({ navigation }) {
                 source={relationIcons.ristretto}
                 style={styles.image}
                 contentFit="contain"
+                accessibilityLabel="Ristretto"
               />
             </View>
             <Text
@@ -439,6 +444,7 @@ export default function PreferencesScreen({ navigation }) {
                 source={relationIcons.matcha}
                 style={styles.imageMatcha}
                 contentFit="contain"
+                accessibilityLabel="Matcha"
               />
             </View>
             <Text
