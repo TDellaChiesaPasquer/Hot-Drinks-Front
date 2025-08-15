@@ -11,6 +11,14 @@ const height = Dimensions.get("window").height;
 const SURFACE_BG = "#F5EBE6";
 const CARD_BG = "#BC8D85";
 
+// Tableau des types de relation avec leurs descriptions
+const relationTypes = {
+	Allongé: "Relation sérieuse",
+	Thé: "Plus si affinités",
+	Expresso: "Sans prise de tête",
+	Ristretto: "Un shot de plaisir",
+	Matcha: "Relation amicale",
+};
 
 const PrefRow = ({ icon, label, value }) => (
 	<View style={styles.prefRow}>
@@ -62,7 +70,7 @@ const HeaderBasics = ({ username, age, distance }) => {
 		<View style={styles.headerBasics}>
 			<View style={styles.headerTopRow}>
 				<View style={styles.nameAgeRow}>
-					<Text style={styles.nameText}>{username.trim()+", "}</Text>
+					<Text style={styles.nameText}>{username.trim() + ", "}</Text>
 					<Text style={styles.ageText}>{ageText}</Text>
 				</View>
 
@@ -96,18 +104,21 @@ export default function SwipeProfileInformations() {
 		uri: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1080&h=607&q=80",
 	};
 
+	// Déterminer la description du type de relation
+	const relationDescription = relationTypes[relationship] || capitalize(relationship);
+
 	return (
 		<View style={styles.container}>
-      <View style={styles.top}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
-          <AntDesign name="left" size={24} color="#965A51"/>
-        </TouchableOpacity>
-			  <Text style={styles.title}>Informations du profil</Text>
-        <View style={styles.buttonLeft}></View>
-      </View>
+			<View style={styles.top}>
+				<TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonLeft}>
+					<AntDesign name="left" size={24} color="#965A51" />
+				</TouchableOpacity>
+				<Text style={styles.title}>Informations du profil</Text>
+				<View style={styles.buttonLeft}></View>
+			</View>
 
 			<ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.wrapper} alwaysBounceVertical={true}>
-				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" accessibilityLabel="Photo de la personne"/>
+				<Image key={0} source={imageSource} style={styles.image} contentFit="cover" accessibilityLabel="Photo de la personne" />
 
 				{/* Infos basiques et préférences (sans cadre) */}
 				<View style={styles.infoSection}>
@@ -115,7 +126,7 @@ export default function SwipeProfileInformations() {
 
 					<PrefRow icon="venus-mars" label="Genre" value={capitalize(gender)} />
 					<PrefRow icon="search" label="Recherche" value={capitalize(orientation)} />
-					<PrefRow icon="heart" label="Type de relation" value={capitalize(relationship)} />
+					<PrefRow icon="heart" label="relationship" value={capitalize(relationDescription)} />
 				</View>
 
 				{/* Goûts */}
@@ -305,19 +316,17 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "600",
 	},
-  buttonLeft: {
-    height: 50,
-    width: 50,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  top: {
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%'
-  }
+	buttonLeft: {
+		height: 50,
+		width: 50,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	top: {
+		height: 50,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		width: "100%",
+	},
 });
-
-
